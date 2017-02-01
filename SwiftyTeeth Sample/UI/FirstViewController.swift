@@ -19,12 +19,13 @@ class FirstViewController: UIViewController, SwiftyTeethable {
     }
     
     @IBAction func stateTapped() {
-        resultLabel.text = "\(swiftyTeeth.state.rawValue)"
+//        resultLabel.text = "\(swiftyTeeth.state.rawValue)"
     }
     
     @IBAction func scanTapped() {
-        swiftyTeeth.scan { _ in
-            resultLabel.text = "TODO"
+        swiftyTeeth.scan(for: 1) { peripherals in
+            self.resultLabel.text = "TODO"
+            print(peripherals)
         }
     }
 }

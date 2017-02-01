@@ -11,40 +11,71 @@ import CoreBluetooth
 
 open class SwiftyTeeth: NSObject {
 
-    static var shared: SwiftyTeeth {
-        return SwiftyTeeth()
-    }
+    static let shared = SwiftyTeeth()
+
+    fileprivate var scanChangesHandler: ((CBPeripheral) -> Void)?
+    fileprivate var scanCompleteHandler: (([CBPeripheral]) -> Void)?
 
     fileprivate lazy var centralManager: CBCentralManager = {
-        return CBCentralManager(
+        let instance = CBCentralManager(
             delegate: self,
             queue: DispatchQueue(label: "com.robotpajamas.SwiftyTeeth"))
+        // Throwaway command to init CoreBluetooth (helps prevent timing problems)
+        instance.retrievePeripherals(withIdentifiers: [])
+        return instance
     }()
 
-    open var state: CBManagerState {
-        return centralManager.state
-    }
+    
+    // TODO: Need iOS 9 support
+//    open var state: CBManagerState {
+//        return centralManager.state
+//    }
 
     open var isScanning: Bool {
         return centralManager.isScanning
     }
+
+    // TODO: Hold a private set, and expose a list?
+    open var scannedPeripherals = Set<CBPeripheral>()
     
+    // TODO: Should be a list? Can connect to > 1 device
     open var device: Device?
     
     public override init() {
-        
     }
 }
 
 // MARK: - Manager functions
 extension SwiftyTeeth {
 
-    open func scan(with timeout: TimeInterval = 10, complete: ([CBPeripheral]) -> Void) {
-        complete([]) //TODO
+    open func scan() {
+        scannedPeripherals.removeAll()
+        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+    }
+    
+    open func scan(changes: ((CBPeripheral) -> Void)?) {
+        scanChangesHandler = changes
+        scan()
+    }
+    
+    open func scan(for timeout: TimeInterval = 10, changes: ((CBPeripheral) -> Void)? = nil, complete: @escaping ([CBPeripheral]) -> Void) {
+        scanChangesHandler = changes
+        scanCompleteHandler = complete
+        // TODO: Should this be on main, or on CB queue?
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
+            self.stopScan()
+        }
+        scan()
     }
 
     open func stopScan() {
+        // TODO: Cancel asyncAfter if in progress?
         centralManager.stopScan()
+        scanCompleteHandler?(Array(scannedPeripherals))
+        
+        // Reset Handlers
+        scanChangesHandler = nil
+        scanCompleteHandler = nil
     }
 
     open func connect(to peripheral: CBPeripheral, complete: (Device?) -> Void) {
@@ -90,6 +121,8 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         print(peripheral.name ?? "")
+        scannedPeripherals.insert(peripheral)
+        scanChangesHandler?(peripheral)
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
