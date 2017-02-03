@@ -13,8 +13,8 @@ open class SwiftyTeeth: NSObject {
 
     static let shared = SwiftyTeeth()
 
-    fileprivate var scanChangesHandler: ((CBPeripheral) -> Void)?
-    fileprivate var scanCompleteHandler: (([CBPeripheral]) -> Void)?
+    fileprivate var scanChangesHandler: ((Device) -> Void)?
+    fileprivate var scanCompleteHandler: (([Device]) -> Void)?
 
     fileprivate lazy var centralManager: CBCentralManager = {
         let instance = CBCentralManager(
@@ -36,7 +36,7 @@ open class SwiftyTeeth: NSObject {
     }
 
     // TODO: Hold a private set, and expose a list?
-    open var scannedPeripherals = Set<CBPeripheral>()
+    open var scannedPeripherals = Set<Device>()
     
     // TODO: Should be a list? Can connect to > 1 device
     open var device: Device?
@@ -53,12 +53,12 @@ extension SwiftyTeeth {
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
     }
     
-    open func scan(changes: ((CBPeripheral) -> Void)?) {
+    open func scan(changes: ((Device) -> Void)?) {
         scanChangesHandler = changes
         scan()
     }
     
-    open func scan(for timeout: TimeInterval = 10, changes: ((CBPeripheral) -> Void)? = nil, complete: @escaping ([CBPeripheral]) -> Void) {
+    open func scan(for timeout: TimeInterval = 10, changes: ((Device) -> Void)? = nil, complete: @escaping ([Device]) -> Void) {
         scanChangesHandler = changes
         scanCompleteHandler = complete
         // TODO: Should this be on main, or on CB queue?
@@ -121,12 +121,13 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         print(peripheral.name ?? "")
-        scannedPeripherals.insert(peripheral)
-        scanChangesHandler?(peripheral)
+        let device = Device(peripheral: peripheral)
+        scannedPeripherals.insert(device)
+        scanChangesHandler?(device)
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        device = Device(delegate: self, peripheral: peripheral)
+        device = Device(peripheral: peripheral)
     }
     
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -138,62 +139,6 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     }
     
     public func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
-    
-    }
-}
-
-// MARK: - Central peripheral
-extension SwiftyTeeth: CBPeripheralDelegate {
-
-    public func peripheralDidUpdateName(_ peripheral: CBPeripheral) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-    
-    }
-    
-    public func peripheralDidUpdateRSSI(_ peripheral: CBPeripheral, error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didDiscoverIncludedServicesFor service: CBService, error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
-    
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?) {
     
     }
 }
