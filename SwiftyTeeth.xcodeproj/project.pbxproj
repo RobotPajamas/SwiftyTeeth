@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		195A590F1E47CECC002B076A /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195A590E1E47CECC002B076A /* DeviceViewController.swift */; };
 		8B64D18F1DC2E16300D41A2C /* SwiftyTeeth.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8B64D1AF1DC2E86200D41A2C /* SwiftyTeeth_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1AE1DC2E86200D41A2C /* SwiftyTeeth_Tests.swift */; };
 		8B64D1B11DC2E86200D41A2C /* SwiftyTeeth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */; };
@@ -15,8 +16,7 @@
 		8B64D1C71DC2E8C600D41A2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B64D1C61DC2E8C600D41A2C /* Assets.xcassets */; };
 		8B64D1CA1DC2E8C600D41A2C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B64D1C81DC2E8C600D41A2C /* LaunchScreen.storyboard */; };
 		8B64D1D01DC2E8FE00D41A2C /* SwiftyTeeth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1CF1DC2E8FE00D41A2C /* SwiftyTeeth.swift */; };
-		8B64D1D61DC2E9E800D41A2C /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1D31DC2E9E800D41A2C /* FirstViewController.swift */; };
-		8B64D1D71DC2E9E800D41A2C /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1D41DC2E9E800D41A2C /* SecondViewController.swift */; };
+		8B64D1D61DC2E9E800D41A2C /* DeviceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1D31DC2E9E800D41A2C /* DeviceListViewController.swift */; };
 		8B64D1DD1DC2F5D000D41A2C /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1DC1DC2F5D000D41A2C /* Device.swift */; };
 		8B64D1DF1DC2F92600D41A2C /* CBPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1DE1DC2F92600D41A2C /* CBPeripheral.swift */; };
 		8B64D1E31DC2FCEB00D41A2C /* SwiftyTeethable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1E21DC2FCEB00D41A2C /* SwiftyTeethable.swift */; };
@@ -56,6 +56,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		195A590E1E47CECC002B076A /* DeviceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
 		8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyTeeth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftyTeeth.h; sourceTree = "<group>"; };
 		8B64D1A11DC2E42000D41A2C /* Info-iOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
@@ -74,8 +75,7 @@
 		8B64D1C91DC2E8C600D41A2C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8B64D1CB1DC2E8C600D41A2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8B64D1CF1DC2E8FE00D41A2C /* SwiftyTeeth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyTeeth.swift; sourceTree = "<group>"; };
-		8B64D1D31DC2E9E800D41A2C /* FirstViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		8B64D1D41DC2E9E800D41A2C /* SecondViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		8B64D1D31DC2E9E800D41A2C /* DeviceListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceListViewController.swift; sourceTree = "<group>"; };
 		8B64D1DC1DC2F5D000D41A2C /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		8B64D1DE1DC2F92600D41A2C /* CBPeripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBPeripheral.swift; sourceTree = "<group>"; };
 		8B64D1E21DC2FCEB00D41A2C /* SwiftyTeethable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyTeethable.swift; sourceTree = "<group>"; };
@@ -276,8 +276,8 @@
 		8B64D1D21DC2E9E800D41A2C /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				8B64D1D31DC2E9E800D41A2C /* FirstViewController.swift */,
-				8B64D1D41DC2E9E800D41A2C /* SecondViewController.swift */,
+				8B64D1D31DC2E9E800D41A2C /* DeviceListViewController.swift */,
+				195A590E1E47CECC002B076A /* DeviceViewController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -365,22 +365,19 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				TargetAttributes = {
 					8B64D1891DC2E16300D41A2C = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = UL3M495G23;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					8B64D1AB1DC2E86200D41A2C = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = UL3M495G23;
 						ProvisioningStyle = Automatic;
 					};
 					8B64D1BA1DC2E8C600D41A2C = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = UL3M495G23;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -456,9 +453,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B64D1D71DC2E9E800D41A2C /* SecondViewController.swift in Sources */,
 				8B64D1BE1DC2E8C600D41A2C /* AppDelegate.swift in Sources */,
-				8B64D1D61DC2E9E800D41A2C /* FirstViewController.swift in Sources */,
+				8B64D1D61DC2E9E800D41A2C /* DeviceListViewController.swift in Sources */,
+				195A590F1E47CECC002B076A /* DeviceViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -500,7 +497,26 @@
 		8B64D1831DC2E0A400D41A2C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 			};
@@ -509,7 +525,24 @@
 		8B64D1841DC2E0A400D41A2C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 			};
@@ -538,12 +571,12 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = UL3M495G23;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -604,12 +637,12 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = UL3M495G23;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -666,7 +699,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = UL3M495G23;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -721,7 +754,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = UL3M495G23;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -769,7 +802,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = UL3M495G23;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -825,7 +858,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = UL3M495G23;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -876,6 +909,7 @@
 				8B64D1B51DC2E86200D41A2C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8B64D1CC1DC2E8C600D41A2C /* Build configuration list for PBXNativeTarget "SwiftyTeeth Sample" */ = {
 			isa = XCConfigurationList;
@@ -884,6 +918,7 @@
 				8B64D1CE1DC2E8C600D41A2C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
