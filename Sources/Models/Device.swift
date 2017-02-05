@@ -13,7 +13,10 @@ open class Device: NSObject {
 
     let peripheral: CBPeripheral
     
-    var isConnected = false
+    open var isConnected: Bool {
+        return peripheral.state == .connected
+    }
+    
     open var name: String {
         return peripheral.name ?? ""
     }
@@ -61,12 +64,22 @@ open class Device: NSObject {
     }
     
     open func discoverServices(with uuids: [CBUUID]? = nil, complete: (([CBService], Error?) -> Void)?) {
+        guard isConnected == true else {
+            print("Not connected - cannot discoverServices")
+            return
+        }
+        
         serviceDiscoveryHandler = complete
         print("discoverServices: \(self.peripheral) \n \(self.peripheral.delegate)")
         self.peripheral.discoverServices(uuids)        
     }
 
     open func discoverCharacteristics(with uuids: [CBUUID]? = nil, for service: CBService, complete: ((Error?) -> Void)?) {
+        guard isConnected == true else {
+            print("Not connected - cannot discoverCharacteristics")
+            return
+        }
+        
         characteristicDiscoveryHandler = complete
         print("discoverCharacteristics")
         peripheral.discoverCharacteristics(uuids, for: service)
@@ -75,15 +88,13 @@ open class Device: NSObject {
 
 
 // TODO: Instead of creating internal functions, could register connection/disconnection handlers with the Manager?
-// MARK: - Connection Handlers
+// MARK: - Connection Handler Proxy
 extension Device {
     internal func didConnect() {
-        print("Calling didConnect")
         connectionHandler?(true)
     }
     
     internal func didDisconnect() {
-        print("Calling didDisconnect")
         connectionHandler?(false)
         if autoReconnect == true {
             connect(complete: connectionHandler)
@@ -129,12 +140,11 @@ extension Device  {
     }
     
     internal func didDiscoverServices(error: Error?) {
-        print("didDiscoverServices")
         discoveredServices.removeAll()
-        for service in peripheral.services ?? [] {
+        peripheral.services?.forEach({ service in
             print("Service Discovered: \(service.uuid.uuidString)")
             discoveredServices[service] = [CBCharacteristic]()
-        }
+        })
         serviceDiscoveryHandler?(Array(discoveredServices.keys), error)
         serviceDiscoveryHandler = nil
     }
@@ -144,12 +154,11 @@ extension Device  {
     }
     
     internal func didDiscoverCharacteristicsFor(service: CBService, error: Error?) {
-        print("didDiscoverCharacteristicsFor")
         discoveredServices[service]?.removeAll()
-        for characteristic in service.characteristics ?? [] {
+        service.characteristics?.forEach({ characteristic in
             print("Characteristic Discovered: \(characteristic.uuid.uuidString)")
             discoveredServices[service]?.append(characteristic)
-        }
+        })
         characteristicDiscoveryHandler?(error)
         characteristicDiscoveryHandler = nil
     }

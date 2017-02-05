@@ -37,11 +37,14 @@ extension DeviceListViewController: SwiftyTeethable {
 extension DeviceListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let cell = tableView.cellForRow(at: indexPath)
         let device = devices[indexPath.row]
-        print("Try to connect")
+        print("Initiate connection")
         device.connect { isConnected in
             print("isConnected? \(isConnected)")
+            guard isConnected == true else {
+                return
+            }
+            
             device.discoverServices(complete: { services, error in
                 for service in services {
                     device.discoverCharacteristics(for: service, complete: { error in
@@ -51,19 +54,6 @@ extension DeviceListViewController {
             })
         }
     }
-    
-//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        let cell = self.tableView.cellForRowAtIndexPath(indexPath)
-//        
-//        // Only perform segue if we have beacon previously in range
-//        let beaconModel = BeaconManager.shared.assignedBeacons[indexPath.row]
-//        guard BeaconManager.shared.beacons[beaconModel.macAddress] != nil else {
-//            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-//            return
-//        }
-//        
-//        performSegueWithIdentifier(popoverSegue, sender: cell)
-//    }
 }
 
 
