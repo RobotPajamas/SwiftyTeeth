@@ -10,7 +10,12 @@ import Foundation
 import CoreBluetooth
 
 open class Device: NSObject {
-
+    public typealias ConnectionHandler = ((Bool) -> Void)
+    public typealias ServiceDiscovery = (([CBService], Error?) -> Void)
+    public typealias CharacteristicDiscovery = (([CBCharacteristic], Error?) -> Void)
+    public typealias ReadHandler = ((Data?, Error?) -> Void)
+    public typealias WriteHandler = ((Error?) -> Void)
+    
     let peripheral: CBPeripheral
     
     open var isConnected: Bool {
@@ -33,11 +38,13 @@ open class Device: NSObject {
     open var discoveredServices = [CBService: [CBCharacteristic]]()
     
     fileprivate let manager: SwiftyTeeth
-    
-    // Callbacks
-    fileprivate var connectionHandler: ((Bool) -> Void)?
-    fileprivate var serviceDiscoveryHandler: (([CBService], Error?) -> Void)?        // TODO: Add CBService?
-    fileprivate var characteristicDiscoveryHandler: ((Error?) -> Void)? // TODO: Add CBCharacteristic?
+
+    fileprivate var connectionHandler: ConnectionHandler?
+    // Should these handlers be queues?
+    fileprivate var serviceDiscoveryHandler: ServiceDiscovery?
+    fileprivate var characteristicDiscoveryHandler: CharacteristicDiscovery?
+    fileprivate var readHandler: ReadHandler?
+    fileprivate var writeHandler: WriteHandler?
     
     // Connection parameters
     fileprivate var autoReconnect = false
@@ -47,10 +54,13 @@ open class Device: NSObject {
         self.peripheral = peripheral
         self.peripheral.delegate = manager
     }
-    
+}
+
+// MARK: - Connection operations
+extension Device {
     // Annoyingly, iOS has the connection functionality sitting on the central manager, instead of on the peripheral
     // TODO: Should the completion be optional?
-    open func connect(with timeout: TimeInterval? = nil, autoReconnect: Bool = true, complete: ((Bool) -> Void)?) {
+    open func connect(with timeout: TimeInterval? = nil, autoReconnect: Bool = true, complete: ConnectionHandler?) {
         self.connectionHandler = complete
         self.autoReconnect = autoReconnect
         self.manager.connect(to: self)
@@ -62,43 +72,70 @@ open class Device: NSObject {
         autoReconnect = false
         self.manager.disconnect(from: self)
     }
-    
-    open func discoverServices(with uuids: [CBUUID]? = nil, complete: (([CBService], Error?) -> Void)?) {
+}
+
+
+// MARK: - GATT operations
+extension Device {
+    open func discoverServices(with uuids: [CBUUID]? = nil, complete: ServiceDiscovery?) {
         guard isConnected == true else {
-            print("Not connected - cannot discoverServices")
+            print("Device: Not connected - cannot discoverServices")
             return
         }
         
         serviceDiscoveryHandler = complete
-        print("discoverServices: \(self.peripheral) \n \(self.peripheral.delegate)")
-        self.peripheral.discoverServices(uuids)        
+        print("Device: discoverServices: \(self.peripheral) \n \(self.peripheral.delegate)")
+        self.peripheral.discoverServices(uuids)
     }
-
-    open func discoverCharacteristics(with uuids: [CBUUID]? = nil, for service: CBService, complete: ((Error?) -> Void)?) {
+    
+    open func discoverCharacteristics(with uuids: [CBUUID]? = nil, for service: CBService, complete: CharacteristicDiscovery?) {
         guard isConnected == true else {
-            print("Not connected - cannot discoverCharacteristics")
+            print("Device: Not connected - cannot discoverCharacteristics")
             return
         }
         
         characteristicDiscoveryHandler = complete
-        print("discoverCharacteristics")
+        print("Device: discoverCharacteristics")
         peripheral.discoverCharacteristics(uuids, for: service)
     }
-}
-
-
-// TODO: Instead of creating internal functions, could register connection/disconnection handlers with the Manager?
-// MARK: - Connection Handler Proxy
-extension Device {
-    internal func didConnect() {
-        connectionHandler?(true)
+    
+    // TODO: Create convenience extensions for CBUUID and CBService and CBCharacteristic
+    open func read(from characteristic: String, in service: String, complete: ReadHandler?) {
+        // Iterate through Services/Characteristics to find desired
+        // TODO: Hashmaps are faster -
+        guard let targetService = peripheral.services?.first(where: {$0.uuid.uuidString.lowercased() == service.lowercased()}),
+            let targetCharacteristic = targetService.characteristics?.first(where: {$0.uuid.uuidString.lowercased() == characteristic.lowercased()}) else {
+                return
+        }
+        
+        guard isConnected == true else {
+            print("Device: Not connected - cannot read")
+            return
+        }
+        
+        readHandler = complete
+        peripheral.readValue(for: targetCharacteristic)
     }
     
-    internal func didDisconnect() {
-        connectionHandler?(false)
-        if autoReconnect == true {
-            connect(complete: connectionHandler)
+    // TODO: Create convenience extensions for CBUUID and CBService and CBCharacteristic
+    open func write(data: Data, to characteristic: String, in service: String, complete: WriteHandler?) {
+        // Iterate through Services/Characteristics to find desired target
+        guard let targetService = peripheral.services?.first(where: {$0.uuid.uuidString.lowercased() == service.lowercased()}),
+            let targetCharacteristic = targetService.characteristics?.first(where: {$0.uuid.uuidString.lowercased() == characteristic.lowercased()}) else {
+                return
         }
+        
+        guard isConnected == true else {
+            print("Device: Not connected - cannot write")
+            return
+        }
+        
+        writeHandler = complete
+        var writeType = CBCharacteristicWriteType.withResponse
+        if complete == nil {
+            writeType = .withoutResponse
+        }
+        peripheral.writeValue(data, for: targetCharacteristic, type: writeType)
     }
 }
 
@@ -119,71 +156,92 @@ extension Device {
 }
 
 
+// TODO: Instead of creating internal functions, could register connection/disconnection handlers with the Manager?
+// MARK: - Connection Handler Proxy
+internal extension Device {
+    
+    func didConnect() {
+        connectionHandler?(true)
+    }
+    
+    func didDisconnect() {
+        connectionHandler?(false)
+        if autoReconnect == true {
+            connect(complete: connectionHandler)
+        }
+    }
+}
+
+
 // TODO: If multiple peripherals are connected, should there be a peripheral validation done?
 // MARK: - CBPeripheralDelegate Proxy
-extension Device  {
+internal extension Device  {
     
-    internal func didUpdateName() {
+    func didUpdateName() {
         
     }
     
-    internal func didModifyServices(invalidatedServices: [CBService]) {
+    func didModifyServices(invalidatedServices: [CBService]) {
         
     }
     
-    internal func didUpdateRSSI(error: Error?) {
+    func didUpdateRSSI(error: Error?) {
         
     }
     
-    internal func didReadRSSI(RSSI: NSNumber, error: Error?) {
+    func didReadRSSI(RSSI: NSNumber, error: Error?) {
         
     }
     
-    internal func didDiscoverServices(error: Error?) {
+    func didDiscoverServices(error: Error?) {
         discoveredServices.removeAll()
         peripheral.services?.forEach({ service in
-            print("Service Discovered: \(service.uuid.uuidString)")
+            print("Device: Service Discovered: \(service.uuid.uuidString)")
             discoveredServices[service] = [CBCharacteristic]()
         })
         serviceDiscoveryHandler?(Array(discoveredServices.keys), error)
-        serviceDiscoveryHandler = nil
+//        serviceDiscoveryHandler = nil
     }
     
-    internal func didDiscoverIncludedServicesFor(service: CBService, error: Error?) {
+    func didDiscoverIncludedServicesFor(service: CBService, error: Error?) {
         
     }
     
-    internal func didDiscoverCharacteristicsFor(service: CBService, error: Error?) {
+    func didDiscoverCharacteristicsFor(service: CBService, error: Error?) {
         discoveredServices[service]?.removeAll()
+        var characteristics = [CBCharacteristic]()
         service.characteristics?.forEach({ characteristic in
-            print("Characteristic Discovered: \(characteristic.uuid.uuidString)")
-            discoveredServices[service]?.append(characteristic)
+            print("Device: Characteristic Discovered: \(characteristic.uuid.uuidString)")
+            characteristics.append(characteristic)
         })
-        characteristicDiscoveryHandler?(error)
-        characteristicDiscoveryHandler = nil
+        discoveredServices[service]? = characteristics
+        characteristicDiscoveryHandler?(characteristics, error)
+//        characteristicDiscoveryHandler = nil
     }
     
-    internal func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
+    func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
+        print("Device: didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(characteristic.value)")
+        readHandler?(characteristic.value, error)
+        readHandler = nil
+    }
+    
+    func didWriteValueFor(characteristic: CBCharacteristic, error: Error?) {
+        print("Device: didWriteValueFor: \(characteristic.uuid.uuidString)")
+    }
+    
+    func didUpdateNotificationStateFor(characteristic: CBCharacteristic, error: Error?) {
+        print("Device: didUpdateNotificationStateFor: \(characteristic.uuid.uuidString)")
+    }
+    
+    func didDiscoverDescriptorsFor(characteristic: CBCharacteristic, error: Error?) {
         
     }
     
-    internal func didWriteValueFor(characteristic: CBCharacteristic, error: Error?) {
+    func didUpdateValueFor(descriptor: CBDescriptor, error: Error?) {
         
     }
     
-    internal func didUpdateNotificationStateFor(characteristic: CBCharacteristic, error: Error?) {
-        
-    }
-    
-    internal func didDiscoverDescriptorsFor(characteristic: CBCharacteristic, error: Error?) {
-        
-    }
-    
-    internal func didUpdateValueFor(descriptor: CBDescriptor, error: Error?) {
-        
-    }
-    
-    internal func didWriteValueFor(descriptor: CBDescriptor, error: Error?) {
+    func didWriteValueFor(descriptor: CBDescriptor, error: Error?) {
         
     }
 }
