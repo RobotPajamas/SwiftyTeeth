@@ -121,13 +121,13 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         print(peripheral.name ?? "")
-        let device = Device(peripheral: peripheral)
+        let device = Device(manager: self.centralManager, peripheral: peripheral)
         scannedPeripherals.insert(device)
         scanChangesHandler?(device)
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        device = Device(peripheral: peripheral)
+        device = Device(manager: self.centralManager, peripheral: peripheral)
     }
     
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {

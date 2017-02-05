@@ -26,17 +26,39 @@ open class Device: NSObject {
 //        return peripheral.
 //    }
     
+    fileprivate let manager: CBCentralManager
+    
+    // Callbacks
+    fileprivate var connectionHandler: ((Bool) -> Void)?
     fileprivate var serviceDiscoveryHandler: ((Error?) -> Void)?
     fileprivate var characteristicDiscoveryHandler: ((Error?) -> Void)?
     
-    init(peripheral: CBPeripheral) {
+    // Connection parameters
+    fileprivate var autoReconnect = false
+    
+    init(manager: CBCentralManager, peripheral: CBPeripheral) {
+        self.manager = manager
         self.peripheral = peripheral
+        super.init()
+        
+        self.peripheral.delegate = self
     }
     
     // Annoyingly, iOS has the connection functionality sitting on the central manager, instead of on the peripheral
-//    open func connect(with timeout: TimeInterval, complete: ) {
-//        
-//    }
+    // TODO: Should the completion be optional?
+    open func connect(with timeout: TimeInterval? = nil, autoReconnect: Bool = true, complete: ((Bool) -> Void)?) {
+        if complete != nil {
+            self.connectionHandler = complete
+        }
+        self.autoReconnect = autoReconnect
+        self.manager.connect(peripheral, options: nil)
+    }
+    
+    open func disconnect() {
+        // Disable auto reconnection when calling the disconnect API
+        autoReconnect = false
+        manager.cancelPeripheralConnection(peripheral)
+    }
     
     open func discoverServices(with uuids: [CBUUID]? = nil, complete: @escaping (Error?) -> Void) {
         serviceDiscoveryHandler = complete
@@ -47,6 +69,7 @@ open class Device: NSObject {
         characteristicDiscoveryHandler = complete
         peripheral.discoverCharacteristics(uuids, for: service)
     }
+
 }
 
 
