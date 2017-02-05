@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -40,6 +41,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="b0Y-dl-iTq" kind="show" identifier="goToDevice" id="rGF-Uf-rs5"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -55,6 +59,41 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gfm-w0-3b1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-106" y="204"/>
+        </scene>
+        <!--Device View Controller-->
+        <scene sceneID="zzq-8D-2iW">
+            <objects>
+                <viewController id="b0Y-dl-iTq" customClass="DeviceViewController" customModule="SwiftyTeeth_Sample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XZt-fx-MMv"/>
+                        <viewControllerLayoutGuide type="bottom" id="2Hv-EX-MNl"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HxR-xO-DWK">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZWI-ZS-YUy">
+                                <rect key="frame" x="16" y="86" width="343" height="561"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ZWI-ZS-YUy" firstAttribute="leading" secondItem="HxR-xO-DWK" secondAttribute="leadingMargin" id="0pI-OQ-FzR"/>
+                            <constraint firstAttribute="bottom" secondItem="ZWI-ZS-YUy" secondAttribute="bottom" constant="20" symbolic="YES" id="1pr-fM-YA8"/>
+                            <constraint firstItem="ZWI-ZS-YUy" firstAttribute="top" secondItem="XZt-fx-MMv" secondAttribute="bottom" constant="22" id="KvI-f2-kAD"/>
+                            <constraint firstItem="ZWI-ZS-YUy" firstAttribute="trailing" secondItem="HxR-xO-DWK" secondAttribute="trailingMargin" id="o9I-5Y-xsD"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="textView" destination="ZWI-ZS-YUy" id="Cxm-IE-9IU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uwp-Ow-2o5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="733.60000000000002" y="199.25037481259372"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="H7f-gx-gpY">

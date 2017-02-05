@@ -12,6 +12,7 @@ import SwiftyTeeth
 class DeviceListViewController: UITableViewController {
     
     fileprivate var devices = [Device]()
+    static let segue = "goToDevice"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,27 +34,20 @@ extension DeviceListViewController: SwiftyTeethable {
 }
 
 
-// MARK: - UITableViewDelegate
+// MARK: - Segues
 extension DeviceListViewController {
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let device = devices[indexPath.row]
-        print("Initiate connection")
-        device.connect { isConnected in
-            print("isConnected? \(isConnected)")
-            guard isConnected == true else {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == DeviceListViewController.segue,
+            let destination = segue.destination as? DeviceViewController,
+            let cell = sender as? UITableViewCell,
+            let indexPath = self.tableView.indexPath(for: cell) else {
                 return
-            }
-            
-            device.discoverServices(complete: { services, error in
-                for service in services {
-                    device.discoverCharacteristics(for: service, complete: { error in
-                        
-                    })
-                }
-            })
         }
-    }
+        
+        let device = devices[indexPath.row]
+        destination.device = device
+    }    
 }
 
 
