@@ -81,10 +81,10 @@ extension SwiftyTeeth {
 
 
 // MARK: - Internal Connection functions
-extension SwiftyTeeth {
+internal extension SwiftyTeeth {
     
     // Using these internal functions, so that we can track devices 'in use'
-    internal func connect(to device: Device) {
+    func connect(to device: Device) {
         // Add device to dictionary only if it isn't there
         if connectedDevices[device.id] == nil {
             connectedDevices[device.id] = device
@@ -93,7 +93,7 @@ extension SwiftyTeeth {
     }
     
     // Using these internal functions, so that we can track devices 'in use'
-    internal func disconnect(from device: Device) {
+    func disconnect(from device: Device) {
         // Add device to dictionary only if it isn't there
         if connectedDevices[device.id] == nil {
             connectedDevices[device.id] = device
@@ -103,35 +103,23 @@ extension SwiftyTeeth {
 }
 
 
-// MARK: - Peripheral functions
-extension SwiftyTeeth {
-
-    open func readValue(for characteristic: UUID, complete: (CBCharacteristic) -> Void) {
-        //TODO
-    }
-
-    open func write(data: NSData, for characteristic: UUID, complete: (CBCharacteristic) -> Void) {
-        //TODO
-    }
-}
-
 // MARK: - Central manager
 extension SwiftyTeeth: CBCentralManagerDelegate {
 
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch (central.state) {
         case .unknown:
-            print("Bluetooth state is unknown.")
+            print("SwiftyTeeth: Bluetooth state is unknown.")
         case .resetting:
-            print("Bluetooth state is resetting.")
+            print("SwiftyTeeth: Bluetooth state is resetting.")
         case .unsupported:
-            print("Bluetooth state is unsupported.")
+            print("SwiftyTeeth: Bluetooth state is unsupported.")
         case .unauthorized:
-            print("Bluetooth state is unauthorized.")
+            print("SwiftyTeeth: Bluetooth state is unauthorized.")
         case .poweredOff:
-            print("Bluetooth state is powered off.")
+            print("SwiftyTeeth: Bluetooth state is powered off.")
         case .poweredOn:
-            print("Bluetooth state is powered on")
+            print("SwiftyTeeth: Bluetooth state is powered on")
         }
     }
     
@@ -146,17 +134,17 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("centralManager: didConnect")
+        print("SwiftyTeeth: centralManager: didConnect")
         connectedDevices[peripheral.identifier.uuidString]?.didConnect()
     }
     
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        print("centralManager: didFailToConnect")
+        print("SwiftyTeeth: centralManager: didFailToConnect")
         connectedDevices[peripheral.identifier.uuidString]?.didDisconnect()
     }
     
     public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("centralManager: didDisconnect")
+        print("SwiftyTeeth: centralManager: didDisconnect")
         connectedDevices[peripheral.identifier.uuidString]?.didDisconnect()
     }
     
