@@ -12,7 +12,7 @@ import CoreBluetooth
 open class SwiftyTeeth: NSObject {
 
     static let shared = SwiftyTeeth()
-
+    
     fileprivate var scanChangesHandler: ((Device) -> Void)?
     fileprivate var scanCompleteHandler: (([Device]) -> Void)?
 
@@ -25,6 +25,12 @@ open class SwiftyTeeth: NSObject {
         return instance
     }()
 
+    // TODO: Hold a private set, and expose a list?
+    open var scannedDevices = Set<Device>()
+    
+    // TODO: Should be a list? Can connect to > 1 device
+    fileprivate var connectedDevices = [String:Device]()
+
     
     // TODO: Need iOS 9 support
 //    open var state: CBManagerState {
@@ -34,22 +40,16 @@ open class SwiftyTeeth: NSObject {
     open var isScanning: Bool {
         return centralManager.isScanning
     }
-
-    // TODO: Hold a private set, and expose a list?
-    open var scannedPeripherals = Set<Device>()
-    
-    // TODO: Should be a list? Can connect to > 1 device
-    open var device: Device?
     
     public override init() {
     }
 }
 
-// MARK: - Manager functions
+// MARK: - Manager Scan functions
 extension SwiftyTeeth {
 
     open func scan() {
-        scannedPeripherals.removeAll()
+        scannedDevices.removeAll()
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
     }
     
@@ -71,21 +71,37 @@ extension SwiftyTeeth {
     open func stopScan() {
         // TODO: Cancel asyncAfter if in progress?
         centralManager.stopScan()
-        scanCompleteHandler?(Array(scannedPeripherals))
+        scanCompleteHandler?(Array(scannedDevices))
         
         // Reset Handlers
         scanChangesHandler = nil
         scanCompleteHandler = nil
     }
+}
 
-    open func connect(to peripheral: CBPeripheral, complete: (Device?) -> Void) {
-        complete(nil) //TODO
+
+// MARK: - Internal Connection functions
+extension SwiftyTeeth {
+    
+    // Using these internal functions, so that we can track devices 'in use'
+    internal func connect(to device: Device) {
+        // Add device to dictionary only if it isn't there
+        if connectedDevices[device.id] == nil {
+            connectedDevices[device.id] = device
+        }
+        centralManager.connect(device.peripheral, options: nil)
     }
-
-    open func disconnect(from peripheral: CBPeripheral, complete: () -> Void) {
-        complete() //TODO
+    
+    // Using these internal functions, so that we can track devices 'in use'
+    internal func disconnect(from device: Device) {
+        // Add device to dictionary only if it isn't there
+        if connectedDevices[device.id] == nil {
+            connectedDevices[device.id] = device
+        }
+        centralManager.cancelPeripheralConnection(device.peripheral)
     }
 }
+
 
 // MARK: - Peripheral functions
 extension SwiftyTeeth {
@@ -120,25 +136,90 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     }
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        print(peripheral.name ?? "")
-        let device = Device(peripheral: peripheral)
-        scannedPeripherals.insert(device)
+        guard peripheral.name != nil else {
+            return
+        }
+        
+        let device = Device(manager: self, peripheral: peripheral)
+        scannedDevices.insert(device)
         scanChangesHandler?(device)
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        device = Device(peripheral: peripheral)
+        print("centralManager: didConnect")
+        connectedDevices[peripheral.identifier.uuidString]?.didConnect()
     }
     
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-    
+        print("centralManager: didFailToConnect")
+        connectedDevices[peripheral.identifier.uuidString]?.didDisconnect()
     }
     
     public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-    
+        print("centralManager: didDisconnect")
+        connectedDevices[peripheral.identifier.uuidString]?.didDisconnect()
     }
     
     public func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
     
     }
 }
+
+// TODO: If multiple peripherals are connected, should there be a peripheral validation done?
+// MARK: - CBPeripheralDelegate
+extension SwiftyTeeth: CBPeripheralDelegate {
+    
+    public func peripheralDidUpdateName(_ peripheral: CBPeripheral) {
+        connectedDevices[peripheral.identifier.uuidString]?.didUpdateName()
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+        connectedDevices[peripheral.identifier.uuidString]?.didModifyServices(invalidatedServices: invalidatedServices)
+    }
+    
+    public func peripheralDidUpdateRSSI(_ peripheral: CBPeripheral, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didUpdateRSSI(error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didReadRSSI(RSSI: RSSI, error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didDiscoverServices(error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverIncludedServicesFor service: CBService, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didDiscoverIncludedServicesFor(service: service, error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didDiscoverCharacteristicsFor(service: service, error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didUpdateValueFor(characteristic: characteristic, error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didWriteValueFor(characteristic: characteristic, error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didUpdateNotificationStateFor(characteristic: characteristic, error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didDiscoverDescriptorsFor(characteristic: characteristic, error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didUpdateValueFor(descriptor: descriptor, error: error)
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?) {
+        connectedDevices[peripheral.identifier.uuidString]?.didWriteValueFor(descriptor: descriptor, error: error)
+    }
+}
+
+

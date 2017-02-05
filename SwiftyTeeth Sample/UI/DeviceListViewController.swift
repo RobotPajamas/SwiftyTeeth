@@ -33,6 +33,30 @@ extension DeviceListViewController: SwiftyTeethable {
 }
 
 
+// MARK: - UITableViewDelegate
+extension DeviceListViewController {
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let device = devices[indexPath.row]
+        print("Initiate connection")
+        device.connect { isConnected in
+            print("isConnected? \(isConnected)")
+            guard isConnected == true else {
+                return
+            }
+            
+            device.discoverServices(complete: { services, error in
+                for service in services {
+                    device.discoverCharacteristics(for: service, complete: { error in
+                        
+                    })
+                }
+            })
+        }
+    }
+}
+
+
 // MARK: - UITableViewDataSource
 extension DeviceListViewController {
     
