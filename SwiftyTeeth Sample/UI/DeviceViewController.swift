@@ -19,13 +19,11 @@ class DeviceViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let readButton = UIBarButtonItem(title: "Read", style: .plain, target: self, action: #selector(read))
-        self.navigationItem.rightBarButtonItem = readButton
-        
-        let writeButton = UIBarButtonItem(title: "Write", style: .plain, target: self, action: #selector(write))
-        self.navigationItem.rightBarButtonItem = writeButton
-        
         let subscribeButton = UIBarButtonItem(title: "Subscribe", style: .plain, target: self, action: #selector(subscribe))
-        self.navigationItem.rightBarButtonItem = subscribeButton
+        self.navigationItem.rightBarButtonItems = [readButton, subscribeButton]
+        
+//        let writeButton = UIBarButtonItem(title: "Write", style: .plain, target: self, action: #selector(write))
+//        self.navigationItem.rightBarButtonItem = writeButton
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,12 +82,13 @@ extension DeviceViewController {
         })
     }
     
-    func write() {
-        
-    }
+//    func write() {
+//    }
     
     func subscribe() {
-        
+        device?.subscribe(to: "2a37", in: "180d", complete: { data, error in
+            self.printUi(data?.base64EncodedString())
+        })
     }
 }
 

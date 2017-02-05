@@ -9,6 +9,10 @@
 import Foundation
 import CoreBluetooth
 
+// Note: The design of this class will (eventually, and if reasonable) attempt to keep APIs unaware of CoreBluetooth
+// while at the same time making use of them internally as a convenience
+// NotificationHandler is an example of this, as it could be a dictionary using a String key - but that just adds extra indirection internally,
+// where all CBCharacterisics need to be dereferenced by uuid then uuidString. Internally, this adds no value - and adds risk.
 open class Device: NSObject {
     public typealias ConnectionHandler = ((Bool) -> Void)
     public typealias ServiceDiscovery = (([CBService], Error?) -> Void)
@@ -30,6 +34,11 @@ open class Device: NSObject {
         return peripheral.identifier.uuidString
     }
     
+    //    open var connectionState: StateEnumOfSomeSort {
+    //        return peripheral.state
+    //    }
+    
+    
 //    open var rssi: Int {
 //        return peripheral.
 //    }
@@ -45,6 +54,8 @@ open class Device: NSObject {
     fileprivate var characteristicDiscoveryHandler: CharacteristicDiscovery?
     fileprivate var readHandler: ReadHandler?
     fileprivate var writeHandler: WriteHandler?
+    
+    fileprivate var notificationHandler = [CBCharacteristic: ReadHandler]()
     
     // Connection parameters
     fileprivate var autoReconnect = false
@@ -77,6 +88,7 @@ extension Device {
 
 // MARK: - GATT operations
 extension Device {
+    // TODO: Make CBUUID into strings
     open func discoverServices(with uuids: [CBUUID]? = nil, complete: ServiceDiscovery?) {
         guard isConnected == true else {
             print("Device: Not connected - cannot discoverServices")
@@ -88,6 +100,8 @@ extension Device {
         self.peripheral.discoverServices(uuids)
     }
     
+    // TODO: Make CBUUID into strings
+    // TODO: Make service a UUID?
     open func discoverCharacteristics(with uuids: [CBUUID]? = nil, for service: CBService, complete: CharacteristicDiscovery?) {
         guard isConnected == true else {
             print("Device: Not connected - cannot discoverCharacteristics")
@@ -136,6 +150,52 @@ extension Device {
             writeType = .withoutResponse
         }
         peripheral.writeValue(data, for: targetCharacteristic, type: writeType)
+    }
+    
+    // TODO: Adding some pre-conditions libraries/toolkits could streamline the initial clutter
+    open func subscribe(to characteristic: String, in service: String, complete: ReadHandler?) {
+        // Iterate through Services/Characteristics to find desired target
+        guard let targetService = peripheral.services?.first(where: {$0.uuid.uuidString.lowercased() == service.lowercased()}),
+            let targetCharacteristic = targetService.characteristics?.first(where: {$0.uuid.uuidString.lowercased() == characteristic.lowercased()}) else {
+                return
+        }
+        
+        guard isConnected == true else {
+            print("Device: Not connected - cannot write")
+            return
+        }
+        
+        guard targetCharacteristic.isNotifying == false else {
+            return
+        }
+        
+        // TODO: Can using just the characteristic UUID cause a conflict if there is an identical characteristic in another service? Can't recall if legal
+        notificationHandler[targetCharacteristic] = complete
+        peripheral.setNotifyValue(true, for: targetCharacteristic)
+    }
+    
+    // TODO: Faster probably to just iterate through the notification handler instead of current method
+    open func unsubscribe(from characteristic: String, in service: String) {
+        guard let targetService = peripheral.services?.first(where: {$0.uuid.uuidString.lowercased() == service.lowercased()}),
+            let targetCharacteristic = targetService.characteristics?.first(where: {$0.uuid.uuidString.lowercased() == characteristic.lowercased()}) else {
+                return
+        }
+
+        guard isConnected == true else {
+            print("Device: Not connected - cannot write")
+            return
+        }
+        
+        guard targetCharacteristic.isNotifying == true else {
+            return
+        }
+        
+        notificationHandler.removeValue(forKey: targetCharacteristic)
+        peripheral.setNotifyValue(false, for: targetCharacteristic)
+    }
+    
+    open func unsubscribeAll() {
+        // TODO
     }
 }
 
@@ -223,14 +283,17 @@ internal extension Device  {
         print("Device: didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(characteristic.value)")
         readHandler?(characteristic.value, error)
         readHandler = nil
+        notificationHandler[characteristic]?(characteristic.value, error)
     }
     
     func didWriteValueFor(characteristic: CBCharacteristic, error: Error?) {
         print("Device: didWriteValueFor: \(characteristic.uuid.uuidString)")
     }
     
+    // This is equivalent to a direct READ from the characteristic
     func didUpdateNotificationStateFor(characteristic: CBCharacteristic, error: Error?) {
         print("Device: didUpdateNotificationStateFor: \(characteristic.uuid.uuidString)")
+        notificationHandler[characteristic]?(characteristic.value, error)
     }
     
     func didDiscoverDescriptorsFor(characteristic: CBCharacteristic, error: Error?) {
