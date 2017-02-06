@@ -50,22 +50,7 @@ extension DeviceViewController {
     // Connect and iterate through services/characteristics
     func connect() {
         device?.connect(complete: { isConnected in
-            self.printUi("Device is connected? \(isConnected)")
-            if isConnected == true {
-                self.printUi("Starting service discovery...")
-                self.device?.discoverServices(complete: { services, error in
-                    for service in services {
-                        self.printUi("Discovering characteristics for service: \(service.uuid.uuidString)")
-                        self.device?.discoverCharacteristics(for: service, complete: { characteristics, error in
-                            for characteristic in characteristics {
-                                self.printUi("Discovered characteristic: \(characteristic.uuid.uuidString)")
-                            }
-                        })
-                    }
-                })
-            } else {
-                // Device is disconnected
-            }
+            self.printUi("App: Device is connected? \(isConnected)")
         })
     }
     
@@ -76,7 +61,7 @@ extension DeviceViewController {
     func read() {
         // Using a Heart-Rate device for testing - this is the HR service and characteristic
         device?.read(from: "2a37", in: "180d", complete: { data, error in
-            self.printUi(data?.base64EncodedString())
+            self.printUi("Read value: \(data?.base64EncodedString())")
         })
     }
     
@@ -89,7 +74,7 @@ extension DeviceViewController {
     
     func subscribe() {
         device?.subscribe(to: "2a37", in: "180d", complete: { data, error in
-            self.printUi(data?.base64EncodedString())
+            self.printUi("Subscribed value: \(data?.base64EncodedString())")
         })
     }
 }

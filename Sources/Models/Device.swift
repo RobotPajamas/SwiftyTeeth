@@ -16,7 +16,7 @@ import CoreBluetooth
 open class Device: NSObject {
     public typealias ConnectionHandler = ((Bool) -> Void)
     public typealias ServiceDiscovery = (([CBService], Error?) -> Void)
-    public typealias CharacteristicDiscovery = (([CBCharacteristic], Error?) -> Void)
+    public typealias CharacteristicDiscovery = ((CBService, [CBCharacteristic], Error?) -> Void)
     public typealias ReadHandler = ((Data?, Error?) -> Void)
     public typealias WriteHandler = ((Error?) -> Void)
     
@@ -113,7 +113,6 @@ extension Device {
         peripheral.discoverCharacteristics(uuids, for: service)
     }
     
-    // TODO: Create convenience extensions for CBUUID and CBService and CBCharacteristic
     open func read(from characteristic: String, in service: String, complete: ReadHandler?) {
         guard let targetService = peripheral.services?.find(uuidString: service),
             let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
@@ -129,7 +128,6 @@ extension Device {
         peripheral.readValue(for: targetCharacteristic)
     }
     
-    // TODO: Create convenience extensions for CBUUID and CBService and CBCharacteristic
     open func write(data: Data, to characteristic: String, in service: String, complete: WriteHandler? = nil) {
         guard let targetService = peripheral.services?.find(uuidString: service),
             let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
@@ -216,8 +214,24 @@ extension Device {
 // MARK: - Connection Handler Proxy
 internal extension Device {
     
+    // TODO: Add error handling and/or a timeout mechanism
     func didConnect() {
-        connectionHandler?(true)
+        print("Device: Starting service discovery...")
+        self.discoverServices(complete: { services, error in
+            services.forEach({
+                print("Device: Discovering characteristics for service: \($0.uuid.uuidString)")
+                self.discoverCharacteristics(for: $0, complete: { service, characteristics, error in
+                    characteristics.forEach({
+                        print("Device: Discovered characteristic: \($0.uuid.uuidString) in \(service.uuid.uuidString)")
+                    })
+                        
+                    if service == services.last {
+                        self.connectionHandler?(self.isConnected)
+                    }
+                })
+            })
+        })
+        
     }
     
     func didDisconnect() {
@@ -251,28 +265,29 @@ internal extension Device  {
     
     func didDiscoverServices(error: Error?) {
         discoveredServices.removeAll()
+        
         peripheral.services?.forEach({ service in
             print("Device: Service Discovered: \(service.uuid.uuidString)")
             discoveredServices[service] = [CBCharacteristic]()
         })
+        
         serviceDiscoveryHandler?(Array(discoveredServices.keys), error)
-//        serviceDiscoveryHandler = nil
     }
     
     func didDiscoverIncludedServicesFor(service: CBService, error: Error?) {
-        
     }
     
     func didDiscoverCharacteristicsFor(service: CBService, error: Error?) {
         discoveredServices[service]?.removeAll()
+        
         var characteristics = [CBCharacteristic]()
         service.characteristics?.forEach({ characteristic in
             print("Device: Characteristic Discovered: \(characteristic.uuid.uuidString)")
             characteristics.append(characteristic)
         })
+        
         discoveredServices[service]? = characteristics
-        characteristicDiscoveryHandler?(characteristics, error)
-//        characteristicDiscoveryHandler = nil
+        characteristicDiscoveryHandler?(service, characteristics, error)
     }
     
     func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
