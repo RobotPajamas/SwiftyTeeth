@@ -50,6 +50,10 @@ extension DeviceViewController {
     // Connect and iterate through services/characteristics
     func connect() {
         device?.connect(complete: { isConnected in
+            guard isConnected == true else {
+                return
+            }
+                
             self.printUi("App: Device is connected? \(isConnected)")
             print("App: Starting service discovery...")
             self.device?.discoverServices(complete: { services, error in
