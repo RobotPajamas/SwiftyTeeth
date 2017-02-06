@@ -132,7 +132,7 @@ extension Device {
     }
     
     // TODO: Create convenience extensions for CBUUID and CBService and CBCharacteristic
-    open func write(data: Data, to characteristic: String, in service: String, complete: WriteHandler?) {
+    open func write(data: Data, to characteristic: String, in service: String, complete: WriteHandler? = nil) {
         // Iterate through Services/Characteristics to find desired target
         guard let targetService = peripheral.services?.first(where: {$0.uuid.uuidString.lowercased() == service.lowercased()}),
             let targetCharacteristic = targetService.characteristics?.first(where: {$0.uuid.uuidString.lowercased() == characteristic.lowercased()}) else {
@@ -288,6 +288,8 @@ internal extension Device  {
     
     func didWriteValueFor(characteristic: CBCharacteristic, error: Error?) {
         print("Device: didWriteValueFor: \(characteristic.uuid.uuidString)")
+        writeHandler?(error)
+        writeHandler = nil
     }
     
     // This is equivalent to a direct READ from the characteristic

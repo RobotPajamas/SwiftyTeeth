@@ -20,10 +20,8 @@ class DeviceViewController: UIViewController {
         super.viewDidLoad()
         let readButton = UIBarButtonItem(title: "Read", style: .plain, target: self, action: #selector(read))
         let subscribeButton = UIBarButtonItem(title: "Subscribe", style: .plain, target: self, action: #selector(subscribe))
-        self.navigationItem.rightBarButtonItems = [readButton, subscribeButton]
-        
-//        let writeButton = UIBarButtonItem(title: "Write", style: .plain, target: self, action: #selector(write))
-//        self.navigationItem.rightBarButtonItem = writeButton
+        let writeButton = UIBarButtonItem(title: "Write", style: .plain, target: self, action: #selector(write))
+        self.navigationItem.rightBarButtonItems = [readButton, subscribeButton, writeButton]
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,8 +80,12 @@ extension DeviceViewController {
         })
     }
     
-//    func write() {
-//    }
+    func write() {
+        let command = Data(bytes: [0x01])
+        device?.write(data: command, to: "abcdef", in: "hijkll", complete: { error in
+            self.printUi("Write with response successful? \(error == nil)")
+        })
+    }
     
     func subscribe() {
         device?.subscribe(to: "2a37", in: "180d", complete: { data, error in
