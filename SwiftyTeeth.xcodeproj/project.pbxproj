@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		195A590F1E47CECC002B076A /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195A590E1E47CECC002B076A /* DeviceViewController.swift */; };
+		195A59141E4834F0002B076A /* CBCharacterisic+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195A59121E482C4F002B076A /* CBCharacterisic+String.swift */; };
+		195A59151E4834F5002B076A /* CBService+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195A59101E482BF4002B076A /* CBService+String.swift */; };
 		8B64D18F1DC2E16300D41A2C /* SwiftyTeeth.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8B64D1AF1DC2E86200D41A2C /* SwiftyTeeth_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1AE1DC2E86200D41A2C /* SwiftyTeeth_Tests.swift */; };
 		8B64D1B11DC2E86200D41A2C /* SwiftyTeeth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */; };
@@ -57,6 +59,8 @@
 
 /* Begin PBXFileReference section */
 		195A590E1E47CECC002B076A /* DeviceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
+		195A59101E482BF4002B076A /* CBService+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CBService+String.swift"; sourceTree = "<group>"; };
+		195A59121E482C4F002B076A /* CBCharacterisic+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CBCharacterisic+String.swift"; sourceTree = "<group>"; };
 		8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyTeeth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftyTeeth.h; sourceTree = "<group>"; };
 		8B64D1A11DC2E42000D41A2C /* Info-iOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
@@ -168,6 +172,8 @@
 			isa = PBXGroup;
 			children = (
 				8B64D1DE1DC2F92600D41A2C /* CBPeripheral.swift */,
+				195A59101E482BF4002B076A /* CBService+String.swift */,
+				195A59121E482C4F002B076A /* CBCharacterisic+String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -434,6 +440,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				195A59141E4834F0002B076A /* CBCharacterisic+String.swift in Sources */,
+				195A59151E4834F5002B076A /* CBService+String.swift in Sources */,
 				8B64D1E31DC2FCEB00D41A2C /* SwiftyTeethable.swift in Sources */,
 				8B64D1D01DC2E8FE00D41A2C /* SwiftyTeeth.swift in Sources */,
 				8B64D1DD1DC2F5D000D41A2C /* Device.swift in Sources */,

@@ -115,10 +115,8 @@ extension Device {
     
     // TODO: Create convenience extensions for CBUUID and CBService and CBCharacteristic
     open func read(from characteristic: String, in service: String, complete: ReadHandler?) {
-        // Iterate through Services/Characteristics to find desired
-        // TODO: Hashmaps are faster -
-        guard let targetService = peripheral.services?.first(where: {$0.uuid.uuidString.lowercased() == service.lowercased()}),
-            let targetCharacteristic = targetService.characteristics?.first(where: {$0.uuid.uuidString.lowercased() == characteristic.lowercased()}) else {
+        guard let targetService = peripheral.services?.find(uuidString: service),
+            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
                 return
         }
         
@@ -133,9 +131,8 @@ extension Device {
     
     // TODO: Create convenience extensions for CBUUID and CBService and CBCharacteristic
     open func write(data: Data, to characteristic: String, in service: String, complete: WriteHandler? = nil) {
-        // Iterate through Services/Characteristics to find desired target
-        guard let targetService = peripheral.services?.first(where: {$0.uuid.uuidString.lowercased() == service.lowercased()}),
-            let targetCharacteristic = targetService.characteristics?.first(where: {$0.uuid.uuidString.lowercased() == characteristic.lowercased()}) else {
+        guard let targetService = peripheral.services?.find(uuidString: service),
+            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
                 return
         }
         
@@ -154,9 +151,8 @@ extension Device {
     
     // TODO: Adding some pre-conditions libraries/toolkits could streamline the initial clutter
     open func subscribe(to characteristic: String, in service: String, complete: ReadHandler?) {
-        // Iterate through Services/Characteristics to find desired target
-        guard let targetService = peripheral.services?.first(where: {$0.uuid.uuidString.lowercased() == service.lowercased()}),
-            let targetCharacteristic = targetService.characteristics?.first(where: {$0.uuid.uuidString.lowercased() == characteristic.lowercased()}) else {
+        guard let targetService = peripheral.services?.find(uuidString: service),
+            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
                 return
         }
         
@@ -176,8 +172,8 @@ extension Device {
     
     // TODO: Faster probably to just iterate through the notification handler instead of current method
     open func unsubscribe(from characteristic: String, in service: String) {
-        guard let targetService = peripheral.services?.first(where: {$0.uuid.uuidString.lowercased() == service.lowercased()}),
-            let targetCharacteristic = targetService.characteristics?.first(where: {$0.uuid.uuidString.lowercased() == characteristic.lowercased()}) else {
+        guard let targetService = peripheral.services?.find(uuidString: service),
+            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
                 return
         }
 
