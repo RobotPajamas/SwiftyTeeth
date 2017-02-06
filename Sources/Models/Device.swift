@@ -216,22 +216,7 @@ internal extension Device {
     
     // TODO: Add error handling and/or a timeout mechanism
     func didConnect() {
-        print("Device: Starting service discovery...")
-        self.discoverServices(complete: { services, error in
-            services.forEach({
-                print("Device: Discovering characteristics for service: \($0.uuid.uuidString)")
-                self.discoverCharacteristics(for: $0, complete: { service, characteristics, error in
-                    characteristics.forEach({
-                        print("Device: Discovered characteristic: \($0.uuid.uuidString) in \(service.uuid.uuidString)")
-                    })
-                        
-                    if service == services.last {
-                        self.connectionHandler?(self.isConnected)
-                    }
-                })
-            })
-        })
-        
+        connectionHandler?(true)
     }
     
     func didDisconnect() {

@@ -51,6 +51,22 @@ extension DeviceViewController {
     func connect() {
         device?.connect(complete: { isConnected in
             self.printUi("App: Device is connected? \(isConnected)")
+            print("App: Starting service discovery...")
+            self.device?.discoverServices(complete: { services, error in
+                services.forEach({
+                    self.printUi("App: Discovering characteristics for service: \($0.uuid.uuidString)")
+                    self.device?.discoverCharacteristics(for: $0, complete: { service, characteristics, error in
+                        characteristics.forEach({
+                            self.printUi("App: Discovered characteristic: \($0.uuid.uuidString) in \(service.uuid.uuidString)")
+                        })
+                        
+                        if service == services.last {
+                            self.printUi("App: All services/characteristics discovered")
+                        }
+                    })
+                })
+            })
+
         })
     }
     
