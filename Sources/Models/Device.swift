@@ -214,7 +214,6 @@ extension Device {
 // MARK: - Connection Handler Proxy
 internal extension Device {
     
-    // TODO: Add error handling and/or a timeout mechanism
     func didConnect() {
         connectionHandler?(true)
     }
