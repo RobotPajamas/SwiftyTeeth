@@ -11,7 +11,7 @@ import CoreBluetooth
 
 open class SwiftyTeeth: NSObject {
 
-    static let shared = SwiftyTeeth()
+    public static let shared = SwiftyTeeth()
     
     fileprivate var scanChangesHandler: ((Device) -> Void)?
     fileprivate var scanCompleteHandler: (([Device]) -> Void)?
