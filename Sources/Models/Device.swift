@@ -65,6 +65,10 @@ open class Device: NSObject {
         self.peripheral = peripheral
         self.peripheral.delegate = manager
     }
+    
+    convenience init(copy: Device) {
+        self.init(manager: copy.manager, peripheral: copy.peripheral)
+    }
 }
 
 // MARK: - Connection operations
@@ -78,9 +82,9 @@ extension Device {
         // TODO: Add timeout functionality
     }
     
-    open func disconnect() {
+    open func disconnect(autoReconnect: Bool = false) {
         // Disable auto reconnection when calling the disconnect API
-        autoReconnect = false
+        self.autoReconnect = autoReconnect
         self.manager.disconnect(from: self)
     }
 }

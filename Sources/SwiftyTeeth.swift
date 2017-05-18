@@ -16,7 +16,7 @@ open class SwiftyTeeth: NSObject {
     fileprivate var scanChangesHandler: ((Device) -> Void)?
     fileprivate var scanCompleteHandler: (([Device]) -> Void)?
 
-    fileprivate lazy var centralManager: CBCentralManager = {
+    open lazy var centralManager: CBCentralManager = {
         let instance = CBCentralManager(
             delegate: self,
             queue: DispatchQueue(label: "com.robotpajamas.SwiftyTeeth"))
