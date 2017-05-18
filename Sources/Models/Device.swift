@@ -60,13 +60,13 @@ open class Device: NSObject {
     // Connection parameters
     fileprivate var autoReconnect = false
     
-    init(manager: SwiftyTeeth, peripheral: CBPeripheral) {
+    public init(manager: SwiftyTeeth, peripheral: CBPeripheral) {
         self.manager = manager
         self.peripheral = peripheral
         self.peripheral.delegate = manager
     }
     
-    convenience init(copy: Device) {
+    public convenience init(copy: Device) {
         self.init(manager: copy.manager, peripheral: copy.peripheral)
     }
 }
