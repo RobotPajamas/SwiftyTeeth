@@ -9,6 +9,8 @@
 import Foundation
 import CoreBluetooth
 
+var swiftyTeethLogger: Logger?
+
 open class SwiftyTeeth: NSObject {
 
     public static let shared = SwiftyTeeth()
@@ -45,20 +47,31 @@ open class SwiftyTeeth: NSObject {
     }
 }
 
-// MARK: - Manager Scan functions
-extension SwiftyTeeth {
+public extension SwiftyTeeth {
+    class var logger: Logger? {
+        get {
+            return swiftyTeethLogger
+        }
+        set {
+            swiftyTeethLogger = newValue
+        }
+    }
+}
 
-    open func scan() {
+// MARK: - Manager Scan functions
+public extension SwiftyTeeth {
+
+    func scan() {
         scannedDevices.removeAll()
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
     }
     
-    open func scan(changes: ((Device) -> Void)?) {
+    func scan(changes: ((Device) -> Void)?) {
         scanChangesHandler = changes
         scan()
     }
     
-    open func scan(for timeout: TimeInterval = 10, changes: ((Device) -> Void)? = nil, complete: @escaping ([Device]) -> Void) {
+    func scan(for timeout: TimeInterval = 10, changes: ((Device) -> Void)? = nil, complete: @escaping ([Device]) -> Void) {
         scanChangesHandler = changes
         scanCompleteHandler = complete
         // TODO: Should this be on main, or on CB queue?
@@ -68,7 +81,7 @@ extension SwiftyTeeth {
         scan()
     }
 
-    open func stopScan() {
+    func stopScan() {
         // TODO: Cancel asyncAfter if in progress?
         centralManager.stopScan()
         scanCompleteHandler?(Array(scannedDevices))
@@ -81,7 +94,7 @@ extension SwiftyTeeth {
 
 
 // MARK: - Internal Connection functions
-internal extension SwiftyTeeth {
+extension SwiftyTeeth {
     
     // Using these internal functions, so that we can track devices 'in use'
     func connect(to device: Device) {
@@ -109,17 +122,17 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch (central.state) {
         case .unknown:
-            print("SwiftyTeeth: Bluetooth state is unknown.")
+            Log(v: "Bluetooth state is unknown.")
         case .resetting:
-            print("SwiftyTeeth: Bluetooth state is resetting.")
+            Log(v: "Bluetooth state is resetting.")
         case .unsupported:
-            print("SwiftyTeeth: Bluetooth state is unsupported.")
+            Log(v: "Bluetooth state is unsupported.")
         case .unauthorized:
-            print("SwiftyTeeth: Bluetooth state is unauthorized.")
+            Log(v: "Bluetooth state is unauthorized.")
         case .poweredOff:
-            print("SwiftyTeeth: Bluetooth state is powered off.")
+            Log(v: "Bluetooth state is powered off.")
         case .poweredOn:
-            print("SwiftyTeeth: Bluetooth state is powered on")
+            Log(v: "Bluetooth state is powered on")
         }
     }
     
@@ -134,17 +147,17 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("SwiftyTeeth: centralManager: didConnect")
+        Log(v: "centralManager: didConnect to \(peripheral.identifier)")
         connectedDevices[peripheral.identifier.uuidString]?.didConnect()
     }
     
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        print("SwiftyTeeth: centralManager: didFailToConnect")
+        Log(v: "centralManager: didFailToConnect to \(peripheral.identifier)")
         connectedDevices[peripheral.identifier.uuidString]?.didDisconnect()
     }
     
     public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("SwiftyTeeth: centralManager: didDisconnect")
+        Log(v: "centralManager: didDisconnect from \(peripheral.identifier)")
         connectedDevices[peripheral.identifier.uuidString]?.didDisconnect()
     }
     
