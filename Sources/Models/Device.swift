@@ -95,12 +95,12 @@ extension Device {
     // TODO: Make CBUUID into strings
     open func discoverServices(with uuids: [CBUUID]? = nil, complete: ServiceDiscovery?) {
         guard isConnected == true else {
-            print("Device: Not connected - cannot discoverServices")
+            Log(v: "Device: Not connected - cannot discoverServices")
             return
         }
         
         serviceDiscoveryHandler = complete
-        print("Device: discoverServices: \(self.peripheral) \n \(self.peripheral.delegate)")
+        Log(v: "Device: discoverServices: \(self.peripheral) \n \(String(describing: self.peripheral.delegate))")
         self.peripheral.discoverServices(uuids)
     }
     
@@ -108,12 +108,12 @@ extension Device {
     // TODO: Make service a UUID?
     open func discoverCharacteristics(with uuids: [CBUUID]? = nil, for service: CBService, complete: CharacteristicDiscovery?) {
         guard isConnected == true else {
-            print("Device: Not connected - cannot discoverCharacteristics")
+            Log(v: "Device: Not connected - cannot discoverCharacteristics")
             return
         }
         
         characteristicDiscoveryHandler = complete
-        print("Device: discoverCharacteristics")
+        Log(v: "Device: discoverCharacteristics")
         peripheral.discoverCharacteristics(uuids, for: service)
     }
     
@@ -124,7 +124,7 @@ extension Device {
         }
         
         guard isConnected == true else {
-            print("Device: Not connected - cannot read")
+            Log(v: "Device: Not connected - cannot read")
             return
         }
         
@@ -139,7 +139,7 @@ extension Device {
         }
         
         guard isConnected == true else {
-            print("Device: Not connected - cannot write")
+            Log(v: "Device: Not connected - cannot write")
             return
         }
         
@@ -159,7 +159,7 @@ extension Device {
         }
         
         guard isConnected == true else {
-            print("Device: Not connected - cannot write")
+            Log(v: "Device: Not connected - cannot write")
             return
         }
         
@@ -180,7 +180,7 @@ extension Device {
         }
 
         guard isConnected == true else {
-            print("Device: Not connected - cannot write")
+            Log(v: "Device: Not connected - cannot write")
             return
         }
         
@@ -255,7 +255,7 @@ internal extension Device  {
         discoveredServices.removeAll()
         
         peripheral.services?.forEach({ service in
-            print("Device: Service Discovered: \(service.uuid.uuidString)")
+            Log(v: "Device: Service Discovered: \(service.uuid.uuidString)")
             discoveredServices[service] = [CBCharacteristic]()
         })
         
@@ -270,7 +270,7 @@ internal extension Device  {
         
         var characteristics = [CBCharacteristic]()
         service.characteristics?.forEach({ characteristic in
-            print("Device: Characteristic Discovered: \(characteristic.uuid.uuidString)")
+            Log(v: "Device: Characteristic Discovered: \(characteristic.uuid.uuidString)")
             characteristics.append(characteristic)
         })
         
@@ -279,21 +279,21 @@ internal extension Device  {
     }
     
     func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
-        print("Device: didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(characteristic.value)")
+        Log(v: "Device: didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(String(describing: characteristic.value))")
         readHandler?(characteristic.value, error)
         readHandler = nil
         notificationHandler[characteristic]?(characteristic.value, error)
     }
     
     func didWriteValueFor(characteristic: CBCharacteristic, error: Error?) {
-        print("Device: didWriteValueFor: \(characteristic.uuid.uuidString)")
+        Log(v: "Device: didWriteValueFor: \(characteristic.uuid.uuidString)")
         writeHandler?(error)
         writeHandler = nil
     }
     
     // This is equivalent to a direct READ from the characteristic
     func didUpdateNotificationStateFor(characteristic: CBCharacteristic, error: Error?) {
-        print("Device: didUpdateNotificationStateFor: \(characteristic.uuid.uuidString)")
+        Log(v: "Device: didUpdateNotificationStateFor: \(characteristic.uuid.uuidString)")
         notificationHandler[characteristic]?(characteristic.value, error)
     }
     
