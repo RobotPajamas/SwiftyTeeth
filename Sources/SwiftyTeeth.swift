@@ -99,18 +99,20 @@ extension SwiftyTeeth {
     // Using these internal functions, so that we can track devices 'in use'
     func connect(to device: Device) {
         // Add device to dictionary only if it isn't there
-        if connectedDevices[device.id] == nil {
+//        if connectedDevices[device.id] == nil {
             connectedDevices[device.id] = device
-        }
+//        }
+        Log(v: "Connecting to device - \(device.id)")
         centralManager.connect(device.peripheral, options: nil)
     }
     
     // Using these internal functions, so that we can track devices 'in use'
     func disconnect(from device: Device) {
         // Add device to dictionary only if it isn't there
-        if connectedDevices[device.id] == nil {
+//        if connectedDevices[device.id] == nil {
             connectedDevices[device.id] = device
-        }
+//        }
+        Log(v: "Disconnecting from device - \(device.id)")
         centralManager.cancelPeripheralConnection(device.peripheral)
     }
 }

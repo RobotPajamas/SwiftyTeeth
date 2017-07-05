@@ -144,11 +144,8 @@
 				8B64D1981DC2E39900D41A2C /* Helpers */,
 				8B64D1991DC2E39900D41A2C /* Logging */,
 				8B64D19A1DC2E39900D41A2C /* Models */,
-				8B64D19B1DC2E39900D41A2C /* Network */,
 				8B64D19C1DC2E39900D41A2C /* Protocols */,
-				8B64D19D1DC2E39900D41A2C /* Rx */,
 				8B64D19E1DC2E39900D41A2C /* Security */,
-				8B64D19F1DC2E39900D41A2C /* Stores */,
 				8B64D1CF1DC2E8FE00D41A2C /* SwiftyTeeth.swift */,
 				8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */,
 				8B64D1A11DC2E42000D41A2C /* Info-iOS.plist */,
@@ -202,13 +199,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		8B64D19B1DC2E39900D41A2C /* Network */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Network;
-			sourceTree = "<group>";
-		};
 		8B64D19C1DC2E39900D41A2C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,25 +208,11 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
-		8B64D19D1DC2E39900D41A2C /* Rx */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Rx;
-			sourceTree = "<group>";
-		};
 		8B64D19E1DC2E39900D41A2C /* Security */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Security;
-			sourceTree = "<group>";
-		};
-		8B64D19F1DC2E39900D41A2C /* Stores */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Stores;
 			sourceTree = "<group>";
 		};
 		8B64D1A01DC2E3A100D41A2C /* Meta */ = {

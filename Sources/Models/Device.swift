@@ -78,6 +78,7 @@ extension Device {
     // Annoyingly, iOS has the connection functionality sitting on the central manager, instead of on the peripheral
     // TODO: Should the completion be optional?
     open func connect(with timeout: TimeInterval? = nil, autoReconnect: Bool = true, complete: ConnectionHandler?) {
+        Log(v: "Calling connect", tag: tag)
         self.connectionHandler = complete
         self.autoReconnect = autoReconnect
         self.manager.connect(to: self)
@@ -86,6 +87,7 @@ extension Device {
     
     open func disconnect(autoReconnect: Bool = false) {
         // Disable auto reconnection when calling the disconnect API
+        Log(v: "Calling disconnect", tag: tag)
         self.autoReconnect = autoReconnect
         self.manager.disconnect(from: self)
     }
@@ -221,10 +223,12 @@ extension Device {
 internal extension Device {
     
     func didConnect() {
+        Log(v: "didConnect: Calling connection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
         connectionHandler?(true)
     }
     
     func didDisconnect() {
+        Log(v: "didDisconnect: Calling disconnection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
         connectionHandler?(false)
         if autoReconnect == true {
             connect(complete: connectionHandler)
