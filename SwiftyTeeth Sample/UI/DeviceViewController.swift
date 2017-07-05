@@ -7,7 +7,6 @@
 //
 
 import UIKit
-
 import SwiftyTeeth
 
 class DeviceViewController: UIViewController {
@@ -81,7 +80,7 @@ extension DeviceViewController {
     func read() {
         // Using a Heart-Rate device for testing - this is the HR service and characteristic
         device?.read(from: "2a37", in: "180d", complete: { data, error in
-            self.printUi("Read value: \(data?.base64EncodedString())")
+            self.printUi("Read value: \(String(describing: data?.base64EncodedString()))")
         })
     }
     
@@ -94,7 +93,7 @@ extension DeviceViewController {
     
     func subscribe() {
         device?.subscribe(to: "2a37", in: "180d", complete: { data, error in
-            self.printUi("Subscribed value: \(data?.base64EncodedString())")
+            self.printUi("Subscribed value: \(String(describing: data?.base64EncodedString()))")
         })
     }
 }

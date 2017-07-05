@@ -7,15 +7,16 @@
 //
 
 import UIKit
+import SwiftyTeeth
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        SwiftyTeeth.logger = MyLogger()
         return true
     }
 
@@ -39,6 +40,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+
+    private class MyLogger: Logger {
+        func verbose(_ message: String) {
+            print("V: " + message)
+        }
+        func debug(_ message: String) {
+            print("D: " + message)
+        }
+        func info(_ message: String) {
+            print("I: " + message)
+        }
+        func warning(_ message: String) {
+            print("W: " + message)
+        }
+        func error(_ message: String) {
+            print("E: " + message)
+        }
     }
 
 

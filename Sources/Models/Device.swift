@@ -14,6 +14,8 @@ import CoreBluetooth
 // NotificationHandler is an example of this, as it could be a dictionary using a String key - but that just adds extra indirection internally,
 // where all CBCharacterisics need to be dereferenced by uuid then uuidString. Internally, this adds no value - and adds risk.
 open class Device: NSObject {
+    fileprivate let tag = "SwiftyDevice"
+    
     public typealias ConnectionHandler = ((Bool) -> Void)
     public typealias ServiceDiscovery = (([CBService], Error?) -> Void)
     public typealias CharacteristicDiscovery = ((CBService, [CBCharacteristic], Error?) -> Void)
@@ -60,10 +62,14 @@ open class Device: NSObject {
     // Connection parameters
     fileprivate var autoReconnect = false
     
-    init(manager: SwiftyTeeth, peripheral: CBPeripheral) {
+    public init(manager: SwiftyTeeth, peripheral: CBPeripheral) {
         self.manager = manager
         self.peripheral = peripheral
         self.peripheral.delegate = manager
+    }
+    
+    public convenience init(copy: Device) {
+        self.init(manager: copy.manager, peripheral: copy.peripheral)
     }
 }
 
@@ -72,15 +78,17 @@ extension Device {
     // Annoyingly, iOS has the connection functionality sitting on the central manager, instead of on the peripheral
     // TODO: Should the completion be optional?
     open func connect(with timeout: TimeInterval? = nil, autoReconnect: Bool = true, complete: ConnectionHandler?) {
+        Log(v: "Calling connect", tag: tag)
         self.connectionHandler = complete
         self.autoReconnect = autoReconnect
         self.manager.connect(to: self)
         // TODO: Add timeout functionality
     }
     
-    open func disconnect() {
+    open func disconnect(autoReconnect: Bool = false) {
         // Disable auto reconnection when calling the disconnect API
-        autoReconnect = false
+        Log(v: "Calling disconnect", tag: tag)
+        self.autoReconnect = autoReconnect
         self.manager.disconnect(from: self)
     }
 }
@@ -91,12 +99,12 @@ extension Device {
     // TODO: Make CBUUID into strings
     open func discoverServices(with uuids: [CBUUID]? = nil, complete: ServiceDiscovery?) {
         guard isConnected == true else {
-            print("Device: Not connected - cannot discoverServices")
+            Log(v: "Not connected - cannot discoverServices", tag: tag)
             return
         }
         
         serviceDiscoveryHandler = complete
-        print("Device: discoverServices: \(self.peripheral) \n \(self.peripheral.delegate)")
+        Log(v: "discoverServices: \(self.peripheral) \n \(String(describing: self.peripheral.delegate))", tag: tag)
         self.peripheral.discoverServices(uuids)
     }
     
@@ -104,12 +112,12 @@ extension Device {
     // TODO: Make service a UUID?
     open func discoverCharacteristics(with uuids: [CBUUID]? = nil, for service: CBService, complete: CharacteristicDiscovery?) {
         guard isConnected == true else {
-            print("Device: Not connected - cannot discoverCharacteristics")
+            Log(v: "Not connected - cannot discoverCharacteristics", tag: tag)
             return
         }
         
         characteristicDiscoveryHandler = complete
-        print("Device: discoverCharacteristics")
+        Log(v: "discoverCharacteristics", tag: tag)
         peripheral.discoverCharacteristics(uuids, for: service)
     }
     
@@ -120,7 +128,7 @@ extension Device {
         }
         
         guard isConnected == true else {
-            print("Device: Not connected - cannot read")
+            Log(v: "Not connected - cannot read", tag: tag)
             return
         }
         
@@ -135,7 +143,7 @@ extension Device {
         }
         
         guard isConnected == true else {
-            print("Device: Not connected - cannot write")
+            Log(v: "Not connected - cannot write", tag: tag)
             return
         }
         
@@ -155,7 +163,7 @@ extension Device {
         }
         
         guard isConnected == true else {
-            print("Device: Not connected - cannot write")
+            Log(v: "Not connected - cannot write", tag: tag)
             return
         }
         
@@ -176,7 +184,7 @@ extension Device {
         }
 
         guard isConnected == true else {
-            print("Device: Not connected - cannot write")
+            Log(v: "Not connected - cannot write", tag: tag)
             return
         }
         
@@ -215,10 +223,12 @@ extension Device {
 internal extension Device {
     
     func didConnect() {
+        Log(v: "didConnect: Calling connection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
         connectionHandler?(true)
     }
     
     func didDisconnect() {
+        Log(v: "didDisconnect: Calling disconnection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
         connectionHandler?(false)
         if autoReconnect == true {
             connect(complete: connectionHandler)
@@ -251,7 +261,7 @@ internal extension Device  {
         discoveredServices.removeAll()
         
         peripheral.services?.forEach({ service in
-            print("Device: Service Discovered: \(service.uuid.uuidString)")
+            Log(v: "Service Discovered: \(service.uuid.uuidString)", tag: tag)
             discoveredServices[service] = [CBCharacteristic]()
         })
         
@@ -266,7 +276,7 @@ internal extension Device  {
         
         var characteristics = [CBCharacteristic]()
         service.characteristics?.forEach({ characteristic in
-            print("Device: Characteristic Discovered: \(characteristic.uuid.uuidString)")
+            Log(v: "Characteristic Discovered: \(characteristic.uuid.uuidString)", tag: tag)
             characteristics.append(characteristic)
         })
         
@@ -275,21 +285,21 @@ internal extension Device  {
     }
     
     func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
-        print("Device: didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(characteristic.value)")
+        Log(v: "didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(String(describing: characteristic.value))", tag: tag)
         readHandler?(characteristic.value, error)
         readHandler = nil
         notificationHandler[characteristic]?(characteristic.value, error)
     }
     
     func didWriteValueFor(characteristic: CBCharacteristic, error: Error?) {
-        print("Device: didWriteValueFor: \(characteristic.uuid.uuidString)")
+        Log(v: "didWriteValueFor: \(characteristic.uuid.uuidString)", tag: tag)
         writeHandler?(error)
         writeHandler = nil
     }
     
     // This is equivalent to a direct READ from the characteristic
     func didUpdateNotificationStateFor(characteristic: CBCharacteristic, error: Error?) {
-        print("Device: didUpdateNotificationStateFor: \(characteristic.uuid.uuidString)")
+        Log(v: "didUpdateNotificationStateFor: \(characteristic.uuid.uuidString)", tag: tag)
         notificationHandler[characteristic]?(characteristic.value, error)
     }
     
