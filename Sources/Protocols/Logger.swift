@@ -14,22 +14,22 @@ public protocol Logger {
     func error(_ message: String)
 }
 
-public func Log(v message: String, path: String = #file, function: String = #function, line: Int = #line) {
-    swiftyTeethLogger?.verbose(message)
+public func Log(v message: String, tag: String = "SwiftyTeeth", path: String = #file, function: String = #function, line: Int = #line) {
+    swiftyTeethLogger?.verbose("\(tag): \(message)")
 }
 
-public func Log(d message: String, path: String = #file, function: String = #function, line: Int = #line) {
-    swiftyTeethLogger?.debug(message)
+public func Log(d message: String, tag: String = "SwiftyTeeth", path: String = #file, function: String = #function, line: Int = #line) {
+    swiftyTeethLogger?.debug("\(tag): \(message)")
 }
 
-public func Log(i message: String, path: String = #file, function: String = #function, line: Int = #line) {
-    swiftyTeethLogger?.info(message)
+public func Log(i message: String, tag: String = "SwiftyTeeth", path: String = #file, function: String = #function, line: Int = #line) {
+    swiftyTeethLogger?.info("\(tag): \(message)")
 }
 
-public func Log(w message: String, path: String = #file, function: String = #function, line: Int = #line) {
-    swiftyTeethLogger?.warning(message)
+public func Log(w message: String, tag: String = "SwiftyTeeth", path: String = #file, function: String = #function, line: Int = #line) {
+    swiftyTeethLogger?.warning("\(tag): \(message)")
 }
 
-public func Log(e message: String, path: String = #file, function: String = #function, line: Int = #line) {
-    swiftyTeethLogger?.error(message)
+public func Log(e message: String, tag: String = "SwiftyTeeth", path: String = #file, function: String = #function, line: Int = #line) {
+    swiftyTeethLogger?.error("\(tag): \(message)")
 }

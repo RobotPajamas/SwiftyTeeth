@@ -122,17 +122,17 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch (central.state) {
         case .unknown:
-            Log(v: "SwiftyTeeth: Bluetooth state is unknown.")
+            Log(v: "Bluetooth state is unknown.")
         case .resetting:
-            Log(v: "SwiftyTeeth: Bluetooth state is resetting.")
+            Log(v: "Bluetooth state is resetting.")
         case .unsupported:
-            Log(v: "SwiftyTeeth: Bluetooth state is unsupported.")
+            Log(v: "Bluetooth state is unsupported.")
         case .unauthorized:
-            Log(v: "SwiftyTeeth: Bluetooth state is unauthorized.")
+            Log(v: "Bluetooth state is unauthorized.")
         case .poweredOff:
-            Log(v: "SwiftyTeeth: Bluetooth state is powered off.")
+            Log(v: "Bluetooth state is powered off.")
         case .poweredOn:
-            Log(v: "SwiftyTeeth: Bluetooth state is powered on")
+            Log(v: "Bluetooth state is powered on")
         }
     }
     
@@ -147,17 +147,17 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        Log(v: "SwiftyTeeth: centralManager: didConnect to \(peripheral.identifier)")
+        Log(v: "centralManager: didConnect to \(peripheral.identifier)")
         connectedDevices[peripheral.identifier.uuidString]?.didConnect()
     }
     
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        Log(v: "SwiftyTeeth: centralManager: didFailToConnect to \(peripheral.identifier)")
+        Log(v: "centralManager: didFailToConnect to \(peripheral.identifier)")
         connectedDevices[peripheral.identifier.uuidString]?.didDisconnect()
     }
     
     public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        Log(v: "SwiftyTeeth: centralManager: didDisconnect from \(peripheral.identifier)")
+        Log(v: "centralManager: didDisconnect from \(peripheral.identifier)")
         connectedDevices[peripheral.identifier.uuidString]?.didDisconnect()
     }
     
