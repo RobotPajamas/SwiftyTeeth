@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'SwiftyTeeth'
-  s.version          = '0.1.0'
+  s.version          = '0.2.0'
   s.summary          = 'A simple, lightweight library intended to take away some of the cruft and tediousness of using CoreBluetooth.'
   s.description      = <<-DESC
 A simple, lightweight library intended to take away some of the cruft and tediousness of using CoreBluetooth. 
@@ -19,5 +19,4 @@ It replaces CoreBluetooth's protocols and delegates with a block-based pattern, 
   s.source_files = 'Sources/**/*'
 
   s.frameworks = 'CoreBluetooth'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
