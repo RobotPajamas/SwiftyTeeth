@@ -77,21 +77,21 @@ extension DeviceViewController {
         device?.disconnect()
     }
     
-    func read() {
+    @objc func read() {
         // Using a Heart-Rate device for testing - this is the HR service and characteristic
         device?.read(from: "2a37", in: "180d", complete: { data, error in
             self.printUi("Read value: \(String(describing: data?.base64EncodedString()))")
         })
     }
     
-    func write() {
+    @objc func write() {
         let command = Data(bytes: [0x01])
         device?.write(data: command, to: "abcdef", in: "hijkll", complete: { error in
             self.printUi("Write with response successful? \(error == nil)")
         })
     }
     
-    func subscribe() {
+    @objc func subscribe() {
         device?.subscribe(to: "2a37", in: "180d", complete: { data, error in
             self.printUi("Subscribed value: \(String(describing: data?.base64EncodedString()))")
         })

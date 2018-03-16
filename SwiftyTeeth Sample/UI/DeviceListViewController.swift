@@ -24,7 +24,7 @@ class DeviceListViewController: UITableViewController {
 
 // MARK: - SwiftyTeethable
 extension DeviceListViewController: SwiftyTeethable {
-    func scanTapped() {
+    @objc func scanTapped() {
         // TODO: Use the changes API to update the list
         swiftyTeeth.scan(for: 1) { devices in
             self.devices = devices
