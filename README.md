@@ -134,6 +134,7 @@ Please report all bugs or feature requests to: https://github.com/RobotPajamas/S
 
 Other iOS-centric Bluetooth libraries.
 
+* [RxSwiftyTeeth](https://github.com/RobotPajamas/RxSwiftyTeeth)
 * [BluetoothKit](https://github.com/rhummelmose/BluetoothKit)
 * [Bluetonium](https://github.com/e-sites/Bluetonium)
 * [RxBluetoothKit](https://github.com/Polidea/RxBluetoothKit)
