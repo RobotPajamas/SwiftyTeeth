@@ -18,6 +18,11 @@ class DeviceListViewController: UITableViewController {
         super.viewDidLoad()
         let scanButton = UIBarButtonItem(title: "Scan", style: .plain, target: self, action: #selector(scanTapped))
         self.navigationItem.rightBarButtonItem = scanButton
+        
+        print("Bluetooth state is: \(swiftyTeeth.state)")
+        swiftyTeeth.stateChangedHandler = { (state) in
+            print("Bluetooth State is: \(state)")
+        }
     }
 }
 

@@ -15,6 +15,7 @@ open class SwiftyTeeth: NSObject {
 
     public static let shared = SwiftyTeeth()
     
+    public var stateChangedHandler: ((BluetoothState) -> Void)?
     fileprivate var scanChangesHandler: ((Device) -> Void)?
     fileprivate var scanCompleteHandler: (([Device]) -> Void)?
 
@@ -27,6 +28,10 @@ open class SwiftyTeeth: NSObject {
         return instance
     }()
 
+    public var state: BluetoothState {
+        return BluetoothState(rawValue: centralManager.state.rawValue) ?? .unknown
+    }
+    
     // TODO: Hold a private set, and expose a list?
     open var scannedDevices = Set<Device>()
     
@@ -136,6 +141,11 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
         case .poweredOn:
             Log(v: "Bluetooth state is powered on")
         }
+        
+        guard let state = BluetoothState(rawValue: central.state.rawValue) else {
+            return
+        }
+        stateChangedHandler?(state)
     }
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
