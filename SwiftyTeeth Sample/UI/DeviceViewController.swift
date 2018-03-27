@@ -55,12 +55,15 @@ extension DeviceViewController {
                 
             self.printUi("App: Device is connected? \(isConnected)")
             print("App: Starting service discovery...")
-            self.device?.discoverServices(complete: { services, error in
+            self.device?.discoverServices(complete: { result in
+                let services = result.value ?? []
                 services.forEach({
                     self.printUi("App: Discovering characteristics for service: \($0.uuid.uuidString)")
-                    self.device?.discoverCharacteristics(for: $0, complete: { service, characteristics, error in
+                    self.device?.discoverCharacteristics(for: $0, complete: { result in
+                        let service = result.value?.service
+                        let characteristics = result.value?.characteristics ?? []
                         characteristics.forEach({
-                            self.printUi("App: Discovered characteristic: \($0.uuid.uuidString) in \(service.uuid.uuidString)")
+                            self.printUi("App: Discovered characteristic: \($0.uuid.uuidString) in \(String(describing: service?.uuid.uuidString))")
                         })
                         
                         if service == services.last {
@@ -79,21 +82,21 @@ extension DeviceViewController {
     
     @objc func read() {
         // Using a Heart-Rate device for testing - this is the HR service and characteristic
-        device?.read(from: "2a37", in: "180d", complete: { data, error in
-            self.printUi("Read value: \(String(describing: data?.base64EncodedString()))")
+        device?.read(from: "2a37", in: "180d", complete: { result in
+            self.printUi("Read value: \(String(describing: result.value?.base64EncodedString()))")
         })
     }
     
     @objc func write() {
         let command = Data(bytes: [0x01])
-        device?.write(data: command, to: "abcdef", in: "hijkll", complete: { error in
-            self.printUi("Write with response successful? \(error == nil)")
+        device?.write(data: command, to: "abcdef", in: "hijkll", complete: { result in
+            self.printUi("Write with response successful? \(result.isSuccess)")
         })
     }
     
     @objc func subscribe() {
-        device?.subscribe(to: "2a37", in: "180d", complete: { data, error in
-            self.printUi("Subscribed value: \(String(describing: data?.base64EncodedString()))")
+        device?.subscribe(to: "2a37", in: "180d", complete: { result in
+            self.printUi("Subscribed value: \(String(describing: result.value?.base64EncodedString()))")
         })
     }
 }
