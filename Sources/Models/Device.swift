@@ -16,9 +16,10 @@ import CoreBluetooth
 open class Device: NSObject {
     fileprivate let tag = "SwiftyDevice"
     
+    public typealias DiscoveredCharacteristic = (service: CBService, characteristics: [CBCharacteristic])
     public typealias ConnectionHandler = ((Bool) -> Void)
     public typealias ServiceDiscovery = ((Result<[CBService]>) -> Void)
-    public typealias CharacteristicDiscovery = ((Result<(CBService, [CBCharacteristic])>) -> Void)
+    public typealias CharacteristicDiscovery = ((Result<DiscoveredCharacteristic>) -> Void)
     public typealias ReadHandler = ((Result<Data>) -> Void)
     public typealias WriteHandler = ((Result<Void>) -> Void)
     
@@ -286,7 +287,7 @@ internal extension Device  {
         })
         
         discoveredServices[service]? = characteristics
-        var result: Result<(CBService, [CBCharacteristic])> = .success((service, characteristics))
+        var result: Result<DiscoveredCharacteristic> = .success((service: service, characteristics: characteristics))
         if let e = error {
             result = .failure(e)
         }

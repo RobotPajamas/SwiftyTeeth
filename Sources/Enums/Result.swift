@@ -10,18 +10,18 @@ public enum Result<Value> {
     case failure(Error)
 }
 
-extension Result {
-    public init(value: Value) {
+public extension Result {
+    init(value: Value) {
         self = .success(value)
     }
     
-    public init(error: Error) {
+    init(error: Error) {
         self = .failure(error)
     }
 }
 
-extension Result {
-    public var value: Value? {
+public extension Result {
+    var value: Value? {
         switch self {
         case .success(let value):
             return value
@@ -30,7 +30,7 @@ extension Result {
         }
     }
     
-    public var error: Error? {
+    var error: Error? {
         switch self {
         case .success:
             return nil
@@ -39,7 +39,7 @@ extension Result {
         }
     }
     
-    public var isSuccess: Bool {
+    var isSuccess: Bool {
         switch self {
         case .success:
             return true
@@ -48,7 +48,18 @@ extension Result {
         }
     }
     
-    public var isFailure: Bool {
+    var isFailure: Bool {
         return !isSuccess
+    }
+}
+
+public extension Result {
+    func unwrap() throws -> Value {
+        switch self {
+        case .success(let value):
+            return value
+        case .failure(let error):
+            throw error
+        }
     }
 }
