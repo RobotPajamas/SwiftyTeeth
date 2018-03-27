@@ -17,10 +17,10 @@ open class Device: NSObject {
     fileprivate let tag = "SwiftyDevice"
     
     public typealias ConnectionHandler = ((Bool) -> Void)
-    public typealias ServiceDiscovery = (([CBService], Error?) -> Void)
-    public typealias CharacteristicDiscovery = ((CBService, [CBCharacteristic], Error?) -> Void)
-    public typealias ReadHandler = ((Data?, Error?) -> Void)
-    public typealias WriteHandler = ((Error?) -> Void)
+    public typealias ServiceDiscovery = ((Result<[CBService]>) -> Void)
+    public typealias CharacteristicDiscovery = ((Result<(CBService, [CBCharacteristic])>) -> Void)
+    public typealias ReadHandler = ((Result<Data>) -> Void)
+    public typealias WriteHandler = ((Result<Void>) -> Void)
     
     let peripheral: CBPeripheral
     
@@ -265,7 +265,12 @@ internal extension Device  {
             discoveredServices[service] = [CBCharacteristic]()
         })
         
-        serviceDiscoveryHandler?(Array(discoveredServices.keys), error)
+        var result: Result<[CBService]> = .success(Array(discoveredServices.keys))
+        if let e = error {
+            result = .failure(e)
+        }
+        
+        serviceDiscoveryHandler?(result)
     }
     
     func didDiscoverIncludedServicesFor(service: CBService, error: Error?) {
@@ -281,26 +286,46 @@ internal extension Device  {
         })
         
         discoveredServices[service]? = characteristics
-        characteristicDiscoveryHandler?(service, characteristics, error)
+        var result: Result<(CBService, [CBCharacteristic])> = .success((service, characteristics))
+        if let e = error {
+            result = .failure(e)
+        }
+        characteristicDiscoveryHandler?(result)
     }
     
     func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
         Log(v: "didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(String(describing: characteristic.value))", tag: tag)
-        readHandler?(characteristic.value, error)
+        
+        var result: Result<Data> = .success(characteristic.value ?? Data())
+        if let e = error {
+            result = .failure(e)
+        }
+        
+        readHandler?(result)
         readHandler = nil
-        notificationHandler[characteristic]?(characteristic.value, error)
+        notificationHandler[characteristic]?(result)
     }
     
     func didWriteValueFor(characteristic: CBCharacteristic, error: Error?) {
         Log(v: "didWriteValueFor: \(characteristic.uuid.uuidString)", tag: tag)
-        writeHandler?(error)
+    
+        var result: Result<Void> = .success(())
+        if let e = error {
+            result = .failure(e)
+        }
+    
+        writeHandler?(result)
         writeHandler = nil
     }
     
     // This is equivalent to a direct READ from the characteristic
     func didUpdateNotificationStateFor(characteristic: CBCharacteristic, error: Error?) {
         Log(v: "didUpdateNotificationStateFor: \(characteristic.uuid.uuidString)", tag: tag)
-        notificationHandler[characteristic]?(characteristic.value, error)
+        var result: Result<Data> = .success(characteristic.value ?? Data())
+        if let e = error {
+            result = .failure(e)
+        }
+        notificationHandler[characteristic]?(result)
     }
     
     func didDiscoverDescriptorsFor(characteristic: CBCharacteristic, error: Error?) {
