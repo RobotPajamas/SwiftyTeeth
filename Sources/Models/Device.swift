@@ -10,6 +10,7 @@ import Foundation
 import CoreBluetooth
 
 public typealias DiscoveredCharacteristic = (service: CBService, characteristics: [CBCharacteristic])
+
 public typealias ConnectionHandler = ((Bool) -> Void)
 public typealias ServiceDiscovery = ((Result<[CBService]>) -> Void)
 public typealias CharacteristicDiscovery = ((Result<DiscoveredCharacteristic>) -> Void)
@@ -36,10 +37,6 @@ open class Device: NSObject {
     fileprivate let manager: SwiftyTeeth
 
     fileprivate var connectionHandler: ConnectionHandler?
-    // Should these handlers be queues?
-    fileprivate var serviceDiscoveryHandler: ServiceDiscovery?
-    fileprivate var characteristicDiscoveryHandler: CharacteristicDiscovery?
-    
     fileprivate var notificationHandler = [CBCharacteristic: ReadHandler]()
     
     // Connection parameters
@@ -109,29 +106,48 @@ extension Device {
 
 // MARK: - GATT operations
 extension Device {
+    
     // TODO: Make CBUUID into strings
     open func discoverServices(with uuids: [CBUUID]? = nil, complete: ServiceDiscovery?) {
-        guard isConnected == true else {
-            Log(v: "Not connected - cannot discoverServices", tag: tag)
-            return
-        }
+        let item = QueueItem<[CBService]>(
+            name: "discoverServices", // TODO: Need better than a hardcoded string
+            execution: { (cb) in
+                guard self.isConnected == true else {
+                    Log(v: "Not connected - cannot discoverServices", tag: self.tag)
+                    cb(.failure(ConnectionError.disconnected))
+                    return
+                }
+                Log(v: "discoverServices: \(self.peripheral) \n \(String(describing: self.peripheral.delegate))", tag: self.tag)
+                self.peripheral.discoverServices(uuids)
+        },
+            callback: { (result, done) in
+                complete?(result)
+                done()
+        })
         
-        serviceDiscoveryHandler = complete
-        Log(v: "discoverServices: \(self.peripheral) \n \(String(describing: self.peripheral.delegate))", tag: tag)
-        self.peripheral.discoverServices(uuids)
+        queue.pushBack(item)
     }
     
     // TODO: Make CBUUID into strings
     // TODO: Make service a UUID?
     open func discoverCharacteristics(with uuids: [CBUUID]? = nil, for service: CBService, complete: CharacteristicDiscovery?) {
-        guard isConnected == true else {
-            Log(v: "Not connected - cannot discoverCharacteristics", tag: tag)
-            return
-        }
+        let item = QueueItem<DiscoveredCharacteristic>(
+            name: service.uuid.uuidString,
+            execution: { (cb) in
+                guard self.isConnected == true else {
+                    Log(v: "Not connected - cannot discoverCharacteristics", tag: self.tag)
+                    cb(.failure(ConnectionError.disconnected))
+                    return
+                }
+                Log(v: "discoverCharacteristics", tag: self.tag)
+                self.peripheral.discoverCharacteristics(uuids, for: service)
+        },
+            callback: { (result, done) in
+                complete?(result)
+                done()
+        })
         
-        characteristicDiscoveryHandler = complete
-        Log(v: "discoverCharacteristics", tag: tag)
-        peripheral.discoverCharacteristics(uuids, for: service)
+        queue.pushBack(item)
     }
     
     open func read(from characteristic: String, in service: String, complete: ReadHandler?) {
@@ -296,7 +312,15 @@ internal extension Device  {
             result = .failure(e)
         }
         
-        serviceDiscoveryHandler?(result)
+        for operation in queue.items {
+            guard operation.name == "discoverServices",
+                operation.isExecuting == true else {
+                    continue
+            }
+            // TODO: Exit loop, or run through everything just in case? Probably exit
+            // TODO: If queue.items can be mapped as QueueItem<Data> - cast unnecessary
+            (operation as? QueueItem<[CBService]>)?.notify(result)
+        }
     }
     
     func didDiscoverIncludedServicesFor(service: CBService, error: Error?) {
@@ -316,7 +340,16 @@ internal extension Device  {
         if let e = error {
             result = .failure(e)
         }
-        characteristicDiscoveryHandler?(result)
+        
+        for operation in queue.items {
+            guard operation.name == service.uuid.uuidString,
+                operation.isExecuting == true else {
+                    continue
+            }
+            // TODO: Exit loop, or run through everything just in case? Probably exit
+            // TODO: If queue.items can be mapped as QueueItem<Data> - cast unnecessary
+            (operation as? QueueItem<DiscoveredCharacteristic>)?.notify(result)
+        }
     }
     
     func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
