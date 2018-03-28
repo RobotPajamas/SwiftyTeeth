@@ -312,15 +312,10 @@ internal extension Device  {
             result = .failure(e)
         }
         
-        for operation in queue.items {
-            guard operation.name == "discoverServices",
-                operation.isExecuting == true else {
-                    continue
-            }
-            // TODO: Exit loop, or run through everything just in case? Probably exit
-            // TODO: If queue.items can be mapped as QueueItem<Data> - cast unnecessary
-            (operation as? QueueItem<[CBService]>)?.notify(result)
-        }
+        let item = queue.items.first { (operation) -> Bool in
+            operation.isExecuting && operation.name == "discoverServices"
+            } as? QueueItem<[CBService]>
+        item?.notify(result)
     }
     
     func didDiscoverIncludedServicesFor(service: CBService, error: Error?) {
@@ -341,15 +336,10 @@ internal extension Device  {
             result = .failure(e)
         }
         
-        for operation in queue.items {
-            guard operation.name == service.uuid.uuidString,
-                operation.isExecuting == true else {
-                    continue
-            }
-            // TODO: Exit loop, or run through everything just in case? Probably exit
-            // TODO: If queue.items can be mapped as QueueItem<Data> - cast unnecessary
-            (operation as? QueueItem<DiscoveredCharacteristic>)?.notify(result)
-        }
+        let item = queue.items.first { (operation) -> Bool in
+            operation.isExecuting && operation.name == service.uuid.uuidString
+            } as? QueueItem<DiscoveredCharacteristic>
+        item?.notify(result)
     }
     
     func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
@@ -360,15 +350,10 @@ internal extension Device  {
             result = .failure(e)
         }
         
-        for operation in queue.items {
-            guard operation.name == characteristic.compositeId,
-                operation.isExecuting == true else {
-                continue
-            }
-            // TODO: Exit loop, or run through everything just in case? Probably exit
-            // TODO: If queue.items can be mapped as QueueItem<Data> - cast unnecessary
-            (operation as? QueueItem<Data>)?.notify(result)
-        }
+        let item = queue.items.first { (operation) -> Bool in
+            operation.isExecuting && operation.name == characteristic.compositeId
+            } as? QueueItem<Data>
+        item?.notify(result)
         notificationHandler[characteristic]?(result)
     }
     
@@ -380,16 +365,10 @@ internal extension Device  {
             result = .failure(e)
         }
         
-        // TODO: Turn this into a helper function or 'find' extension
-        for operation in queue.items {
-            guard operation.name == characteristic.compositeId,
-                operation.isExecuting == true else {
-                    continue
-            }
-            // TODO: Exit loop, or run through everything just in case? Probably exit
-            // TODO: If queue.items can be mapped as QueueItem<Void> - cast unnecessary
-            (operation as? QueueItem<Void>)?.notify(result)
-        }
+        let item = queue.items.first { (operation) -> Bool in
+            operation.isExecuting && operation.name == characteristic.compositeId
+        } as? QueueItem<Void>
+        item?.notify(result)
     }
     
     // This is equivalent to a direct READ from the characteristic
