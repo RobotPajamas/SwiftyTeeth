@@ -71,23 +71,3 @@ extension QueueItem: Queueable {
         finish()
     }
 }
-
-//// MARK: Soul-crushing-ness
-//internal extension QueueItem {
-//    @objc dynamic class func keyPathsForValuesAffectingIsCancelled() -> Set<NSObject> {
-//        return ["state" as NSObject]
-//    }
-//
-//    @objc dynamic class func keyPathsForValuesAffectingIsExecuting() -> Set<NSObject> {
-//        return ["state" as NSObject]
-//    }
-//
-//    @objc dynamic class func keyPathsForValuesAffectingIsFinished() -> Set<NSObject> {
-//        return ["state" as NSObject]
-//    }
-//
-//    //    @objc dynamic class func keyPathsForValuesAffectingIsCancelled() -> Set<NSObject> {
-//    //        return ["state" as NSObject]
-//    //    }
-//}
-
