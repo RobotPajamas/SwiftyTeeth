@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias ExecutionBlock = (() -> Void)
+
 private enum State: String {
     case none = "None"
     case ready = "Ready"
@@ -17,7 +19,19 @@ private enum State: String {
     fileprivate var keyPath: String { return "is" + self.rawValue }
 }
 
-public class QueueItem: Operation {
+public class QueueItem<T>: Operation {
+    public typealias CallbackBlock = ((Result<T>) -> Void)
+    
+    //
+    @available(*, deprecated, message: "Don't use this")
+    override open var completionBlock: (() -> Void)? {
+        get {
+            return nil
+        }
+        set {
+            fatalError("completionBlock has some funky behaviour regarding threading and execution - prefer using regular init")
+        }
+    }
     
     override public var isAsynchronous: Bool { return true }
     override public var isExecuting: Bool { return state == .executing }
@@ -36,29 +50,36 @@ public class QueueItem: Operation {
     
     let timeout: TimeInterval = 0.0
     let doOnFailure: FailureHandler = .nothing
+    let execution: ExecutionBlock?
+    let callback: CallbackBlock?
     
     public init(
+        name: String? = nil,
 //        timeout: TimeInterval = 0.0,
 //        doOnFailure: FailureHandler = .nothing,
         priority: QueuePriority = .normal,
-        completion: (() -> Void)? = nil) {
+        execution: ExecutionBlock? = nil,
+        callback: CallbackBlock? = nil) {
 //        self.timeout = timeout
 //        self.doOnFailure = doOnFailure
+        self.execution = execution // TODO: Maybe use something else
+        self.callback = callback
         super.init()
+        self.name = name
         self.queuePriority = priority
-        self.completionBlock = completion
     }
     
     public override func main() {
         guard isCancelled == false else {
-            finish()
+            done()
             return
         }
-        
+        state = .executing
         execute()
     }
     
-    public func finish() {
+    // Call this after Execute is completed to allow Queue to continue
+    public func done() {
         state = .finished
     }
 }
@@ -67,7 +88,11 @@ public class QueueItem: Operation {
 extension QueueItem: Queueable {
     
     func execute() {
-//        preconditionFailure("This method must be overridden - ensure to call finish() at the end")
-        finish()
+//        preconditionFailure("This method must be overridden - ensure to call done() at the end")
+        if let execution = execution {
+            execution()
+        } else {
+            done()
+        }
     }
 }

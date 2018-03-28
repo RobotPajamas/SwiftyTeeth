@@ -93,16 +93,6 @@ extension Device {
         self.autoReconnect = autoReconnect
         self.manager.connect(to: self)
         // TODO: Add timeout functionality
-        queue.pushBack(item: QueueItem() {
-            print("QUUE1")
-        })
-        queue.pushBack(item: QueueItem() {
-            print("QUUE2")
-        })
-        queue.pushBack(item: QueueItem() {
-            print("QUUE3")
-        })
-        
     }
     
     open func disconnect(autoReconnect: Bool = false) {
@@ -147,15 +137,17 @@ extension Device {
                 return
         }
         
-        queue.pushBack(item: QueueItem(completion: {
-            guard self.isConnected == true else {
-                Log(v: "Not connected - cannot read", tag: self.tag)
-                return
-            }
-            
-//            readHandler = complete
-            self.peripheral.readValue(for: targetCharacteristic)
-        }))
+        let item = QueueItem<Data>(
+            name: targetCharacteristic.compositeId,
+            execution: {
+                guard self.isConnected == true else {
+                    Log(v: "Not connected - cannot read", tag: self.tag)
+                    return
+                }
+                // readHandler = complete
+                self.peripheral.readValue(for: targetCharacteristic)
+            }, callback: complete)
+        queue.pushBack(item)
     }
     
     open func write(data: Data, to characteristic: String, in service: String, complete: WriteHandler? = nil) {

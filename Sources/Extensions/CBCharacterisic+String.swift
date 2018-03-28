@@ -9,6 +9,10 @@
 import CoreBluetooth
 
 internal extension CBCharacteristic {
+    var compositeId: String {
+        return service.uuid.uuidString + uuid.uuidString
+    }
+    
     func equals(_ uuidString: String) -> Bool {
         return self.uuid.uuidString.lowercased() == uuidString.lowercased()
     }
