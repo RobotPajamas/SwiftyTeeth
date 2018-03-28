@@ -16,6 +16,11 @@ public typealias CharacteristicDiscovery = ((Result<DiscoveredCharacteristic>) -
 public typealias ReadHandler = ((Result<Data>) -> Void)
 public typealias WriteHandler = ((Result<Void>) -> Void)
 
+public enum ConnectionError: Error {
+    case disconnected
+}
+
+
 // Note: The design of this class will (eventually, and if reasonable) attempt to keep APIs unaware of CoreBluetooth
 // while at the same time making use of them internally as a convenience
 // NotificationHandler is an example of this, as it could be a dictionary using a String key - but that just adds extra indirection internally,
@@ -135,19 +140,19 @@ extension Device {
                 return
         }
         
-        guard self.isConnected == true else {
-            Log(v: "Not connected - cannot read", tag: self.tag)
-            print("Not connected in read")
-            return
-        }
-        
         let item = QueueItem<Data>(
             name: targetCharacteristic.compositeId,
-            execution: {
-                // TODO: Add connection check, and error out otherwise
+            execution: { (cb) in
+                guard self.isConnected == true else {
+                    Log(v: "Not connected - cannot read", tag: self.tag)
+                    cb(.failure(ConnectionError.disconnected))
+                    return
+                }
                 self.peripheral.readValue(for: targetCharacteristic)
-        }, callback: { (result) in
+            },
+            callback: { (result, done) in
                 complete?(result)
+                done()
         })
     
         queue.pushBack(item)
@@ -159,18 +164,18 @@ extension Device {
                 return
         }
         
-        guard isConnected == true else {
-            Log(v: "Not connected - cannot write", tag: tag)
-            return
-        }
-        
         let item = QueueItem<Void>(
             name: targetCharacteristic.compositeId,
-            execution: {
-                // TODO: Add connection check, and error out otherwise
+            execution: { (cb) in
+                guard self.isConnected == false else {
+                    Log(v: "Not connected - cannot write", tag: self.tag)
+                    cb(.failure(ConnectionError.disconnected))
+                    return
+                }
                 self.peripheral.writeValue(data, for: targetCharacteristic, type: type)
-        }, callback: { (result) in
+        }, callback: { (result, done) in
             complete?(result)
+            done()
         })
         queue.pushBack(item)
     }

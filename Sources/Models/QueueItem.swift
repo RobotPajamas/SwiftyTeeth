@@ -7,8 +7,6 @@
 
 import Foundation
 
-public typealias ExecutionBlock = (() -> Void)
-
 private enum State: String {
     case none = "None"
     case ready = "Ready"
@@ -20,7 +18,8 @@ private enum State: String {
 }
 
 public class QueueItem<T>: Operation {
-    public typealias CallbackBlock = ((Result<T>) -> Void)
+    public typealias CallbackBlock = (Result<T>, () -> Void) -> Void
+    public typealias ExecutionBlock = ((Result<T>) -> Void) -> Void
     
     @available(*, deprecated, message: "Don't use this")
     override open var completionBlock: (() -> Void)? {
@@ -58,10 +57,10 @@ public class QueueItem<T>: Operation {
 //        timeout: TimeInterval = 0.0, // After starting, give up after 'timeout'
 //        doOnFailure: FailureHandler = .nothing, // Retry/reschedule on failure
         priority: QueuePriority = .normal,
-        execution: ExecutionBlock? = nil,
+        execution: ExecutionBlock? = nil, // TODO: Does this being nil make sense??
         callback: CallbackBlock? = nil) {
         
-        self.execution = execution // TODO: Maybe use something else
+        self.execution = execution
         self.callback = callback
         super.init()
         self.name = name
@@ -87,10 +86,13 @@ public class QueueItem<T>: Operation {
 extension QueueItem: Queueable {
     
     func execute() {
-//        preconditionFailure("This method must be overridden - ensure to call done() at the end")
-        // Check for nil callback - as done should be appended to execution otherwise
         if let execution = execution {
-            execution()
+            execution { (result) in
+                // Allow an early exit from the task if execution was a failure
+                if result.isFailure {
+                    notify(result)
+                }
+            }
         } else {
             done()
         }
@@ -98,9 +100,11 @@ extension QueueItem: Queueable {
     
     func notify(_ result: Result<T>) {
         if let cb = callback {
-           cb(result)
+            cb(result) {
+                done()
+            }
+        } else {
+            done()
         }
-        // TODO: This assumes that cb is synchronous...
-        done()
     }
 }
