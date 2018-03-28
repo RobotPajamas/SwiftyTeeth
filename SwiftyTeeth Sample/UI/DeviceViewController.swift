@@ -82,7 +82,7 @@ extension DeviceViewController {
     
     @objc func read() {
         // Using a Heart-Rate device for testing - this is the HR service and characteristic
-        device?.read(from: "2a37", in: "180d", complete: { result in
+        device?.read(from: "2a24", in: "180a", complete: { result in
             self.printUi("Read value: \(String(describing: result.value?.base64EncodedString()))")
         })
     }
