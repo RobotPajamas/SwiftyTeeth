@@ -34,7 +34,6 @@ open class Device: NSObject {
     // Should these handlers be queues?
     fileprivate var serviceDiscoveryHandler: ServiceDiscovery?
     fileprivate var characteristicDiscoveryHandler: CharacteristicDiscovery?
-    fileprivate var readHandler: ReadHandler?
     fileprivate var writeHandler: WriteHandler?
     
     fileprivate var notificationHandler = [CBCharacteristic: ReadHandler]()
@@ -137,16 +136,21 @@ extension Device {
                 return
         }
         
+        guard self.isConnected == true else {
+            Log(v: "Not connected - cannot read", tag: self.tag)
+            print("Not connected in read")
+            return
+        }
+        
         let item = QueueItem<Data>(
             name: targetCharacteristic.compositeId,
             execution: {
-                guard self.isConnected == true else {
-                    Log(v: "Not connected - cannot read", tag: self.tag)
-                    return
-                }
-                // readHandler = complete
+                // TODO: Add connection check, and error out otherwise
                 self.peripheral.readValue(for: targetCharacteristic)
-            }, callback: complete)
+        }, callback: { (result) in
+                complete?(result)
+        })
+    
         queue.pushBack(item)
     }
     
@@ -315,8 +319,15 @@ internal extension Device  {
             result = .failure(e)
         }
         
-        readHandler?(result)
-        readHandler = nil
+        for operation in queue.items {
+            guard operation.name == characteristic.compositeId,
+                operation.isExecuting == true else {
+                continue
+            }
+            // TODO: Exit loop, or run through everything just in case? Probably exit
+            // TODO: If queue.items can be mapped as QueueItem<Data> - cast unnecessary
+            (operation as? QueueItem<Data>)?.notify(result)
+        }
         notificationHandler[characteristic]?(result)
     }
     

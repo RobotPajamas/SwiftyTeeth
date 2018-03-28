@@ -9,13 +9,11 @@ import Foundation
 
 extension OperationQueue: SwiftyQueue {
     
-    var items: [QueueItem<Any>] {
-        return self.operations.map({ (operation) -> QueueItem<Any> in
-            return operation as! QueueItem<Any>
-        })
+    var items: [Operation] {
+        return operations
     }
     
-    func pushBack(_ item: QueueItem<Any>) {
+    func pushBack(_ item: Operation) {
         self.addOperation(item)
     }
     

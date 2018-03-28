@@ -22,7 +22,6 @@ private enum State: String {
 public class QueueItem<T>: Operation {
     public typealias CallbackBlock = ((Result<T>) -> Void)
     
-    //
     @available(*, deprecated, message: "Don't use this")
     override open var completionBlock: (() -> Void)? {
         get {
@@ -50,18 +49,18 @@ public class QueueItem<T>: Operation {
     
     let timeout: TimeInterval = 0.0
     let doOnFailure: FailureHandler = .nothing
-    let execution: ExecutionBlock?
-    let callback: CallbackBlock?
+    private let execution: ExecutionBlock?
+    private let callback: CallbackBlock?
     
     public init(
         name: String? = nil,
-//        timeout: TimeInterval = 0.0,
-//        doOnFailure: FailureHandler = .nothing,
+        //delay: TimeInterval = 0.0, // When the task is kicked off, start running after 'delay'
+//        timeout: TimeInterval = 0.0, // After starting, give up after 'timeout'
+//        doOnFailure: FailureHandler = .nothing, // Retry/reschedule on failure
         priority: QueuePriority = .normal,
         execution: ExecutionBlock? = nil,
         callback: CallbackBlock? = nil) {
-//        self.timeout = timeout
-//        self.doOnFailure = doOnFailure
+        
         self.execution = execution // TODO: Maybe use something else
         self.callback = callback
         super.init()
@@ -89,10 +88,19 @@ extension QueueItem: Queueable {
     
     func execute() {
 //        preconditionFailure("This method must be overridden - ensure to call done() at the end")
+        // Check for nil callback - as done should be appended to execution otherwise
         if let execution = execution {
             execution()
         } else {
             done()
         }
+    }
+    
+    func notify(_ result: Result<T>) {
+        if let cb = callback {
+           cb(result)
+        }
+        // TODO: This assumes that cb is synchronous...
+        done()
     }
 }

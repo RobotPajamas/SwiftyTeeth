@@ -6,9 +6,9 @@
 //
 
 internal protocol SwiftyQueue {
-    var items: [QueueItem<Any>] {get}
+    var items: [Operation] {get}
     
-    func pushBack(_ item: QueueItem<Any>)
+    func pushBack(_ item: Operation)
     func cancelAll()
 }
 
