@@ -9,6 +9,13 @@
 import Foundation
 import CoreBluetooth
 
+public typealias DiscoveredCharacteristic = (service: CBService, characteristics: [CBCharacteristic])
+public typealias ConnectionHandler = ((Bool) -> Void)
+public typealias ServiceDiscovery = ((Result<[CBService]>) -> Void)
+public typealias CharacteristicDiscovery = ((Result<DiscoveredCharacteristic>) -> Void)
+public typealias ReadHandler = ((Result<Data>) -> Void)
+public typealias WriteHandler = ((Result<Void>) -> Void)
+
 // Note: The design of this class will (eventually, and if reasonable) attempt to keep APIs unaware of CoreBluetooth
 // while at the same time making use of them internally as a convenience
 // NotificationHandler is an example of this, as it could be a dictionary using a String key - but that just adds extra indirection internally,
@@ -16,35 +23,7 @@ import CoreBluetooth
 open class Device: NSObject {
     fileprivate let tag = "SwiftyDevice"
     
-    public typealias DiscoveredCharacteristic = (service: CBService, characteristics: [CBCharacteristic])
-    public typealias ConnectionHandler = ((Bool) -> Void)
-    public typealias ServiceDiscovery = ((Result<[CBService]>) -> Void)
-    public typealias CharacteristicDiscovery = ((Result<DiscoveredCharacteristic>) -> Void)
-    public typealias ReadHandler = ((Result<Data>) -> Void)
-    public typealias WriteHandler = ((Result<Void>) -> Void)
-    
     let peripheral: CBPeripheral
-    
-    open var isConnected: Bool {
-        return peripheral.state == .connected
-    }
-    
-    open var name: String {
-        return peripheral.name ?? ""
-    }
-    
-    open var id: String {
-        return peripheral.identifier.uuidString
-    }
-    
-    //    open var connectionState: StateEnumOfSomeSort {
-    //        return peripheral.state
-    //    }
-    
-    
-//    open var rssi: Int {
-//        return peripheral.
-//    }
     
     // TODO: Maybe just make this a String of Strings?
     open var discoveredServices = [CBService: [CBCharacteristic]]()
@@ -62,6 +41,12 @@ open class Device: NSObject {
     
     // Connection parameters
     fileprivate var autoReconnect = false
+ 
+    lazy var queue: SwiftyQueue = {
+        let instance = OperationQueue()
+        instance.maxConcurrentOperationCount = 1 // Ensure serial queue
+        return instance
+    }()
     
     public init(manager: SwiftyTeeth, peripheral: CBPeripheral) {
         self.manager = manager
@@ -74,6 +59,30 @@ open class Device: NSObject {
     }
 }
 
+// MARK: Computed properties
+extension Device {
+    open var isConnected: Bool {
+        return peripheral.state == .connected
+    }
+    
+    open var name: String {
+        return peripheral.name ?? ""
+    }
+    
+    open var id: String {
+        return peripheral.identifier.uuidString
+    }
+    
+    //    open var connectionState: StateEnumOfSomeSort {
+    //        return peripheral.state
+    //    }
+    
+    
+    //    open var rssi: Int {
+    //        return peripheral.
+    //    }
+}
+
 // MARK: - Connection operations
 extension Device {
     // Annoyingly, iOS has the connection functionality sitting on the central manager, instead of on the peripheral
@@ -84,6 +93,16 @@ extension Device {
         self.autoReconnect = autoReconnect
         self.manager.connect(to: self)
         // TODO: Add timeout functionality
+        queue.pushBack(item: QueueItem() {
+            print("QUUE1")
+        })
+        queue.pushBack(item: QueueItem() {
+            print("QUUE2")
+        })
+        queue.pushBack(item: QueueItem() {
+            print("QUUE3")
+        })
+        
     }
     
     open func disconnect(autoReconnect: Bool = false) {
@@ -128,13 +147,15 @@ extension Device {
                 return
         }
         
-        guard isConnected == true else {
-            Log(v: "Not connected - cannot read", tag: tag)
-            return
-        }
-        
-        readHandler = complete
-        peripheral.readValue(for: targetCharacteristic)
+        queue.pushBack(item: QueueItem(completion: {
+            guard self.isConnected == true else {
+                Log(v: "Not connected - cannot read", tag: self.tag)
+                return
+            }
+            
+//            readHandler = complete
+            self.peripheral.readValue(for: targetCharacteristic)
+        }))
     }
     
     open func write(data: Data, to characteristic: String, in service: String, complete: WriteHandler? = nil) {

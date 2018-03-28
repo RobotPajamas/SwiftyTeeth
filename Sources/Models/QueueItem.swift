@@ -34,15 +34,16 @@ public class QueueItem: Operation {
         }
     }
     
-    let timeout: TimeInterval
-    let doOnFailure: FailureHandler
+    let timeout: TimeInterval = 0.0
+    let doOnFailure: FailureHandler = .nothing
     
-    public init(timeout: TimeInterval = 0.0,
-                         doOnFailure: FailureHandler = .nothing,
-                         priority: QueuePriority = .normal,
-                         completion: (() -> Void)? = nil) {
-        self.timeout = timeout // TODO: Does nothing
-        self.doOnFailure = doOnFailure // TODO: Does nothing
+    public init(
+//        timeout: TimeInterval = 0.0,
+//        doOnFailure: FailureHandler = .nothing,
+        priority: QueuePriority = .normal,
+        completion: (() -> Void)? = nil) {
+//        self.timeout = timeout
+//        self.doOnFailure = doOnFailure
         super.init()
         self.queuePriority = priority
         self.completionBlock = completion
@@ -66,6 +67,7 @@ public class QueueItem: Operation {
 extension QueueItem: Queueable {
     
     func execute() {
+//        preconditionFailure("This method must be overridden - ensure to call finish() at the end")
         finish()
     }
 }
