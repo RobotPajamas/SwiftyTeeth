@@ -154,7 +154,7 @@ extension Device {
         queue.pushBack(item)
     }
     
-    open func write(data: Data, to characteristic: String, in service: String, complete: WriteHandler? = nil) {
+    open func write(data: Data, to characteristic: String, in service: String, type: CBCharacteristicWriteType = .withResponse, complete: WriteHandler? = nil) {
         guard let targetService = peripheral.services?.find(uuidString: service),
             let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
                 return
@@ -165,12 +165,15 @@ extension Device {
             return
         }
         
-        writeHandler = complete
-        var writeType = CBCharacteristicWriteType.withResponse
-        if complete == nil {
-            writeType = .withoutResponse
-        }
-        peripheral.writeValue(data, for: targetCharacteristic, type: writeType)
+        let item = QueueItem<Void>(
+            name: targetCharacteristic.compositeId,
+            execution: {
+                // TODO: Add connection check, and error out otherwise
+                self.peripheral.writeValue(data, for: targetCharacteristic, type: type)
+        }, callback: { (result) in
+            complete?(result)
+        })
+        queue.pushBack(item)
     }
     
     // TODO: Adding some pre-conditions libraries/toolkits could streamline the initial clutter
@@ -190,6 +193,7 @@ extension Device {
         }
         
         // TODO: Can using just the characteristic UUID cause a conflict if there is an identical characteristic in another service? Can't recall if legal
+        // TODO: Maybe use new compositeId? Merges service and characteristic IDs
         notificationHandler[targetCharacteristic] = complete
         peripheral.setNotifyValue(true, for: targetCharacteristic)
     }
@@ -338,9 +342,17 @@ internal extension Device  {
         if let e = error {
             result = .failure(e)
         }
-    
-        writeHandler?(result)
-        writeHandler = nil
+        
+        // TODO: Turn this into a helper function or 'find' extension
+        for operation in queue.items {
+            guard operation.name == characteristic.compositeId,
+                operation.isExecuting == true else {
+                    continue
+            }
+            // TODO: Exit loop, or run through everything just in case? Probably exit
+            // TODO: If queue.items can be mapped as QueueItem<Void> - cast unnecessary
+            (operation as? QueueItem<Void>)?.notify(result)
+        }
     }
     
     // This is equivalent to a direct READ from the characteristic
