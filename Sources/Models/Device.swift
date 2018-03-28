@@ -34,7 +34,6 @@ open class Device: NSObject {
     // Should these handlers be queues?
     fileprivate var serviceDiscoveryHandler: ServiceDiscovery?
     fileprivate var characteristicDiscoveryHandler: CharacteristicDiscovery?
-    fileprivate var writeHandler: WriteHandler?
     
     fileprivate var notificationHandler = [CBCharacteristic: ReadHandler]()
     
