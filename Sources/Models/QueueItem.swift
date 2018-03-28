@@ -39,8 +39,10 @@ public class QueueItem<T>: Operation {
         willSet {
             willChangeValue(forKey: state.keyPath)
             willChangeValue(forKey: newValue.keyPath)
+            mutex.wait()
         }
         didSet {
+            mutex.signal()
             didChangeValue(forKey: state.keyPath)
             didChangeValue(forKey: oldValue.keyPath)
         }
@@ -48,8 +50,11 @@ public class QueueItem<T>: Operation {
     
     let timeout: TimeInterval = 0.0
     let doOnFailure: FailureHandler = .nothing
+    
     private let execution: ExecutionBlock?
     private let callback: CallbackBlock?
+    
+    private let mutex = DispatchSemaphore(value: 1)
     
     public init(
         name: String? = nil,

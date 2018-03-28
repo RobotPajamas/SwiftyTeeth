@@ -167,7 +167,7 @@ extension Device {
         let item = QueueItem<Void>(
             name: targetCharacteristic.compositeId,
             execution: { (cb) in
-                guard self.isConnected == false else {
+                guard self.isConnected == true else {
                     Log(v: "Not connected - cannot write", tag: self.tag)
                     cb(.failure(ConnectionError.disconnected))
                     return
