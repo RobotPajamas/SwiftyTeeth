@@ -57,20 +57,20 @@ extension DeviceViewController {
             print("App: Starting service discovery...")
             self.device?.discoverServices(complete: { result in
                 let services = result.value ?? []
-                services.forEach({
+                services.forEach {
                     self.printUi("App: Discovering characteristics for service: \($0.uuid.uuidString)")
                     self.device?.discoverCharacteristics(for: $0, complete: { result in
                         let service = result.value?.service
                         let characteristics = result.value?.characteristics ?? []
-                        characteristics.forEach({
+                        characteristics.forEach {
                             self.printUi("App: Discovered characteristic: \($0.uuid.uuidString) in \(String(describing: service?.uuid.uuidString))")
-                        })
+                        }
                         
                         if service == services.last {
                             self.printUi("App: All services/characteristics discovered")
                         }
                     })
-                })
+                }
             })
 
         })

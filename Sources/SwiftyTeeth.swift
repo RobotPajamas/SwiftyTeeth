@@ -15,7 +15,12 @@ open class SwiftyTeeth: NSObject {
 
     public static let shared = SwiftyTeeth()
     
-    public var stateChangedHandler: ((BluetoothState) -> Void)?
+    public var stateChangedHandler: ((BluetoothState) -> Void)? {
+        didSet {
+            stateChangedHandler?(state)
+        }
+    }
+    
     fileprivate var scanChangesHandler: ((Device) -> Void)?
     fileprivate var scanCompleteHandler: (([Device]) -> Void)?
 
