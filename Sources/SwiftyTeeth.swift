@@ -145,6 +145,8 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
             Log(v: "Bluetooth state is powered off.")
         case .poweredOn:
             Log(v: "Bluetooth state is powered on")
+        default:
+            Log(v: "Bluetooth state is not in supported switches")
         }
         
         guard let state = BluetoothState(rawValue: central.state.rawValue) else {
