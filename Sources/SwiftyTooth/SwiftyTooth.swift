@@ -54,15 +54,18 @@ public extension SwiftyTooth {
         return peripheralManager.isAdvertising
     }
     
-    func advertise(name: String, for timeout: TimeInterval = 0) {
+    func advertise(name: String, uuids: [CBUUID] = [], for timeout: TimeInterval = 0) {
         DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
             self.stopAdvertising()
         }
         advertise(name: name)
     }
     
-    func advertise(name: String) {
-        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey:name])
+    func advertise(name: String, uuids: [CBUUID] = []) {
+        peripheralManager.startAdvertising([
+            CBAdvertisementDataLocalNameKey:name,
+            CBAdvertisementDataServiceUUIDsKey: uuids
+        ])
     }
     
     func stopAdvertising() {
@@ -94,5 +97,10 @@ extension SwiftyTooth: CBPeripheralManagerDelegate {
             return
         }
         stateChangedHandler?(state)
+    }
+    
+    public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
+        Log(v: "Started advertising")
+        print("Started advertising")
     }
 }
