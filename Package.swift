@@ -21,15 +21,15 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftyTeeth",
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-    ],
     platforms: [
         .macOS(.v10_14),
         .iOS(.v10),
         .tvOS(.v10),
         .watchOS(.v4)
+    ],
+    dependencies: [
+        // Dependencies declare other packages that this package depends on.
+        // .package(url: /* package url */, from: "1.0.0"),
     ],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
