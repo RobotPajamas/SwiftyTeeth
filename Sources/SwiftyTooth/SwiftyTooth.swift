@@ -47,7 +47,7 @@ public extension SwiftyTooth {
     }
 }
 
-// MARK: - Manager Advertise functions
+// MARK: - SwiftyTooth Advertise functions
 public extension SwiftyTooth {
 
     var isAdvertising: Bool {
@@ -75,6 +75,8 @@ public extension SwiftyTooth {
 
 // MARK: - Peripheral manager
 extension SwiftyTooth: CBPeripheralManagerDelegate {
+    
+    // MARK: - Peripheral Manager State Changes
     public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch (peripheral.state) {
         case .unknown:
@@ -99,8 +101,44 @@ extension SwiftyTooth: CBPeripheralManagerDelegate {
         stateChangedHandler?(state)
     }
     
+    public func peripheralManager(_ peripheral: CBPeripheralManager, willRestoreState dict: [String : Any]) {
+
+    }
+    
+    // MARK: - Peripheral Manager Services
+    
+    public func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: Error?) {
+        
+    }
+    
+    // MARK: - Peripheral Manager Advertisments
+    
     public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
         Log(v: "Started advertising")
         print("Started advertising")
     }
+    
+    // MARK: - Peripheral Manager Characteristic Subscriptions
+    public func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
+        
+    }
+    
+    public func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
+        
+    }
+    
+    public func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
+        
+    }
+    
+    // MARK: - Peripheral Manager Read/Write requests
+    public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
+        request.value = Data(base64Encoded: "Hello")
+        peripheralManager.respond(to: request, withResult: .success)
+    }
+    
+    public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+        peripheralManager.respond(to: <#T##CBATTRequest#>, withResult: <#T##CBATTError.Code#>)
+    }
+    
 }
