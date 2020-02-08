@@ -5,6 +5,8 @@
 //  Created by Suresh Joshi on 2018-03-27.
 //
 
+import Foundation
+
 internal protocol SwiftyQueue {
     var items: [Operation] {get}
     
