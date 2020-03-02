@@ -138,7 +138,7 @@ extension SwiftyTooth: CBPeripheralManagerDelegate {
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
-        peripheralManager.respond(to: <#T##CBATTRequest#>, withResult: <#T##CBATTError.Code#>)
+//        peripheralManager.respond(to: <#T##CBATTRequest#>, withResult: <#T##CBATTError.Code#>)
     }
     
 }

@@ -149,7 +149,6 @@
 				8B64D1971DC2E39900D41A2C /* Extensions */,
 				8B64D19A1DC2E39900D41A2C /* Models */,
 				8B64D19C1DC2E39900D41A2C /* Protocols */,
-				8B64D19E1DC2E39900D41A2C /* Security */,
 				8B64D1CF1DC2E8FE00D41A2C /* SwiftyTeeth.swift */,
 				8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */,
 				8B64D1A11DC2E42000D41A2C /* Info.plist */,
@@ -160,17 +159,10 @@
 		1952CB97238A3E7500EBBCD3 /* SwiftyTooth */ = {
 			isa = PBXGroup;
 			children = (
+				1952CBA1238A43F700EBBCD3 /* SwiftyTooth.h */,
 				1952CB98238A3F0100EBBCD3 /* SwiftyTooth.swift */,
 				1952CBA8238A451700EBBCD3 /* Logger.swift */,
 				1952CBAB238A458B00EBBCD3 /* BluetoothState.swift */,
-			);
-			path = SwiftyTooth;
-			sourceTree = "<group>";
-		};
-		1952CBA0238A43F700EBBCD3 /* SwiftyTooth */ = {
-			isa = PBXGroup;
-			children = (
-				1952CBA1238A43F700EBBCD3 /* SwiftyTooth.h */,
 				1952CBA2238A43F700EBBCD3 /* Info.plist */,
 			);
 			path = SwiftyTooth;
@@ -183,7 +175,6 @@
 				8B64D1941DC2E39900D41A2C /* Sources */,
 				8B64D1AD1DC2E86200D41A2C /* Tests */,
 				8B64D1BC1DC2E8C600D41A2C /* SwiftyTeeth Sample */,
-				1952CBA0238A43F700EBBCD3 /* SwiftyTooth */,
 				8B64D18B1DC2E16300D41A2C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -245,14 +236,6 @@
 				19A0686A206B162E0023D5EE /* SwiftyQueue.swift */,
 			);
 			path = Protocols;
-			sourceTree = "<group>";
-		};
-		8B64D19E1DC2E39900D41A2C /* Security */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Security;
-			path = ../Security;
 			sourceTree = "<group>";
 		};
 		8B64D1A01DC2E3A100D41A2C /* Meta */ = {
@@ -808,7 +791,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info-iOS.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/SwiftyTeeth/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -875,7 +858,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info-iOS.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/SwiftyTeeth/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
