@@ -10,9 +10,23 @@ import CoreBluetooth
 
 var swiftyToothLogger: Logger?
 
+public typealias ReadHandler = ((Result<Data, Error>) -> Void)
+public typealias WriteHandler = ((Result<Data?, Error>) -> Void)
+public typealias NotifyHandler = ((Result<Data, Error>) -> Void)
+
 open class SwiftyTooth: NSObject {
 
     public static let shared = SwiftyTooth()
+    
+    // Only allow a single connected Central right now
+    // Seems like connectivity needs to be inferred, there isn't an "isConnected" anywhere
+    // This is just used to determine if we should notify out values to a subscribed central
+    fileprivate var connectedCentral: String?
+    fileprivate var characteristics: [CBMutableCharacteristic] = []
+    fileprivate var notifyHandlers = [UUID: NotifyHandler]()
+    fileprivate var readHandlers = [UUID: ReadHandler]()
+    fileprivate var writeHandlers = [UUID: WriteHandler]()
+    
     
     public var stateChangedHandler: ((BluetoothState) -> Void)? {
         didSet {
@@ -58,7 +72,7 @@ public extension SwiftyTooth {
         DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
             self.stopAdvertising()
         }
-        advertise(name: name)
+        advertise(name: name, uuids: uuids)
     }
     
     func advertise(name: String, uuids: [CBUUID] = []) {
@@ -73,6 +87,69 @@ public extension SwiftyTooth {
     }
 }
 
+// MARK: - SwiftyTooth Service/Characteristics
+public extension SwiftyTooth {
+    func add(service: Service) {
+        let cbService = CBMutableService(type: CBUUID(nsuuid: service.uuid), primary: true)
+        cbService.characteristics = []
+        
+        for char in service.characteristics {
+            var cbProperties = CBCharacteristicProperties()
+            var cbAttributePermissions = CBAttributePermissions()
+            
+            for prop in char.properties {
+                switch(prop) {
+                case .read(let handler):
+                    cbProperties.update(with: .read)
+                    cbAttributePermissions.update(with: .readable)
+                    readHandlers[char.uuid] = handler
+                    
+                case .notify(let handler):
+                    cbProperties.update(with: .notify)
+                    cbAttributePermissions.update(with: .readable)
+                    notifyHandlers[char.uuid] = handler
+                    
+                case .write(let handler):
+                    cbProperties.update(with: .write)
+                    cbAttributePermissions.update(with: .writeable)
+                    writeHandlers[char.uuid] = handler
+                
+                case .writeNoResponse(let handler):
+                    cbProperties.update(with: .writeWithoutResponse)
+                    cbAttributePermissions.update(with: .writeable)
+                    writeHandlers[char.uuid] = handler
+                }
+            }
+            
+            let cbChar = CBMutableCharacteristic(
+                type: CBUUID(nsuuid: char.uuid),
+                properties: cbProperties,
+                value: nil,
+                permissions: cbAttributePermissions)
+            
+            cbService.characteristics?.append(cbChar)
+            characteristics.append(cbChar)
+        }
+
+        peripheralManager.add(cbService)
+    }
+}
+
+// MARK: - SwiftyTooth Emitting Data
+public extension SwiftyTooth {
+    // Sends data to all subscribed centrals for this characteristic
+    func emit(data: Data, on characteristic: Characteristic) {
+        guard let mutableCharacteristic = characteristics.first(where: { (char) -> Bool in
+            char.uuid.uuidString == characteristic.uuid.uuidString
+        }) else {
+            return
+        }
+        
+        peripheralManager.updateValue(data, for: mutableCharacteristic, onSubscribedCentrals: nil)
+    }
+}
+
+
 // MARK: - Peripheral manager
 extension SwiftyTooth: CBPeripheralManagerDelegate {
     
@@ -80,19 +157,19 @@ extension SwiftyTooth: CBPeripheralManagerDelegate {
     public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch (peripheral.state) {
         case .unknown:
-            Log(v: "Bluetooth state is unknown.")
+            print("Bluetooth state is unknown.")
         case .resetting:
-            Log(v: "Bluetooth state is resetting.")
+            print("Bluetooth state is resetting.")
         case .unsupported:
-            Log(v: "Bluetooth state is unsupported.")
+            print("Bluetooth state is unsupported.")
         case .unauthorized:
-            Log(v: "Bluetooth state is unauthorized.")
+            print("Bluetooth state is unauthorized.")
         case .poweredOff:
-            Log(v: "Bluetooth state is powered off.")
+            print("Bluetooth state is powered off.")
         case .poweredOn:
-            Log(v: "Bluetooth state is powered on")
+            print("Bluetooth state is powered on")
         default:
-            Log(v: "Bluetooth state is not in supported switches")
+            print("Bluetooth state is not in supported switches")
         }
         
         guard let state = BluetoothState(rawValue: peripheral.state.rawValue) else {
@@ -102,42 +179,53 @@ extension SwiftyTooth: CBPeripheralManagerDelegate {
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, willRestoreState dict: [String : Any]) {
-
+        print("Will restore state")
     }
     
     // MARK: - Peripheral Manager Services
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: Error?) {
-        
+        print("didAdd \(service.uuid.uuidString)")
     }
     
     // MARK: - Peripheral Manager Advertisments
     
     public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
-        Log(v: "Started advertising")
-        print("Started advertising")
+//        Log(v: "Started advertising")
+        print("Started advertising with \(error)")
     }
     
     // MARK: - Peripheral Manager Characteristic Subscriptions
     public func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
+        print("didSubscribeTo \(characteristic.uuid.uuidString) \(central.maximumUpdateValueLength)")
+        
         
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
-        
+        print("didUnsubscribeFrom \(characteristic.uuid.uuidString)")
     }
     
     public func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
-        
+        print("peripheralManagerIsReady")
     }
     
     // MARK: - Peripheral Manager Read/Write requests
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
+        print("didReceiveRead")
+        
+        
+        
         request.value = Data(base64Encoded: "Hello")
         peripheralManager.respond(to: request, withResult: .success)
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+        print("didReceiveWrite")
+        for request in requests {
+            let uuid = UUID(uuidString: request.characteristic.uuid.uuidString)!
+            writeHandlers[uuid]?(.success(request.value))
+        }
 //        peripheralManager.respond(to: <#T##CBATTRequest#>, withResult: <#T##CBATTError.Code#>)
     }
     

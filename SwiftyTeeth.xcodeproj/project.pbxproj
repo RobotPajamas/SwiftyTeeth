@@ -20,6 +20,8 @@
 		19A0686B206B162E0023D5EE /* SwiftyQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686A206B162E0023D5EE /* SwiftyQueue.swift */; };
 		19A0686D206B18B20023D5EE /* QueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686C206B18B20023D5EE /* QueueItem.swift */; };
 		19B7DC8F1F0D624F0035FDFA /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7DC8E1F0D624F0035FDFA /* Logger.swift */; };
+		33FBC0BA240DD7DF00511997 /* Characteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FBC0B8240DD7D900511997 /* Characteristic.swift */; };
+		33FBC0BE240DD8F700511997 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FBC0BC240DD88900511997 /* Service.swift */; };
 		8B64D18F1DC2E16300D41A2C /* SwiftyTeeth.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8B64D1AF1DC2E86200D41A2C /* SwiftyTeeth_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1AE1DC2E86200D41A2C /* SwiftyTeeth_Tests.swift */; };
 		8B64D1B11DC2E86200D41A2C /* SwiftyTeeth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */; };
@@ -84,6 +86,8 @@
 		19A0686A206B162E0023D5EE /* SwiftyQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyQueue.swift; sourceTree = "<group>"; };
 		19A0686C206B18B20023D5EE /* QueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItem.swift; sourceTree = "<group>"; };
 		19B7DC8E1F0D624F0035FDFA /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		33FBC0B8240DD7D900511997 /* Characteristic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characteristic.swift; sourceTree = "<group>"; };
+		33FBC0BC240DD88900511997 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyTeeth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftyTeeth.h; sourceTree = "<group>"; };
 		8B64D1A11DC2E42000D41A2C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -159,13 +163,23 @@
 		1952CB97238A3E7500EBBCD3 /* SwiftyTooth */ = {
 			isa = PBXGroup;
 			children = (
+				33FBC0BB240DD85500511997 /* Extensions */,
 				1952CBA1238A43F700EBBCD3 /* SwiftyTooth.h */,
 				1952CB98238A3F0100EBBCD3 /* SwiftyTooth.swift */,
 				1952CBA8238A451700EBBCD3 /* Logger.swift */,
 				1952CBAB238A458B00EBBCD3 /* BluetoothState.swift */,
 				1952CBA2238A43F700EBBCD3 /* Info.plist */,
+				33FBC0B8240DD7D900511997 /* Characteristic.swift */,
+				33FBC0BC240DD88900511997 /* Service.swift */,
 			);
 			path = SwiftyTooth;
+			sourceTree = "<group>";
+		};
+		33FBC0BB240DD85500511997 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		8B64D17E1DC2E0A400D41A2C = {
@@ -482,7 +496,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33FBC0BA240DD7DF00511997 /* Characteristic.swift in Sources */,
 				1952CBA7238A44E500EBBCD3 /* SwiftyTooth.swift in Sources */,
+				33FBC0BE240DD8F700511997 /* Service.swift in Sources */,
 				1952CBAC238A458B00EBBCD3 /* BluetoothState.swift in Sources */,
 				1952CBAA238A453E00EBBCD3 /* Logger.swift in Sources */,
 			);
@@ -593,7 +609,7 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = SwiftyTooth/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/SwiftyTooth/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -644,7 +660,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = SwiftyTooth/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/SwiftyTooth/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
