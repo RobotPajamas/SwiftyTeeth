@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8B64D1BA1DC2E8C600D41A2C"
+               BlueprintIdentifier = "33FEC8B0242EF0C9001F9BD9"
                BuildableName = "SwiftyTeeth Sample.app"
                BlueprintName = "SwiftyTeeth Sample"
                ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
@@ -30,7 +30,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8B64D1BA1DC2E8C600D41A2C"
+            BlueprintIdentifier = "33FEC8B0242EF0C9001F9BD9"
             BuildableName = "SwiftyTeeth Sample.app"
             BlueprintName = "SwiftyTeeth Sample"
             ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
@@ -53,7 +53,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8B64D1BA1DC2E8C600D41A2C"
+            BlueprintIdentifier = "33FEC8B0242EF0C9001F9BD9"
             BuildableName = "SwiftyTeeth Sample.app"
             BlueprintName = "SwiftyTeeth Sample"
             ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
@@ -70,7 +70,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8B64D1BA1DC2E8C600D41A2C"
+            BlueprintIdentifier = "33FEC8B0242EF0C9001F9BD9"
             BuildableName = "SwiftyTeeth Sample.app"
             BlueprintName = "SwiftyTeeth Sample"
             ReferencedContainer = "container:SwiftyTeeth.xcodeproj">

@@ -19,6 +19,8 @@
 		19A0686B206B162E0023D5EE /* SwiftyQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686A206B162E0023D5EE /* SwiftyQueue.swift */; };
 		19A0686D206B18B20023D5EE /* QueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686C206B18B20023D5EE /* QueueItem.swift */; };
 		19B7DC8F1F0D624F0035FDFA /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7DC8E1F0D624F0035FDFA /* Logger.swift */; };
+		337BABE3242FF2BB00499385 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337BABE2242FF2BB00499385 /* TextView.swift */; };
+		337BABE6242FF2EB00499385 /* Apply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337BABE5242FF2EB00499385 /* Apply.swift */; };
 		33C34997242D1FC0006C7383 /* UUID+CBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C34995242D1F31006C7383 /* UUID+CBUUID.swift */; };
 		33FBC0BA240DD7DF00511997 /* Characteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FBC0B8240DD7D900511997 /* Characteristic.swift */; };
 		33FBC0BE240DD8F700511997 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FBC0BC240DD88900511997 /* Service.swift */; };
@@ -28,6 +30,11 @@
 		33FEC8BA242EF0CA001F9BD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33FEC8B9242EF0CA001F9BD9 /* Assets.xcassets */; };
 		33FEC8BD242EF0CA001F9BD9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33FEC8BC242EF0CA001F9BD9 /* Preview Assets.xcassets */; };
 		33FEC8C0242EF0CA001F9BD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33FEC8BE242EF0CA001F9BD9 /* LaunchScreen.storyboard */; };
+		33FEC8C7242EF5CE001F9BD9 /* SwiftyTeeth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */; };
+		33FEC8C8242EF5CE001F9BD9 /* SwiftyTeeth.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		33FEC8CD242EF6BC001F9BD9 /* ScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FEC8CC242EF6BC001F9BD9 /* ScanningView.swift */; };
+		33FEC8CF242EF6C5001F9BD9 /* PeripheralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FEC8CE242EF6C5001F9BD9 /* PeripheralView.swift */; };
+		33FEC8D6242EF825001F9BD9 /* Device+Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FEC8D5242EF825001F9BD9 /* Device+Identifiable.swift */; };
 		8B64D18F1DC2E16300D41A2C /* SwiftyTeeth.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8B64D1AF1DC2E86200D41A2C /* SwiftyTeeth_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1AE1DC2E86200D41A2C /* SwiftyTeeth_Tests.swift */; };
 		8B64D1B11DC2E86200D41A2C /* SwiftyTeeth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */; };
@@ -38,6 +45,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		33FEC8C9242EF5CE001F9BD9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B64D17F1DC2E0A400D41A2C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8B64D1891DC2E16300D41A2C;
+			remoteInfo = SwiftyTeeth;
+		};
 		8B64D1B21DC2E86200D41A2C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8B64D17F1DC2E0A400D41A2C /* Project object */;
@@ -46,6 +60,20 @@
 			remoteInfo = "SwiftyTeeth iOS";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		33FEC8CB242EF5CE001F9BD9 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				33FEC8C8242EF5CE001F9BD9 /* SwiftyTeeth.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1952CB98238A3F0100EBBCD3 /* SwiftyTooth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyTooth.swift; sourceTree = "<group>"; };
@@ -63,6 +91,8 @@
 		19A0686A206B162E0023D5EE /* SwiftyQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyQueue.swift; sourceTree = "<group>"; };
 		19A0686C206B18B20023D5EE /* QueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItem.swift; sourceTree = "<group>"; };
 		19B7DC8E1F0D624F0035FDFA /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		337BABE2242FF2BB00499385 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
+		337BABE5242FF2EB00499385 /* Apply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Apply.swift; sourceTree = "<group>"; };
 		33C34994242C2856006C7383 /* Peripheral */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Peripheral; path = Examples/Peripheral; sourceTree = "<group>"; };
 		33C34995242D1F31006C7383 /* UUID+CBUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UUID+CBUUID.swift"; sourceTree = "<group>"; };
 		33FBC0B8240DD7D900511997 /* Characteristic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characteristic.swift; sourceTree = "<group>"; };
@@ -76,6 +106,10 @@
 		33FEC8BC242EF0CA001F9BD9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		33FEC8BF242EF0CA001F9BD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		33FEC8C1242EF0CA001F9BD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		33FEC8C5242EF1E6001F9BD9 /* SwiftyTeeth Sample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "SwiftyTeeth Sample.entitlements"; sourceTree = "<group>"; };
+		33FEC8CC242EF6BC001F9BD9 /* ScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanningView.swift; sourceTree = "<group>"; };
+		33FEC8CE242EF6C5001F9BD9 /* PeripheralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralView.swift; sourceTree = "<group>"; };
+		33FEC8D5242EF825001F9BD9 /* Device+Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Device+Identifiable.swift"; sourceTree = "<group>"; };
 		8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyTeeth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftyTeeth.h; sourceTree = "<group>"; };
 		8B64D1A11DC2E42000D41A2C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -105,6 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33FEC8C7242EF5CE001F9BD9 /* SwiftyTeeth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +190,14 @@
 			path = SwiftyTooth;
 			sourceTree = "<group>";
 		};
+		337BABE4242FF2E200499385 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				337BABE5242FF2EB00499385 /* Apply.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		33FBC0BB240DD85500511997 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,6 +209,11 @@
 		33FEC8B2242EF0C9001F9BD9 /* SwiftyTeeth Sample */ = {
 			isa = PBXGroup;
 			children = (
+				337BABE4242FF2E200499385 /* Utils */,
+				33FEC8D4242EF81A001F9BD9 /* Extensions */,
+				33FEC8D3242EF802001F9BD9 /* UI */,
+				33FEC8D0242EF7D5001F9BD9 /* Components */,
+				33FEC8C5242EF1E6001F9BD9 /* SwiftyTeeth Sample.entitlements */,
 				33FEC8B3242EF0C9001F9BD9 /* AppDelegate.swift */,
 				33FEC8B5242EF0C9001F9BD9 /* SceneDelegate.swift */,
 				33FEC8B7242EF0C9001F9BD9 /* ContentView.swift */,
@@ -185,6 +233,38 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		33FEC8C6242EF5CE001F9BD9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		33FEC8D0242EF7D5001F9BD9 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				337BABE2242FF2BB00499385 /* TextView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		33FEC8D3242EF802001F9BD9 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				33FEC8CC242EF6BC001F9BD9 /* ScanningView.swift */,
+				33FEC8CE242EF6C5001F9BD9 /* PeripheralView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		33FEC8D4242EF81A001F9BD9 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				33FEC8D5242EF825001F9BD9 /* Device+Identifiable.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		8B64D17E1DC2E0A400D41A2C = {
 			isa = PBXGroup;
 			children = (
@@ -195,6 +275,7 @@
 				8B64D18B1DC2E16300D41A2C /* Products */,
 				8B64D1941DC2E39900D41A2C /* Sources */,
 				8B64D1AD1DC2E86200D41A2C /* Tests */,
+				33FEC8C6242EF5CE001F9BD9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -326,10 +407,12 @@
 				33FEC8AD242EF0C9001F9BD9 /* Sources */,
 				33FEC8AE242EF0C9001F9BD9 /* Frameworks */,
 				33FEC8AF242EF0C9001F9BD9 /* Resources */,
+				33FEC8CB242EF5CE001F9BD9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				33FEC8CA242EF5CE001F9BD9 /* PBXTargetDependency */,
 			);
 			name = "SwiftyTeeth Sample";
 			productName = "SwiftyTeeth Sample";
@@ -473,8 +556,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				33FEC8B4242EF0C9001F9BD9 /* AppDelegate.swift in Sources */,
+				337BABE3242FF2BB00499385 /* TextView.swift in Sources */,
+				33FEC8CD242EF6BC001F9BD9 /* ScanningView.swift in Sources */,
+				33FEC8CF242EF6C5001F9BD9 /* PeripheralView.swift in Sources */,
+				337BABE6242FF2EB00499385 /* Apply.swift in Sources */,
 				33FEC8B6242EF0C9001F9BD9 /* SceneDelegate.swift in Sources */,
 				33FEC8B8242EF0C9001F9BD9 /* ContentView.swift in Sources */,
+				33FEC8D6242EF825001F9BD9 /* Device+Identifiable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +596,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		33FEC8CA242EF5CE001F9BD9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8B64D1891DC2E16300D41A2C /* SwiftyTeeth */;
+			targetProxy = 33FEC8C9242EF5CE001F9BD9 /* PBXContainerItemProxy */;
+		};
 		8B64D1B31DC2E86200D41A2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8B64D1891DC2E16300D41A2C /* SwiftyTeeth */;
@@ -568,7 +661,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.5.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robotpajamas.SwiftyTooth;
@@ -619,7 +712,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.5.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robotpajamas.SwiftyTooth;
@@ -650,6 +743,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "SwiftyTeeth Sample/SwiftyTeeth Sample.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -676,6 +770,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.robotpajamas.SwiftyTeeth-Sample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -698,6 +793,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "SwiftyTeeth Sample/SwiftyTeeth Sample.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -719,6 +815,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.robotpajamas.SwiftyTeeth-Sample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
