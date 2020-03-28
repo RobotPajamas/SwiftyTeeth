@@ -13,7 +13,7 @@ public enum Property {
     case read(onRead: ReadHandler)
     case notify(onNotify: NotifyHandler)
     case write(onWrite: WriteHandler)
-    case writeNoResponse(onWrite: WriteHandler)
+    case writeNoResponse(onWrite: WriteNoResponseHandler)
     
     var isReadable: Bool {
         switch self {

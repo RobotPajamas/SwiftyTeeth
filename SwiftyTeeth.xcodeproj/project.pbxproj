@@ -20,6 +20,7 @@
 		19A0686B206B162E0023D5EE /* SwiftyQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686A206B162E0023D5EE /* SwiftyQueue.swift */; };
 		19A0686D206B18B20023D5EE /* QueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686C206B18B20023D5EE /* QueueItem.swift */; };
 		19B7DC8F1F0D624F0035FDFA /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7DC8E1F0D624F0035FDFA /* Logger.swift */; };
+		33C34997242D1FC0006C7383 /* UUID+CBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C34995242D1F31006C7383 /* UUID+CBUUID.swift */; };
 		33FBC0BA240DD7DF00511997 /* Characteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FBC0B8240DD7D900511997 /* Characteristic.swift */; };
 		33FBC0BE240DD8F700511997 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FBC0BC240DD88900511997 /* Service.swift */; };
 		8B64D18F1DC2E16300D41A2C /* SwiftyTeeth.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -86,6 +87,8 @@
 		19A0686A206B162E0023D5EE /* SwiftyQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyQueue.swift; sourceTree = "<group>"; };
 		19A0686C206B18B20023D5EE /* QueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItem.swift; sourceTree = "<group>"; };
 		19B7DC8E1F0D624F0035FDFA /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		33C34994242C2856006C7383 /* Peripheral */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Peripheral; path = Examples/Peripheral; sourceTree = "<group>"; };
+		33C34995242D1F31006C7383 /* UUID+CBUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UUID+CBUUID.swift"; sourceTree = "<group>"; };
 		33FBC0B8240DD7D900511997 /* Characteristic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characteristic.swift; sourceTree = "<group>"; };
 		33FBC0BC240DD88900511997 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyTeeth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,6 +181,7 @@
 		33FBC0BB240DD85500511997 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				33C34995242D1F31006C7383 /* UUID+CBUUID.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -190,6 +194,7 @@
 				8B64D1AD1DC2E86200D41A2C /* Tests */,
 				8B64D1BC1DC2E8C600D41A2C /* SwiftyTeeth Sample */,
 				8B64D18B1DC2E16300D41A2C /* Products */,
+				33C34994242C2856006C7383 /* Peripheral */,
 			);
 			sourceTree = "<group>";
 		};
@@ -278,7 +283,6 @@
 			isa = PBXGroup;
 			children = (
 				8B64D1D51DC2E9E800D41A2C /* ViewModels */,
-				8B64D1D11DC2E9E800D41A2C /* Graphs */,
 				8B64D1D21DC2E9E800D41A2C /* UI */,
 				8B64D1BD1DC2E8C600D41A2C /* AppDelegate.swift */,
 				8B64D1C31DC2E8C600D41A2C /* Main.storyboard */,
@@ -287,13 +291,6 @@
 				8B64D1CB1DC2E8C600D41A2C /* Info.plist */,
 			);
 			path = "SwiftyTeeth Sample";
-			sourceTree = "<group>";
-		};
-		8B64D1D11DC2E9E800D41A2C /* Graphs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Graphs;
 			sourceTree = "<group>";
 		};
 		8B64D1D21DC2E9E800D41A2C /* UI */ = {
@@ -500,6 +497,7 @@
 				1952CBA7238A44E500EBBCD3 /* SwiftyTooth.swift in Sources */,
 				33FBC0BE240DD8F700511997 /* Service.swift in Sources */,
 				1952CBAC238A458B00EBBCD3 /* BluetoothState.swift in Sources */,
+				33C34997242D1FC0006C7383 /* UUID+CBUUID.swift in Sources */,
 				1952CBAA238A453E00EBBCD3 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

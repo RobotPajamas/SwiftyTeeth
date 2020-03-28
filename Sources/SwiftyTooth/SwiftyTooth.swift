@@ -5,14 +5,15 @@
 //  Created by Suresh Joshi on 2019-11-23.
 //
 
-import Foundation
 import CoreBluetooth
+import Foundation
 
 var swiftyToothLogger: Logger?
 
-public typealias ReadHandler = ((Result<Data, Error>) -> Void)
-public typealias WriteHandler = ((Result<Data?, Error>) -> Void)
-public typealias NotifyHandler = ((Result<Data, Error>) -> Void)
+public typealias ReadHandler = ((Result<Data?, Error>) -> Void) -> Void
+public typealias WriteHandler = (Data?, (Result<Void, Error>) -> Void) -> Void
+public typealias WriteNoResponseHandler = (Data?) -> Void
+public typealias NotifyHandler = (Result<Data, Error>) -> Void
 
 open class SwiftyTooth: NSObject {
 
@@ -26,7 +27,7 @@ open class SwiftyTooth: NSObject {
     fileprivate var notifyHandlers = [UUID: NotifyHandler]()
     fileprivate var readHandlers = [UUID: ReadHandler]()
     fileprivate var writeHandlers = [UUID: WriteHandler]()
-    
+    fileprivate var writeNoResponseHandlers = [UUID: WriteNoResponseHandler]()
     
     public var stateChangedHandler: ((BluetoothState) -> Void)? {
         didSet {
@@ -117,7 +118,7 @@ public extension SwiftyTooth {
                 case .writeNoResponse(let handler):
                     cbProperties.update(with: .writeWithoutResponse)
                     cbAttributePermissions.update(with: .writeable)
-                    writeHandlers[char.uuid] = handler
+                    writeNoResponseHandlers[char.uuid] = handler
                 }
             }
             
@@ -142,6 +143,7 @@ public extension SwiftyTooth {
         guard let mutableCharacteristic = characteristics.first(where: { (char) -> Bool in
             char.uuid.uuidString == characteristic.uuid.uuidString
         }) else {
+            Log(w: "No such characteristic found with UUID \(characteristic.uuid)")
             return
         }
         
@@ -157,19 +159,19 @@ extension SwiftyTooth: CBPeripheralManagerDelegate {
     public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         switch (peripheral.state) {
         case .unknown:
-            print("Bluetooth state is unknown.")
+            Log(i: "Bluetooth state is unknown.")
         case .resetting:
-            print("Bluetooth state is resetting.")
+            Log(i: "Bluetooth state is resetting.")
         case .unsupported:
-            print("Bluetooth state is unsupported.")
+            Log(i: "Bluetooth state is unsupported.")
         case .unauthorized:
-            print("Bluetooth state is unauthorized.")
+            Log(i: "Bluetooth state is unauthorized.")
         case .poweredOff:
-            print("Bluetooth state is powered off.")
+            Log(i: "Bluetooth state is powered off.")
         case .poweredOn:
-            print("Bluetooth state is powered on")
+            Log(i: "Bluetooth state is powered on")
         default:
-            print("Bluetooth state is not in supported switches")
+            Log(i: "Bluetooth state is not in supported switches")
         }
         
         guard let state = BluetoothState(rawValue: peripheral.state.rawValue) else {
@@ -179,54 +181,96 @@ extension SwiftyTooth: CBPeripheralManagerDelegate {
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, willRestoreState dict: [String : Any]) {
-        print("Will restore state")
+        Log(v: "Will restore state")
     }
     
     // MARK: - Peripheral Manager Services
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: Error?) {
-        print("didAdd \(service.uuid.uuidString)")
+        Log(v: "didAdd \(service.uuid.uuidString)")
     }
     
     // MARK: - Peripheral Manager Advertisments
     
     public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
 //        Log(v: "Started advertising")
-        print("Started advertising with \(error)")
+        Log(v: "Started advertising with \(String(describing: error))")
     }
     
     // MARK: - Peripheral Manager Characteristic Subscriptions
     public func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
-        print("didSubscribeTo \(characteristic.uuid.uuidString) \(central.maximumUpdateValueLength)")
+        Log(v: "didSubscribeTo \(characteristic.uuid.uuidString) \(central.maximumUpdateValueLength)")
         
         
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
-        print("didUnsubscribeFrom \(characteristic.uuid.uuidString)")
+        Log(v: "didUnsubscribeFrom \(characteristic.uuid.uuidString)")
     }
     
     public func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
-        print("peripheralManagerIsReady")
+        Log(v: "peripheralManagerIsReady")
     }
     
     // MARK: - Peripheral Manager Read/Write requests
     public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
-        print("didReceiveRead")
-        
-        
-        
-        request.value = Data(base64Encoded: "Hello")
-        peripheralManager.respond(to: request, withResult: .success)
-    }
-    
-    public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
-        print("didReceiveWrite")
-        for request in requests {
-            let uuid = UUID(uuidString: request.characteristic.uuid.uuidString)!
-            writeHandlers[uuid]?(.success(request.value))
+        guard let uuid = UUID(cbuuid: request.characteristic.uuid) else {
+            Log(w: "didReceiveRead: CBATTRequest contained invalid UUID (\(request.characteristic.uuid))")
+            peripheralManager.respond(to: request, withResult: .unlikelyError)
+            return
         }
-//        peripheralManager.respond(to: <#T##CBATTRequest#>, withResult: <#T##CBATTError.Code#>)
+        
+        guard let handler = readHandlers[uuid] else {
+            Log(w: "didReceiveRead: No associated read handler with UUID \(uuid)")
+            peripheralManager.respond(to: request, withResult: .unlikelyError)
+            return
+        }
+        
+        handler { (result) in
+            if let value = try? result.get() {
+                request.value = value
+                peripheralManager.respond(to: request, withResult: .success)
+            } else {
+                // TODO: Until there is a better idea, should errors be returned? Or an empty success?
+                peripheralManager.respond(to: request, withResult: .unlikelyError)
+            }
+        }
     }
     
+    // TODO: Only works for 1 request right now
+    // TODO: Do we need a "respond" if this is an unacknowledged write? What if it's both ack and unack'd?
+    // Note: If you have acknowledged and unacknowledged writes on the same characteristic, they will BOTH be called (need to review the BLE spec to see how this should be handled)
+    public func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+        guard requests.isEmpty != true else {
+            Log(e: "didReceiveWrite: There are no requests somehow")
+            return
+        }
+        
+        if requests.count > 1 {
+            Log(i: "didReceiveWrite: TODO: Received multiple requests - but only handling first one...")
+        }
+        
+        // TODO: Handle multiple requests
+        let firstRequest = requests[0]
+        
+        guard let uuid = UUID(cbuuid: firstRequest.characteristic.uuid) else {
+            Log(w: "didReceiveWrite: CBATTRequest contained invalid UUID (\(firstRequest.characteristic.uuid))")
+            peripheralManager.respond(to: firstRequest, withResult: .unlikelyError)
+            return
+        }
+        
+        let noResponseHandler = writeNoResponseHandlers[uuid]
+        noResponseHandler?(firstRequest.value)
+
+        let handler = writeHandlers[uuid]
+        handler?(firstRequest.value) { (result) in
+            if ((try? result.get()) != nil) {
+                peripheralManager.respond(to: firstRequest, withResult: .success)
+            } else {
+                // TODO: Until there is a better idea, should errors be returned? Or an empty success?
+                // TODO: If one of these handlers fails, I think we're supposed to fail them all
+                peripheralManager.respond(to: firstRequest, withResult: .unlikelyError)
+            }
+        }
+    }
 }

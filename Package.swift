@@ -1,7 +1,7 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
-// Copyright (c) 2019 Robot Pajamas
+// Copyright (c) 2020 Robot Pajamas
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
