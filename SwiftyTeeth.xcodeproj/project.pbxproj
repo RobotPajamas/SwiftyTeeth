@@ -91,6 +91,7 @@
 		33C34995242D1F31006C7383 /* UUID+CBUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UUID+CBUUID.swift"; sourceTree = "<group>"; };
 		33FBC0B8240DD7D900511997 /* Characteristic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characteristic.swift; sourceTree = "<group>"; };
 		33FBC0BC240DD88900511997 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		33FEC8AC242EEE54001F9BD9 /* Central */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Central; path = Examples/Central; sourceTree = "<group>"; };
 		8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyTeeth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftyTeeth.h; sourceTree = "<group>"; };
 		8B64D1A11DC2E42000D41A2C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -189,12 +190,13 @@
 		8B64D17E1DC2E0A400D41A2C = {
 			isa = PBXGroup;
 			children = (
+				33FEC8AC242EEE54001F9BD9 /* Central */,
 				8B64D1A01DC2E3A100D41A2C /* Meta */,
-				8B64D1941DC2E39900D41A2C /* Sources */,
-				8B64D1AD1DC2E86200D41A2C /* Tests */,
-				8B64D1BC1DC2E8C600D41A2C /* SwiftyTeeth Sample */,
-				8B64D18B1DC2E16300D41A2C /* Products */,
 				33C34994242C2856006C7383 /* Peripheral */,
+				8B64D18B1DC2E16300D41A2C /* Products */,
+				8B64D1941DC2E39900D41A2C /* Sources */,
+				8B64D1BC1DC2E8C600D41A2C /* SwiftyTeeth Sample */,
+				8B64D1AD1DC2E86200D41A2C /* Tests */,
 			);
 			sourceTree = "<group>";
 		};
