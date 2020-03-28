@@ -241,5 +241,3 @@ extension SwiftyTeeth: CBPeripheralDelegate {
         connectedDevices[peripheral.identifier.uuidString]?.didWriteValueFor(descriptor: descriptor, error: error)
     }
 }
-
-
