@@ -11,6 +11,10 @@ import SwiftyTeeth
 
 class DeviceViewController: UIViewController {
     
+    let serviceUuid = UUID(uuidString: "00726f62-6f74-7061-6a61-6d61732e6361")
+    let txUuid = UUID(uuidString: "01726f62-6f74-7061-6a61-6d61732e6361")
+    let rxUuid = UUID(uuidString: "02726f62-6f74-7061-6a61-6d61732e6361")
+    
     @IBOutlet weak var textView: UITextView!
     
     var device: Device?
@@ -81,23 +85,30 @@ extension DeviceViewController {
     }
     
     @objc func read() {
-        // Using a Heart-Rate device for testing - this is the HR service and characteristic
-        device?.read(from: "2a24", in: "180a", complete: { result in
-            self.printUi("Read value: \(String(describing: result.value?.base64EncodedString()))")
-        })
+        device?.read(from: rxUuid!.uuidString, in: serviceUuid!.uuidString) { result in
+            guard let value = result.value else {
+                self.printUi("Read returned nil")
+                return
+            }
+            self.printUi("Read value: \([UInt8](value))")
+        }
     }
     
     @objc func write() {
-        let command = Data(bytes: [0x01])
-        device?.write(data: command, to: "abcdef", in: "hijkll", complete: { result in
+        let command = Data([0x01])
+        device?.write(data: command, to: txUuid!.uuidString, in: serviceUuid!.uuidString) { result in
             self.printUi("Write with response successful? \(result.isSuccess)")
-        })
+        }
     }
     
     @objc func subscribe() {
-        device?.subscribe(to: "2a37", in: "180d", complete: { result in
-            self.printUi("Subscribed value: \(String(describing: result.value?.base64EncodedString()))")
-        })
+        device?.subscribe(to: rxUuid!.uuidString, in: serviceUuid!.uuidString) { result in
+            guard let value = result.value else {
+                self.printUi("Subscribed value returned nil")
+                return
+            }
+            self.printUi("Subscribed value: \([UInt8](value))")
+        }
     }
 }
 

@@ -24,7 +24,7 @@ let rx = Characteristic(
         }),
         .read(onRead: { (response) in
             print("Returning counter value \(counter)")
-            let data = Data(repeating: counter, count: 1)
+            let data = Data([counter])
             response(.success(data))
         }),
     ]
@@ -57,7 +57,7 @@ let tx = Characteristic(
 var counter = UInt8.min
 func increment(by value: UInt8) {
     counter += value
-    let data = Data(repeating: counter, count: 1)
+    let data = Data([counter])
     instance.emit(data: data, on: rx)
 }
 
