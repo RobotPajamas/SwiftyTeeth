@@ -107,9 +107,9 @@ Now that this library is released and progressively becoming more stable, the ne
 
 ## Requirements
 
-* iOS 9+
-* Swift 3+
-* XCode 8+
+* iOS 10+
+* Swift 5+
+* XCode 10+
 
 ## Download
 
@@ -150,7 +150,7 @@ Other iOS-centric Bluetooth libraries.
 
 The Apache License (Apache)
 
-    Copyright (c) 2017 Robot Pajamas
+    Copyright (c) 2019 Robot Pajamas
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
