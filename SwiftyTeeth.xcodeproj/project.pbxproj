@@ -19,6 +19,7 @@
 		19A0686B206B162E0023D5EE /* SwiftyQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686A206B162E0023D5EE /* SwiftyQueue.swift */; };
 		19A0686D206B18B20023D5EE /* QueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686C206B18B20023D5EE /* QueueItem.swift */; };
 		19B7DC8F1F0D624F0035FDFA /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7DC8E1F0D624F0035FDFA /* Logger.swift */; };
+		332C23B22434F7EF00EBB5E2 /* Deque.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332C23B12434F7EF00EBB5E2 /* Deque.swift */; };
 		337BABE3242FF2BB00499385 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337BABE2242FF2BB00499385 /* TextView.swift */; };
 		337BABE6242FF2EB00499385 /* Apply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337BABE5242FF2EB00499385 /* Apply.swift */; };
 		33C34997242D1FC0006C7383 /* UUID+CBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C34995242D1F31006C7383 /* UUID+CBUUID.swift */; };
@@ -91,6 +92,7 @@
 		19A0686A206B162E0023D5EE /* SwiftyQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyQueue.swift; sourceTree = "<group>"; };
 		19A0686C206B18B20023D5EE /* QueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItem.swift; sourceTree = "<group>"; };
 		19B7DC8E1F0D624F0035FDFA /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		332C23B12434F7EF00EBB5E2 /* Deque.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deque.swift; sourceTree = "<group>"; };
 		337BABE2242FF2BB00499385 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		337BABE5242FF2EB00499385 /* Apply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Apply.swift; sourceTree = "<group>"; };
 		33C34994242C2856006C7383 /* Peripheral */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Peripheral; path = Examples/Peripheral; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				1952CBA2238A43F700EBBCD3 /* Info.plist */,
 				33FBC0B8240DD7D900511997 /* Characteristic.swift */,
 				33FBC0BC240DD88900511997 /* Service.swift */,
+				332C23B12434F7EF00EBB5E2 /* Deque.swift */,
 			);
 			path = SwiftyTooth;
 			sourceTree = "<group>";
@@ -543,6 +546,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				33FBC0BA240DD7DF00511997 /* Characteristic.swift in Sources */,
+				332C23B22434F7EF00EBB5E2 /* Deque.swift in Sources */,
 				1952CBA7238A44E500EBBCD3 /* SwiftyTooth.swift in Sources */,
 				33FBC0BE240DD8F700511997 /* Service.swift in Sources */,
 				1952CBAC238A458B00EBBCD3 /* BluetoothState.swift in Sources */,
