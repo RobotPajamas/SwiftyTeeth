@@ -166,7 +166,7 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        Log(v: "centralManager: didConnect to \(peripheral.identifier)")
+        Log(v: "centralManager: didConnect to \(peripheral.identifier) with maximum write value of \(peripheral.maximumWriteValueLength(for: .withoutResponse)) and \(peripheral.maximumWriteValueLength(for: .withResponse))")
         connectedDevices[peripheral.identifier.uuidString]?.didConnect()
     }
     
@@ -181,7 +181,6 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
     }
     
     public func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
-    
     }
 }
 
