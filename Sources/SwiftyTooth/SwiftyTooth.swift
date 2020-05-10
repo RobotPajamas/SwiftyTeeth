@@ -15,6 +15,11 @@ public typealias WriteHandler = (Data?, (Result<Void, Error>) -> Void) -> Void
 public typealias WriteNoResponseHandler = (Data?) -> Void
 public typealias NotifyHandler = (Result<Data, Error>) -> Void
 
+private struct QueueItem {
+    let data: Data
+    let characteristic: CBMutableCharacteristic
+}
+
 open class SwiftyTooth: NSObject {
 
     public static let shared = SwiftyTooth()
@@ -28,6 +33,9 @@ open class SwiftyTooth: NSObject {
     fileprivate var readHandlers = [UUID: ReadHandler]()
     fileprivate var writeHandlers = [UUID: WriteHandler]()
     fileprivate var writeNoResponseHandlers = [UUID: WriteNoResponseHandler]()
+    
+    // Using a very quick thread-unsafe queue just to test this out conceptually, to see how it works
+    fileprivate var notificationQueue = Deque<QueueItem>()
     
     public var stateChangedHandler: ((BluetoothState) -> Void)? {
         didSet {
@@ -138,16 +146,31 @@ public extension SwiftyTooth {
 
 // MARK: - SwiftyTooth Emitting Data
 public extension SwiftyTooth {
+    private func emitQueuedItems() {
+        while notificationQueue.count != 0 {
+            guard let item = notificationQueue.dequeue() else {
+                return
+            }
+
+            if peripheralManager.updateValue(item.data, for: item.characteristic, onSubscribedCentrals: nil) == false {
+                notificationQueue.enqueueFront(item)
+                return
+            }
+        }
+    }
+    
     // Sends data to all subscribed centrals for this characteristic
-    func emit(data: Data, on characteristic: Characteristic) {
+    func emit(data: Data, on characteristic: Characteristic) -> Bool {
         guard let mutableCharacteristic = characteristics.first(where: { (char) -> Bool in
             char.uuid.uuidString == characteristic.uuid.uuidString
         }) else {
             Log(w: "No such characteristic found with UUID \(characteristic.uuid)")
-            return
+            return false
         }
         
-        peripheralManager.updateValue(data, for: mutableCharacteristic, onSubscribedCentrals: nil)
+        notificationQueue.enqueue(QueueItem(data: data, characteristic: mutableCharacteristic))
+        emitQueuedItems()
+        return true
     }
 }
 
@@ -193,15 +216,12 @@ extension SwiftyTooth: CBPeripheralManagerDelegate {
     // MARK: - Peripheral Manager Advertisments
     
     public func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
-//        Log(v: "Started advertising")
         Log(v: "Started advertising with \(String(describing: error))")
     }
     
     // MARK: - Peripheral Manager Characteristic Subscriptions
     public func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
         Log(v: "didSubscribeTo \(characteristic.uuid.uuidString) \(central.maximumUpdateValueLength)")
-        
-        
     }
     
     public func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
@@ -209,7 +229,8 @@ extension SwiftyTooth: CBPeripheralManagerDelegate {
     }
     
     public func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
-        Log(v: "peripheralManagerIsReady")
+        Log(v: "peripheralManagerIsReady: Currently \(notificationQueue.count) items to transmit")
+        emitQueuedItems()
     }
     
     // MARK: - Peripheral Manager Read/Write requests

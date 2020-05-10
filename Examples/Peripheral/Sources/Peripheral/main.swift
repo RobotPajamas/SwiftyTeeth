@@ -45,6 +45,8 @@ let tx = Characteristic(
             
             // TODO: Clean up this UInt8 
             increment(by: [UInt8](value)[0])
+            
+            // If increment is really long, this could technically time out - should increment the counter, respond success, THEN notify
             response(.success(()))
         }),
 
@@ -56,9 +58,11 @@ let tx = Characteristic(
 
 var counter = UInt8.min
 func increment(by value: UInt8) {
-    counter += value
-    let data = Data([counter])
-    instance.emit(data: data, on: rx)
+    for _ in 0..<128 { // Sending 128 elements to test notification queue
+        counter += value
+        let data = Data([counter])
+        instance.emit(data: data, on: rx)
+    }
 }
 
 let service = Service(
