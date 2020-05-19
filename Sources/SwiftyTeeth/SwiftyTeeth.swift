@@ -20,16 +20,11 @@ open class SwiftyTeeth: NSObject {
             stateChangedHandler?(state)
         }
     }
-    
-    fileprivate var scanChangesHandler: ((Device) -> Void)?
-    fileprivate var scanCompleteHandler: (([Device]) -> Void)?
 
-    open lazy var centralManager: CBCentralManager = {
+    public lazy var centralManager: CBCentralManager = {
         let instance = CBCentralManager(
             delegate: self,
             queue: DispatchQueue(label: "com.robotpajamas.SwiftyTeeth"))
-        // Throwaway command to init CoreBluetooth (helps prevent timing problems)
-        instance.retrievePeripherals(withIdentifiers: [])
         return instance
     }()
 
@@ -38,20 +33,16 @@ open class SwiftyTeeth: NSObject {
     }
     
     // TODO: Hold a private set, and expose a list?
-    open var scannedDevices = Set<Device>()
-    
-    // TODO: Should be a list? Can connect to > 1 device
-    fileprivate var connectedDevices = [String:Device]()
+    public var scannedDevices = Set<Device>()
 
-    
-    // TODO: Need iOS 9 support
-//    open var state: CBManagerState {
-//        return centralManager.state
-//    }
-
-    open var isScanning: Bool {
+    public var isScanning: Bool {
         return centralManager.isScanning
     }
+
+    // TODO: Should be a list? Can connect to > 1 device
+    private var connectedDevices = [String:Device]()
+    private var scanChangesHandler: ((Device) -> Void)?
+    private var scanCompleteHandler: (([Device]) -> Void)?
     
     public override init() {
     }
@@ -65,6 +56,14 @@ public extension SwiftyTeeth {
         set {
             swiftyTeethLogger = newValue
         }
+    }
+}
+
+// MARK: - Manager Utility functions
+public extension SwiftyTeeth {
+    func retrievePeripherals(withIdentifiers uuids: [UUID]) -> [Device] {
+        let cbPeripherals = centralManager.retrievePeripherals(withIdentifiers: uuids)
+        return cbPeripherals.map { Device(manager: self, peripheral: $0) }
     }
 }
 
@@ -145,6 +144,8 @@ extension SwiftyTeeth: CBCentralManagerDelegate {
             Log(v: "Bluetooth state is powered off.")
         case .poweredOn:
             Log(v: "Bluetooth state is powered on")
+            // Throwaway command to init CoreBluetooth (helps prevent timing problems)
+            centralManager.retrievePeripherals(withIdentifiers: [])
         default:
             Log(v: "Bluetooth state is not in supported switches")
         }
