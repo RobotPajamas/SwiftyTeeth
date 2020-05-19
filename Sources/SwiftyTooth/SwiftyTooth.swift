@@ -10,11 +10,6 @@ import Foundation
 
 var swiftyToothLogger: Logger?
 
-public typealias ReadHandler = ((Result<Data?, Error>) -> Void) -> Void
-public typealias WriteHandler = (Data?, (Result<Void, Error>) -> Void) -> Void
-public typealias WriteNoResponseHandler = (Data?) -> Void
-public typealias NotifyHandler = (Result<Data, Error>) -> Void
-
 private struct QueueItem {
     let data: Data
     let characteristic: CBMutableCharacteristic

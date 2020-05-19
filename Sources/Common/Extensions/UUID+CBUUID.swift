@@ -8,6 +8,12 @@
 import CoreBluetooth
 import Foundation
 
+//extension CBUUID {
+//    init?(uuid: UUID) {
+//        self.init
+//    }
+//}
+
 extension UUID {
     init?(cbuuid: CBUUID) {
         self.init(uuidString: cbuuid.uuidString)
