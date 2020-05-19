@@ -18,6 +18,9 @@ final class PeripheralViewModel: ObservableObject {
     
     init(peripheral: Device) {
         self.peripheral = peripheral
+        peripheral.connectionStateChangedHandler = { state in
+            self.log("Connection state is \(state)")
+        }
     }
     
     private func log(_ text: String) {
@@ -28,13 +31,13 @@ final class PeripheralViewModel: ObservableObject {
     }
     
     func connect() {
-        peripheral.connect { (isConnected) in
-            guard isConnected == true else {
+        peripheral.connect { (connectionState) in
+            guard connectionState == .connected else {
                 self.log("Not connected")
                 return
             }
             
-            self.log("App: Device is connected? \(isConnected)")
+            self.log("App: Device is connected? \(connectionState == .connected)")
             self.log("App: Starting service discovery...")
             
             self.peripheral.discoverServices { (result) in

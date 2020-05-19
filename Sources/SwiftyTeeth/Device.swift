@@ -10,12 +10,8 @@ import Foundation
 import CoreBluetooth
 
 public typealias DiscoveredCharacteristic = (service: Service, characteristics: [Characteristic])
-
-public typealias ConnectionHandler = ((Bool) -> Void)
 public typealias ServiceDiscovery = ((Result<[Service], Error>) -> Void)
 public typealias CharacteristicDiscovery = ((Result<DiscoveredCharacteristic, Error>) -> Void)
-//public typealias ReadHandler = ((Result<Data>) -> Void)
-//public typealias WriteHandler = ((Result<Void>) -> Void)
 
 public enum ConnectionError: Error {
     case disconnected
@@ -30,12 +26,18 @@ open class Device: NSObject {
     fileprivate let tag = "SwiftyDevice"
     
     let peripheral: CBPeripheral
-
     var discoveredServices = [UUID: Service]()
     
     private let manager: SwiftyTeeth
 
-    private var connectionHandler: ConnectionHandler?
+    public var connectionStateChangedHandler: ((ConnectionState) -> Void)? {
+        didSet {
+            // TODO: Replace this with an observing property on peripheral.state
+            connectionStateChangedHandler?(connectionState)
+        }
+    }
+
+    private var connectionHandler: ((ConnectionState) -> Void)?
     private var notificationHandler = [CBCharacteristic: ((Result<Data, Error>) -> Void)]()
     
     // Connection parameters
@@ -60,8 +62,23 @@ open class Device: NSObject {
 
 // MARK: Computed properties
 extension Device {
+    open var connectionState: ConnectionState {
+        switch peripheral.state {
+        case .connecting:
+            return .connecting
+        case .connected:
+            return .connected
+        case .disconnecting:
+            return .disconnecting
+        case .disconnected:
+            return .disconnected
+        @unknown default:
+            return .disconnected
+        }
+    }
+
     open var isConnected: Bool {
-        return peripheral.state == .connected
+        return connectionState == .connected
     }
     
     open var name: String {
@@ -72,11 +89,6 @@ extension Device {
         return peripheral.identifier.uuidString
     }
     
-    //    open var connectionState: StateEnumOfSomeSort {
-    //        return peripheral.state
-    //    }
-    
-    
     //    open var rssi: Int {
     //        return peripheral.
     //    }
@@ -86,8 +98,9 @@ extension Device {
 extension Device {
     // Annoyingly, iOS has the connection functionality sitting on the central manager, instead of on the peripheral
     // TODO: Should the completion be optional?
-    open func connect(with timeout: TimeInterval? = nil, autoReconnect: Bool = true, complete: ConnectionHandler?) {
+    open func connect(with timeout: TimeInterval? = nil, autoReconnect: Bool = true, complete: ((ConnectionState) -> Void)?) {
         Log(v: "Calling connect", tag: tag)
+        connectionStateChangedHandler?(.connecting)
         self.connectionHandler = complete
         self.autoReconnect = autoReconnect
         self.manager.connect(to: self)
@@ -97,6 +110,7 @@ extension Device {
     open func disconnect(autoReconnect: Bool = false) {
         // Disable auto reconnection when calling the disconnect API
         Log(v: "Calling disconnect", tag: tag)
+        connectionStateChangedHandler?(.disconnecting)
         self.autoReconnect = autoReconnect
         self.manager.disconnect(from: self)
     }
@@ -272,12 +286,14 @@ internal extension Device {
     
     func didConnect() {
         Log(v: "didConnect: Calling connection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
-        connectionHandler?(true)
+        connectionHandler?(.connected)
+        connectionStateChangedHandler?(.connected)
     }
     
     func didDisconnect() {
         Log(v: "didDisconnect: Calling disconnection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
-        connectionHandler?(false)
+        connectionHandler?(.disconnected)
+        connectionStateChangedHandler?(.disconnected)
         if autoReconnect == true {
             connect(complete: connectionHandler)
         }
