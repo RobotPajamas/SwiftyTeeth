@@ -9,22 +9,28 @@
 /* Begin PBXBuildFile section */
 		1952CBA3238A43F700EBBCD3 /* SwiftyTooth.h in Headers */ = {isa = PBXBuildFile; fileRef = 1952CBA1238A43F700EBBCD3 /* SwiftyTooth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1952CBA7238A44E500EBBCD3 /* SwiftyTooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1952CB98238A3F0100EBBCD3 /* SwiftyTooth.swift */; };
-		1952CBAA238A453E00EBBCD3 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1952CBA8238A451700EBBCD3 /* Logger.swift */; };
-		1952CBAC238A458B00EBBCD3 /* BluetoothState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1952CBAB238A458B00EBBCD3 /* BluetoothState.swift */; };
+		1952CBAA238A453E00EBBCD3 /* SwiftyToothLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1952CBA8238A451700EBBCD3 /* SwiftyToothLogger.swift */; };
 		195A59141E4834F0002B076A /* CBCharacterisic+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195A59121E482C4F002B076A /* CBCharacterisic+String.swift */; };
 		195A59151E4834F5002B076A /* CBService+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195A59101E482BF4002B076A /* CBService+String.swift */; };
-		19A06865206AD8820023D5EE /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A06864206AD8820023D5EE /* Result.swift */; };
-		19A06867206AF4590023D5EE /* BluetoothState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A06866206AF4590023D5EE /* BluetoothState.swift */; };
-		19A06869206B130F0023D5EE /* OperationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A06868206B130F0023D5EE /* OperationQueue.swift */; };
+		19A06869206B130F0023D5EE /* OperationQueue+SwiftyQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A06868206B130F0023D5EE /* OperationQueue+SwiftyQueue.swift */; };
 		19A0686B206B162E0023D5EE /* SwiftyQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686A206B162E0023D5EE /* SwiftyQueue.swift */; };
 		19A0686D206B18B20023D5EE /* QueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0686C206B18B20023D5EE /* QueueItem.swift */; };
-		19B7DC8F1F0D624F0035FDFA /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7DC8E1F0D624F0035FDFA /* Logger.swift */; };
-		332C23B22434F7EF00EBB5E2 /* Deque.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332C23B12434F7EF00EBB5E2 /* Deque.swift */; };
+		19B7DC8F1F0D624F0035FDFA /* SwiftyTeethLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7DC8E1F0D624F0035FDFA /* SwiftyTeethLogger.swift */; };
 		337BABE3242FF2BB00499385 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337BABE2242FF2BB00499385 /* TextView.swift */; };
 		337BABE6242FF2EB00499385 /* Apply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337BABE5242FF2EB00499385 /* Apply.swift */; };
-		33C34997242D1FC0006C7383 /* UUID+CBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C34995242D1F31006C7383 /* UUID+CBUUID.swift */; };
-		33FBC0BA240DD7DF00511997 /* Characteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FBC0B8240DD7D900511997 /* Characteristic.swift */; };
-		33FBC0BE240DD8F700511997 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FBC0BC240DD88900511997 /* Service.swift */; };
+		33C3318C24735BAB00D90A7A /* BluetoothState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318624735BAB00D90A7A /* BluetoothState.swift */; };
+		33C3318D24735BAB00D90A7A /* BluetoothState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318624735BAB00D90A7A /* BluetoothState.swift */; };
+		33C3318E24735BAB00D90A7A /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318724735BAB00D90A7A /* Service.swift */; };
+		33C3318F24735BAB00D90A7A /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318724735BAB00D90A7A /* Service.swift */; };
+		33C3319024735BAB00D90A7A /* Deque.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318824735BAB00D90A7A /* Deque.swift */; };
+		33C3319124735BAB00D90A7A /* Deque.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318824735BAB00D90A7A /* Deque.swift */; };
+		33C3319224735BAB00D90A7A /* UUID+CBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318A24735BAB00D90A7A /* UUID+CBUUID.swift */; };
+		33C3319324735BAB00D90A7A /* UUID+CBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318A24735BAB00D90A7A /* UUID+CBUUID.swift */; };
+		33C3319424735BAB00D90A7A /* Characteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318B24735BAB00D90A7A /* Characteristic.swift */; };
+		33C3319524735BAB00D90A7A /* Characteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3318B24735BAB00D90A7A /* Characteristic.swift */; };
+		33C3319724735C7400D90A7A /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3319624735C7400D90A7A /* Logger.swift */; };
+		33C3319824735C7400D90A7A /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3319624735C7400D90A7A /* Logger.swift */; };
+		33C3319B247376D400D90A7A /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C3319A247376D400D90A7A /* ConnectionState.swift */; };
 		33FEC8B4242EF0C9001F9BD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FEC8B3242EF0C9001F9BD9 /* AppDelegate.swift */; };
 		33FEC8B6242EF0C9001F9BD9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FEC8B5242EF0C9001F9BD9 /* SceneDelegate.swift */; };
 		33FEC8B8242EF0C9001F9BD9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FEC8B7242EF0C9001F9BD9 /* ContentView.swift */; };
@@ -41,7 +47,6 @@
 		8B64D1B11DC2E86200D41A2C /* SwiftyTeeth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B64D18A1DC2E16300D41A2C /* SwiftyTeeth.framework */; };
 		8B64D1D01DC2E8FE00D41A2C /* SwiftyTeeth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1CF1DC2E8FE00D41A2C /* SwiftyTeeth.swift */; };
 		8B64D1DD1DC2F5D000D41A2C /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1DC1DC2F5D000D41A2C /* Device.swift */; };
-		8B64D1DF1DC2F92600D41A2C /* CBPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1DE1DC2F92600D41A2C /* CBPeripheral.swift */; };
 		8B64D1E31DC2FCEB00D41A2C /* SwiftyTeethable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B64D1E21DC2FCEB00D41A2C /* SwiftyTeethable.swift */; };
 /* End PBXBuildFile section */
 
@@ -81,24 +86,24 @@
 		1952CB9F238A43F700EBBCD3 /* SwiftyTooth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyTooth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1952CBA1238A43F700EBBCD3 /* SwiftyTooth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftyTooth.h; sourceTree = "<group>"; };
 		1952CBA2238A43F700EBBCD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1952CBA8238A451700EBBCD3 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		1952CBAB238A458B00EBBCD3 /* BluetoothState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothState.swift; sourceTree = "<group>"; };
+		1952CBA8238A451700EBBCD3 /* SwiftyToothLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyToothLogger.swift; sourceTree = "<group>"; };
 		195A59101E482BF4002B076A /* CBService+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CBService+String.swift"; sourceTree = "<group>"; };
 		195A59121E482C4F002B076A /* CBCharacterisic+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CBCharacterisic+String.swift"; sourceTree = "<group>"; };
 		1966DC73238A29390085C9A5 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		19A06864206AD8820023D5EE /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
-		19A06866206AF4590023D5EE /* BluetoothState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothState.swift; sourceTree = "<group>"; };
-		19A06868206B130F0023D5EE /* OperationQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationQueue.swift; sourceTree = "<group>"; };
+		19A06868206B130F0023D5EE /* OperationQueue+SwiftyQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationQueue+SwiftyQueue.swift"; sourceTree = "<group>"; };
 		19A0686A206B162E0023D5EE /* SwiftyQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyQueue.swift; sourceTree = "<group>"; };
 		19A0686C206B18B20023D5EE /* QueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueItem.swift; sourceTree = "<group>"; };
-		19B7DC8E1F0D624F0035FDFA /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		332C23B12434F7EF00EBB5E2 /* Deque.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deque.swift; sourceTree = "<group>"; };
+		19B7DC8E1F0D624F0035FDFA /* SwiftyTeethLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyTeethLogger.swift; sourceTree = "<group>"; };
 		337BABE2242FF2BB00499385 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		337BABE5242FF2EB00499385 /* Apply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Apply.swift; sourceTree = "<group>"; };
+		33C3318624735BAB00D90A7A /* BluetoothState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothState.swift; sourceTree = "<group>"; };
+		33C3318724735BAB00D90A7A /* Service.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		33C3318824735BAB00D90A7A /* Deque.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deque.swift; sourceTree = "<group>"; };
+		33C3318A24735BAB00D90A7A /* UUID+CBUUID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UUID+CBUUID.swift"; sourceTree = "<group>"; };
+		33C3318B24735BAB00D90A7A /* Characteristic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Characteristic.swift; sourceTree = "<group>"; };
+		33C3319624735C7400D90A7A /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		33C3319A247376D400D90A7A /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		33C34994242C2856006C7383 /* Peripheral */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Peripheral; path = Examples/Peripheral; sourceTree = "<group>"; };
-		33C34995242D1F31006C7383 /* UUID+CBUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UUID+CBUUID.swift"; sourceTree = "<group>"; };
-		33FBC0B8240DD7D900511997 /* Characteristic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characteristic.swift; sourceTree = "<group>"; };
-		33FBC0BC240DD88900511997 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		33FEC8AC242EEE54001F9BD9 /* Central */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Central; path = Examples/Central; sourceTree = "<group>"; };
 		33FEC8B1242EF0C9001F9BD9 /* SwiftyTeeth Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftyTeeth Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		33FEC8B3242EF0C9001F9BD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -125,7 +130,6 @@
 		8B64D1B01DC2E86200D41A2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8B64D1CF1DC2E8FE00D41A2C /* SwiftyTeeth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyTeeth.swift; sourceTree = "<group>"; };
 		8B64D1DC1DC2F5D000D41A2C /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
-		8B64D1DE1DC2F92600D41A2C /* CBPeripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBPeripheral.swift; sourceTree = "<group>"; };
 		8B64D1E21DC2FCEB00D41A2C /* SwiftyTeethable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyTeethable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,13 +170,16 @@
 		1952CB96238A3E6B00EBBCD3 /* SwiftyTeeth */ = {
 			isa = PBXGroup;
 			children = (
-				8B64D1951DC2E39900D41A2C /* Enums */,
+				33C33199247376A100D90A7A /* Internal */,
 				8B64D1971DC2E39900D41A2C /* Extensions */,
-				8B64D19A1DC2E39900D41A2C /* Models */,
-				8B64D19C1DC2E39900D41A2C /* Protocols */,
 				8B64D1CF1DC2E8FE00D41A2C /* SwiftyTeeth.swift */,
+				19A0686C206B18B20023D5EE /* QueueItem.swift */,
+				8B64D1DC1DC2F5D000D41A2C /* Device.swift */,
+				8B64D1E21DC2FCEB00D41A2C /* SwiftyTeethable.swift */,
+				19B7DC8E1F0D624F0035FDFA /* SwiftyTeethLogger.swift */,
 				8B64D18D1DC2E16300D41A2C /* SwiftyTeeth.h */,
 				8B64D1A11DC2E42000D41A2C /* Info.plist */,
+				33C3319A247376D400D90A7A /* ConnectionState.swift */,
 			);
 			path = SwiftyTeeth;
 			sourceTree = "<group>";
@@ -180,15 +187,10 @@
 		1952CB97238A3E7500EBBCD3 /* SwiftyTooth */ = {
 			isa = PBXGroup;
 			children = (
-				33FBC0BB240DD85500511997 /* Extensions */,
 				1952CBA1238A43F700EBBCD3 /* SwiftyTooth.h */,
 				1952CB98238A3F0100EBBCD3 /* SwiftyTooth.swift */,
-				1952CBA8238A451700EBBCD3 /* Logger.swift */,
-				1952CBAB238A458B00EBBCD3 /* BluetoothState.swift */,
+				1952CBA8238A451700EBBCD3 /* SwiftyToothLogger.swift */,
 				1952CBA2238A43F700EBBCD3 /* Info.plist */,
-				33FBC0B8240DD7D900511997 /* Characteristic.swift */,
-				33FBC0BC240DD88900511997 /* Service.swift */,
-				332C23B12434F7EF00EBB5E2 /* Deque.swift */,
 			);
 			path = SwiftyTooth;
 			sourceTree = "<group>";
@@ -201,12 +203,33 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		33FBC0BB240DD85500511997 /* Extensions */ = {
+		33C3318524735BAB00D90A7A /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				33C34995242D1F31006C7383 /* UUID+CBUUID.swift */,
+				33C3318624735BAB00D90A7A /* BluetoothState.swift */,
+				33C3318724735BAB00D90A7A /* Service.swift */,
+				33C3318824735BAB00D90A7A /* Deque.swift */,
+				33C3318924735BAB00D90A7A /* Extensions */,
+				33C3318B24735BAB00D90A7A /* Characteristic.swift */,
+				33C3319624735C7400D90A7A /* Logger.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		33C3318924735BAB00D90A7A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				33C3318A24735BAB00D90A7A /* UUID+CBUUID.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		33C33199247376A100D90A7A /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				19A0686A206B162E0023D5EE /* SwiftyQueue.swift */,
+			);
+			path = Internal;
 			sourceTree = "<group>";
 		};
 		33FEC8B2242EF0C9001F9BD9 /* SwiftyTeeth Sample */ = {
@@ -296,49 +319,21 @@
 		8B64D1941DC2E39900D41A2C /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				33C3318524735BAB00D90A7A /* Common */,
 				1952CB97238A3E7500EBBCD3 /* SwiftyTooth */,
 				1952CB96238A3E6B00EBBCD3 /* SwiftyTeeth */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		8B64D1951DC2E39900D41A2C /* Enums */ = {
-			isa = PBXGroup;
-			children = (
-				19A06864206AD8820023D5EE /* Result.swift */,
-			);
-			path = Enums;
-			sourceTree = "<group>";
-		};
 		8B64D1971DC2E39900D41A2C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				8B64D1DE1DC2F92600D41A2C /* CBPeripheral.swift */,
-				195A59101E482BF4002B076A /* CBService+String.swift */,
 				195A59121E482C4F002B076A /* CBCharacterisic+String.swift */,
-				19A06868206B130F0023D5EE /* OperationQueue.swift */,
+				195A59101E482BF4002B076A /* CBService+String.swift */,
+				19A06868206B130F0023D5EE /* OperationQueue+SwiftyQueue.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		8B64D19A1DC2E39900D41A2C /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				8B64D1DC1DC2F5D000D41A2C /* Device.swift */,
-				19A06866206AF4590023D5EE /* BluetoothState.swift */,
-				19A0686C206B18B20023D5EE /* QueueItem.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		8B64D19C1DC2E39900D41A2C /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				8B64D1E21DC2FCEB00D41A2C /* SwiftyTeethable.swift */,
-				19B7DC8E1F0D624F0035FDFA /* Logger.swift */,
-				19A0686A206B162E0023D5EE /* SwiftyQueue.swift */,
-			);
-			path = Protocols;
 			sourceTree = "<group>";
 		};
 		8B64D1A01DC2E3A100D41A2C /* Meta */ = {
@@ -545,13 +540,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33FBC0BA240DD7DF00511997 /* Characteristic.swift in Sources */,
-				332C23B22434F7EF00EBB5E2 /* Deque.swift in Sources */,
+				33C3319524735BAB00D90A7A /* Characteristic.swift in Sources */,
+				33C3319324735BAB00D90A7A /* UUID+CBUUID.swift in Sources */,
 				1952CBA7238A44E500EBBCD3 /* SwiftyTooth.swift in Sources */,
-				33FBC0BE240DD8F700511997 /* Service.swift in Sources */,
-				1952CBAC238A458B00EBBCD3 /* BluetoothState.swift in Sources */,
-				33C34997242D1FC0006C7383 /* UUID+CBUUID.swift in Sources */,
-				1952CBAA238A453E00EBBCD3 /* Logger.swift in Sources */,
+				33C3318F24735BAB00D90A7A /* Service.swift in Sources */,
+				33C3318D24735BAB00D90A7A /* BluetoothState.swift in Sources */,
+				33C3319124735BAB00D90A7A /* Deque.swift in Sources */,
+				1952CBAA238A453E00EBBCD3 /* SwiftyToothLogger.swift in Sources */,
+				33C3319824735C7400D90A7A /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,17 +571,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				195A59141E4834F0002B076A /* CBCharacterisic+String.swift in Sources */,
+				33C3319B247376D400D90A7A /* ConnectionState.swift in Sources */,
+				33C3318E24735BAB00D90A7A /* Service.swift in Sources */,
 				19A0686B206B162E0023D5EE /* SwiftyQueue.swift in Sources */,
 				195A59151E4834F5002B076A /* CBService+String.swift in Sources */,
 				8B64D1E31DC2FCEB00D41A2C /* SwiftyTeethable.swift in Sources */,
 				8B64D1D01DC2E8FE00D41A2C /* SwiftyTeeth.swift in Sources */,
-				19B7DC8F1F0D624F0035FDFA /* Logger.swift in Sources */,
-				19A06867206AF4590023D5EE /* BluetoothState.swift in Sources */,
+				19B7DC8F1F0D624F0035FDFA /* SwiftyTeethLogger.swift in Sources */,
+				33C3318C24735BAB00D90A7A /* BluetoothState.swift in Sources */,
+				33C3319024735BAB00D90A7A /* Deque.swift in Sources */,
+				33C3319224735BAB00D90A7A /* UUID+CBUUID.swift in Sources */,
+				33C3319724735C7400D90A7A /* Logger.swift in Sources */,
 				8B64D1DD1DC2F5D000D41A2C /* Device.swift in Sources */,
-				19A06865206AD8820023D5EE /* Result.swift in Sources */,
-				8B64D1DF1DC2F92600D41A2C /* CBPeripheral.swift in Sources */,
 				19A0686D206B18B20023D5EE /* QueueItem.swift in Sources */,
-				19A06869206B130F0023D5EE /* OperationQueue.swift in Sources */,
+				33C3319424735BAB00D90A7A /* Characteristic.swift in Sources */,
+				19A06869206B130F0023D5EE /* OperationQueue+SwiftyQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -665,7 +665,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.7.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robotpajamas.SwiftyTooth;
@@ -716,7 +716,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robotpajamas.SwiftyTooth;
@@ -769,7 +769,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.7.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.robotpajamas.SwiftyTeeth-Sample";
@@ -814,7 +814,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.robotpajamas.SwiftyTeeth-Sample";
@@ -959,7 +959,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robotpajamas.SwiftyTeeth;
@@ -1026,7 +1026,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robotpajamas.SwiftyTeeth;
 				PRODUCT_NAME = SwiftyTeeth;

@@ -8,6 +8,11 @@
 import CoreBluetooth
 import Foundation
 
+public typealias ReadHandler = ((Result<Data?, Error>) -> Void) -> Void
+public typealias WriteHandler = (Data?, (Result<Void, Error>) -> Void) -> Void
+public typealias WriteNoResponseHandler = (Data?) -> Void
+public typealias NotifyHandler = (Result<Data, Error>) -> Void
+
 // Maybe put callback in this enum?
 public enum Property {
     case read(onRead: ReadHandler)

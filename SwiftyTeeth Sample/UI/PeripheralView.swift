@@ -10,14 +10,17 @@ import SwiftUI
 
 final class PeripheralViewModel: ObservableObject {
     let peripheral: Device
-    let serviceUuid = UUID(uuidString: "00726f62-6f74-7061-6a61-6d61732e6361")
-    let txUuid = UUID(uuidString: "01726f62-6f74-7061-6a61-6d61732e6361")
-    let rxUuid = UUID(uuidString: "02726f62-6f74-7061-6a61-6d61732e6361")
+    let serviceUuid = UUID(uuidString: "00726f62-6f74-7061-6a61-6d61732e6361")!
+    let txUuid = UUID(uuidString: "01726f62-6f74-7061-6a61-6d61732e6361")!
+    let rxUuid = UUID(uuidString: "02726f62-6f74-7061-6a61-6d61732e6361")!
 
     @Published var logMessage = ""
     
     init(peripheral: Device) {
         self.peripheral = peripheral
+        peripheral.connectionStateChangedHandler = { state in
+            self.log("Connection state is \(state)")
+        }
     }
     
     private func log(_ text: String) {
@@ -28,26 +31,26 @@ final class PeripheralViewModel: ObservableObject {
     }
     
     func connect() {
-        peripheral.connect { (isConnected) in
-            guard isConnected == true else {
+        peripheral.connect { (connectionState) in
+            guard connectionState == .connected else {
                 self.log("Not connected")
                 return
             }
             
-            self.log("App: Device is connected? \(isConnected)")
+            self.log("App: Device is connected? \(connectionState == .connected)")
             self.log("App: Starting service discovery...")
             
             self.peripheral.discoverServices { (result) in
-                let services = result.value ?? []
+                let services = (try? result.get()) ?? []
                 services.forEach { (service) in
                     self.log("App: Discovering characteristics for service: \(service.uuid.uuidString)")
                     self.peripheral.discoverCharacteristics(for: service) { (result) in
-                        let characteristics = result.value?.characteristics ?? []
+                        let characteristics = (try? result.get().characteristics) ?? []
                         characteristics.forEach { (characteristuc) in
                             self.log("App: Discovered characteristic: \(characteristuc.uuid.uuidString) in \(String(describing: service.uuid.uuidString))")
                         }
-                        
-                        if service == services.last {
+
+                        if service.uuid == services.last?.uuid {
                             self.log("App: All services/characteristics discovered")
                         }
                     }
@@ -61,29 +64,36 @@ final class PeripheralViewModel: ObservableObject {
     }
     
     func subscribe() {
-        peripheral.subscribe(to: rxUuid!.uuidString, in: serviceUuid!.uuidString) { result in
-            guard let value = result.value else {
-                self.log("Subscribed value returned nil")
-                return
+        peripheral.subscribe(to: rxUuid, in: serviceUuid) { result in
+            switch result {
+            case .success(let value):
+                self.log("Subscribed value: \([UInt8](value))")
+            case .failure(let error):
+                self.log("Subscribed value returned nil \(error)")
             }
-            self.log("Subscribed value: \([UInt8](value))")
         }
     }
     
     func read() {
-        peripheral.read(from: rxUuid!.uuidString, in: serviceUuid!.uuidString) { (result) in
-            guard let value = result.value else {
-                self.log("Read returned nil")
-                return
+        peripheral.read(from: rxUuid, in: serviceUuid) { (result) in
+            switch result {
+            case .success(let value):
+                self.log("Read value: \([UInt8](value))")
+            case .failure(let error):
+                self.log("Read returned nil \(error)")
             }
-            self.log("Read value: \([UInt8](value))")
         }
     }
     
     func write() {
         let command = Data([0x01])
-        peripheral.write(data: command, to: txUuid!.uuidString, in: serviceUuid!.uuidString) { result in
-            self.log("Write with response successful? \(result.isSuccess)")
+        peripheral.write(data: command, to: txUuid, in: serviceUuid) { result in
+            switch result {
+            case .success:
+                self.log("Write with response was successful")
+            case .failure(let error):
+                self.log("Write with response was unsuccessful \(error)")
+            }
         }
     }
 }

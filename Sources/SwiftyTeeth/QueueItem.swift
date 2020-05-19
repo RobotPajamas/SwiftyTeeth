@@ -18,8 +18,8 @@ private enum State: String {
 }
 
 public class QueueItem<T>: Operation {
-    public typealias CallbackBlock = (Result<T>, () -> Void) -> Void
-    public typealias ExecutionBlock = ((Result<T>) -> Void) -> Void
+    public typealias CallbackBlock = (Result<T, Error>, () -> Void) -> Void
+    public typealias ExecutionBlock = ((Result<T, Error>) -> Void) -> Void
     
     @available(*, deprecated, message: "Don't use this")
     override open var completionBlock: (() -> Void)? {
@@ -94,8 +94,11 @@ extension QueueItem: Queueable {
         if let execution = execution {
             execution { (result) in
                 // Allow an early exit from the task if execution was a failure
-                if result.isFailure {
+                switch result {
+                case .failure:
                     notify(result)
+                default:
+                    break
                 }
             }
         } else {
@@ -103,7 +106,7 @@ extension QueueItem: Queueable {
         }
     }
     
-    func notify(_ result: Result<T>) {
+    func notify(_ result: Result<T, Error>) {
         if let cb = callback {
             cb(result) {
                 done()
