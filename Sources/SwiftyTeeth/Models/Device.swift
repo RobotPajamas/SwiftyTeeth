@@ -9,10 +9,10 @@
 import Foundation
 import CoreBluetooth
 
-public typealias DiscoveredCharacteristic = (service: CBService, characteristics: [CBCharacteristic])
+public typealias DiscoveredCharacteristic = (service: Service, characteristics: [Characteristic])
 
 public typealias ConnectionHandler = ((Bool) -> Void)
-public typealias ServiceDiscovery = ((Result<[CBService], Error>) -> Void)
+public typealias ServiceDiscovery = ((Result<[Service], Error>) -> Void)
 public typealias CharacteristicDiscovery = ((Result<DiscoveredCharacteristic, Error>) -> Void)
 //public typealias ReadHandler = ((Result<Data>) -> Void)
 //public typealias WriteHandler = ((Result<Void>) -> Void)
@@ -30,14 +30,13 @@ open class Device: NSObject {
     fileprivate let tag = "SwiftyDevice"
     
     let peripheral: CBPeripheral
-    
-    // TODO: Maybe just make this a String of Strings?
-    open var discoveredServices = [CBService: [CBCharacteristic]]()
-    
-    fileprivate let manager: SwiftyTeeth
 
-    fileprivate var connectionHandler: ConnectionHandler?
-    fileprivate var notificationHandler = [CBCharacteristic: ((Result<Data, Error>) -> Void)]()
+    var discoveredServices = [UUID: Service]()
+    
+    private let manager: SwiftyTeeth
+
+    private var connectionHandler: ConnectionHandler?
+    private var notificationHandler = [CBCharacteristic: ((Result<Data, Error>) -> Void)]()
     
     // Connection parameters
     fileprivate var autoReconnect = false
@@ -108,8 +107,8 @@ extension Device {
 extension Device {
     
     // TODO: Make CBUUID into strings
-    open func discoverServices(with uuids: [CBUUID]? = nil, complete: ServiceDiscovery?) {
-        let item = QueueItem<[CBService]>(
+    open func discoverServices(with uuids: [UUID]? = nil, complete: ServiceDiscovery?) {
+        let item = QueueItem<[Service]>(
             name: "discoverServices", // TODO: Need better than a hardcoded string
             execution: { (cb) in
                 guard self.isConnected == true else {
@@ -118,7 +117,8 @@ extension Device {
                     return
                 }
                 Log(v: "discoverServices: \(self.peripheral) \n \(String(describing: self.peripheral.delegate))", tag: self.tag)
-                self.peripheral.discoverServices(uuids)
+                let cbuuids = uuids == nil ? nil : uuids!.map { CBUUID(nsuuid: $0) }
+                self.peripheral.discoverServices(cbuuids)
         },
             callback: { (result, done) in
                 complete?(result)
@@ -127,10 +127,8 @@ extension Device {
         
         queue.pushBack(item)
     }
-    
-    // TODO: Make CBUUID into strings
-    // TODO: Make service a UUID?
-    open func discoverCharacteristics(with uuids: [CBUUID]? = nil, for service: CBService, complete: CharacteristicDiscovery?) {
+
+    open func discoverCharacteristics(with uuids: [UUID]? = nil, for service: Service, complete: CharacteristicDiscovery?) {
         let item = QueueItem<DiscoveredCharacteristic>(
             name: service.uuid.uuidString,
             execution: { (cb) in
@@ -139,8 +137,16 @@ extension Device {
                     cb(.failure(ConnectionError.disconnected))
                     return
                 }
+
+                guard let cbService = self.peripheral.services?.find(uuidString: service.uuid.uuidString) else {
+                    Log(w: "Service not found on peripheral - cannot discoverCharacteristics", tag: self.tag)
+                    cb(.failure(ConnectionError.disconnected)) // TODO: Replace this error
+                    return
+                }
+
                 Log(v: "discoverCharacteristics", tag: self.tag)
-                self.peripheral.discoverCharacteristics(uuids, for: service)
+                let cbuuids = uuids == nil ? nil : uuids!.map { CBUUID(nsuuid: $0) }
+                self.peripheral.discoverCharacteristics(cbuuids, for: cbService)
         },
             callback: { (result, done) in
                 complete?(result)
@@ -150,9 +156,9 @@ extension Device {
         queue.pushBack(item)
     }
     
-    open func read(from characteristic: String, in service: String, complete: ((Result<Data, Error>) -> Void)?) {
-        guard let targetService = peripheral.services?.find(uuidString: service),
-            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
+    open func read(from characteristic: UUID, in service: UUID, complete: ((Result<Data, Error>) -> Void)?) {
+        guard let targetService = peripheral.services?.find(uuidString: service.uuidString),
+            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic.uuidString) else {
                 return
         }
         
@@ -174,9 +180,9 @@ extension Device {
         queue.pushBack(item)
     }
     
-    open func write(data: Data, to characteristic: String, in service: String, type: CBCharacteristicWriteType = .withResponse, complete: ((Result<Void, Error>) -> Void)? = nil) {
-        guard let targetService = peripheral.services?.find(uuidString: service),
-            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
+    open func write(data: Data, to characteristic: UUID, in service: UUID, type: CBCharacteristicWriteType = .withResponse, complete: ((Result<Void, Error>) -> Void)? = nil) {
+        guard let targetService = peripheral.services?.find(uuidString: service.uuidString),
+            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic.uuidString) else {
                 return
         }
         
@@ -197,9 +203,9 @@ extension Device {
     }
     
     // TODO: Adding some pre-conditions libraries/toolkits could streamline the initial clutter
-    open func subscribe(to characteristic: String, in service: String, complete: ((Result<Data, Error>) -> Void)?) {
-        guard let targetService = peripheral.services?.find(uuidString: service),
-            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
+    open func subscribe(to characteristic: UUID, in service: UUID, complete: ((Result<Data, Error>) -> Void)?) {
+        guard let targetService = peripheral.services?.find(uuidString: service.uuidString),
+            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic.uuidString) else {
                 return
         }
         
@@ -219,9 +225,9 @@ extension Device {
     }
     
     // TODO: Faster probably to just iterate through the notification handler instead of current method
-    open func unsubscribe(from characteristic: String, in service: String) {
-        guard let targetService = peripheral.services?.find(uuidString: service),
-            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
+    open func unsubscribe(from characteristic: UUID, in service: UUID) {
+        guard let targetService = peripheral.services?.find(uuidString: service.uuidString),
+            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic.uuidString) else {
                 return
         }
 
@@ -300,21 +306,26 @@ internal extension Device  {
     }
     
     func didDiscoverServices(error: Error?) {
-        discoveredServices.removeAll()
-        
-        peripheral.services?.forEach({ service in
-            Log(v: "Service Discovered: \(service.uuid.uuidString)", tag: tag)
-            discoveredServices[service] = [CBCharacteristic]()
-        })
-        
-        var result: Result<[CBService], Error> = .success(Array(discoveredServices.keys))
-        if let e = error {
-            result = .failure(e)
+//        discoveredServices.removeAll()
+
+        let services = peripheral.services?.compactMap { (cbService) -> Service? in
+            Log(v: "Service Discovered: \(cbService.uuid.uuidString)", tag: tag)
+            guard let uuid = UUID(cbuuid: cbService.uuid) else {
+                return nil
+            }
+            return Service(uuid: uuid, characteristics: [])
+        } ?? []
+
+        discoveredServices = Dictionary(uniqueKeysWithValues: zip(services.map {$0.uuid}, services))
+
+        var result: Result<[Service], Error> = .success(Array(discoveredServices.values))
+        if let error = error {
+            result = .failure(error)
         }
         
         let item = queue.items.first { (operation) -> Bool in
             operation.isExecuting && operation.name == "discoverServices"
-            } as? QueueItem<[CBService]>
+            } as? QueueItem<[Service]>
         item?.notify(result)
     }
     
@@ -322,18 +333,25 @@ internal extension Device  {
     }
     
     func didDiscoverCharacteristicsFor(service: CBService, error: Error?) {
-        discoveredServices[service]?.removeAll()
-        
-        var characteristics = [CBCharacteristic]()
-        service.characteristics?.forEach({ characteristic in
-            Log(v: "Characteristic Discovered: \(characteristic.uuid.uuidString)", tag: tag)
-            characteristics.append(characteristic)
-        })
-        
-        discoveredServices[service]? = characteristics
+        guard let uuid = UUID(cbuuid: service.uuid) else {
+            // TODO: What to do? Maybe a defer?
+            return
+        }
+
+        let characteristics = service.characteristics?.compactMap { cbCharacteristic -> Characteristic? in
+            Log(v: "Characteristic Discovered: \(cbCharacteristic.uuid.uuidString)", tag: tag)
+            guard let uuid = UUID(cbuuid: cbCharacteristic.uuid) else {
+               return nil
+           }
+            return Characteristic(uuid: uuid, properties: [])
+        } ?? []
+
+        let service = Service(uuid: uuid, characteristics: characteristics)
+        discoveredServices[uuid] = service
+
         var result: Result<DiscoveredCharacteristic, Error> = .success((service: service, characteristics: characteristics))
-        if let e = error {
-            result = .failure(e)
+        if let error = error {
+            result = .failure(error)
         }
         
         let item = queue.items.first { (operation) -> Bool in
