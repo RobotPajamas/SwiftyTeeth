@@ -6,14 +6,6 @@
 //
 //
 
-public protocol Logger {
-    func verbose(_ message: String)
-    func debug(_ message: String)
-    func info(_ message: String)
-    func warning(_ message: String)
-    func error(_ message: String)
-}
-
 public func Log(v message: String, tag: String = "SwiftyTeeth", path: String = #file, function: String = #function, line: Int = #line) {
     swiftyTeethLogger?.verbose("\(tag): \(message)")
 }

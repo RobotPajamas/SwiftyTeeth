@@ -12,10 +12,10 @@ import CoreBluetooth
 public typealias DiscoveredCharacteristic = (service: CBService, characteristics: [CBCharacteristic])
 
 public typealias ConnectionHandler = ((Bool) -> Void)
-public typealias ServiceDiscovery = ((Result<[CBService]>) -> Void)
-public typealias CharacteristicDiscovery = ((Result<DiscoveredCharacteristic>) -> Void)
-public typealias ReadHandler = ((Result<Data>) -> Void)
-public typealias WriteHandler = ((Result<Void>) -> Void)
+public typealias ServiceDiscovery = ((Result<[CBService], Error>) -> Void)
+public typealias CharacteristicDiscovery = ((Result<DiscoveredCharacteristic, Error>) -> Void)
+//public typealias ReadHandler = ((Result<Data>) -> Void)
+//public typealias WriteHandler = ((Result<Void>) -> Void)
 
 public enum ConnectionError: Error {
     case disconnected
@@ -37,7 +37,7 @@ open class Device: NSObject {
     fileprivate let manager: SwiftyTeeth
 
     fileprivate var connectionHandler: ConnectionHandler?
-    fileprivate var notificationHandler = [CBCharacteristic: ReadHandler]()
+    fileprivate var notificationHandler = [CBCharacteristic: ((Result<Data, Error>) -> Void)]()
     
     // Connection parameters
     fileprivate var autoReconnect = false
@@ -150,7 +150,7 @@ extension Device {
         queue.pushBack(item)
     }
     
-    open func read(from characteristic: String, in service: String, complete: ReadHandler?) {
+    open func read(from characteristic: String, in service: String, complete: ((Result<Data, Error>) -> Void)?) {
         guard let targetService = peripheral.services?.find(uuidString: service),
             let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
                 return
@@ -174,7 +174,7 @@ extension Device {
         queue.pushBack(item)
     }
     
-    open func write(data: Data, to characteristic: String, in service: String, type: CBCharacteristicWriteType = .withResponse, complete: WriteHandler? = nil) {
+    open func write(data: Data, to characteristic: String, in service: String, type: CBCharacteristicWriteType = .withResponse, complete: ((Result<Void, Error>) -> Void)? = nil) {
         guard let targetService = peripheral.services?.find(uuidString: service),
             let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
                 return
@@ -197,7 +197,7 @@ extension Device {
     }
     
     // TODO: Adding some pre-conditions libraries/toolkits could streamline the initial clutter
-    open func subscribe(to characteristic: String, in service: String, complete: ReadHandler?) {
+    open func subscribe(to characteristic: String, in service: String, complete: ((Result<Data, Error>) -> Void)?) {
         guard let targetService = peripheral.services?.find(uuidString: service),
             let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic) else {
                 return
@@ -307,7 +307,7 @@ internal extension Device  {
             discoveredServices[service] = [CBCharacteristic]()
         })
         
-        var result: Result<[CBService]> = .success(Array(discoveredServices.keys))
+        var result: Result<[CBService], Error> = .success(Array(discoveredServices.keys))
         if let e = error {
             result = .failure(e)
         }
@@ -331,7 +331,7 @@ internal extension Device  {
         })
         
         discoveredServices[service]? = characteristics
-        var result: Result<DiscoveredCharacteristic> = .success((service: service, characteristics: characteristics))
+        var result: Result<DiscoveredCharacteristic, Error> = .success((service: service, characteristics: characteristics))
         if let e = error {
             result = .failure(e)
         }
@@ -345,7 +345,7 @@ internal extension Device  {
     func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
         Log(v: "didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(String(describing: characteristic.value))", tag: tag)
         
-        var result: Result<Data> = .success(characteristic.value ?? Data())
+        var result: Result<Data, Error> = .success(characteristic.value ?? Data())
         if let e = error {
             result = .failure(e)
         }
@@ -360,7 +360,7 @@ internal extension Device  {
     func didWriteValueFor(characteristic: CBCharacteristic, error: Error?) {
         Log(v: "didWriteValueFor: \(characteristic.uuid.uuidString)", tag: tag)
     
-        var result: Result<Void> = .success(())
+        var result: Result<Void, Error> = .success(())
         if let e = error {
             result = .failure(e)
         }
@@ -374,7 +374,7 @@ internal extension Device  {
     // This is equivalent to a direct READ from the characteristic
     func didUpdateNotificationStateFor(characteristic: CBCharacteristic, error: Error?) {
         Log(v: "didUpdateNotificationStateFor: \(characteristic.uuid.uuidString)", tag: tag)
-        var result: Result<Data> = .success(characteristic.value ?? Data())
+        var result: Result<Data, Error> = .success(characteristic.value ?? Data())
         if let e = error {
             result = .failure(e)
         }
