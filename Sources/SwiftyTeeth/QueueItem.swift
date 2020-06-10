@@ -80,6 +80,11 @@ public class QueueItem<T>: Operation {
         state = .executing
         execute()
     }
+
+    public override func cancel() {
+        super.cancel()
+        done()
+    }
     
     // Call this after Execute is completed to allow Queue to continue
     public func done() {
@@ -91,6 +96,7 @@ public class QueueItem<T>: Operation {
 extension QueueItem: Queueable {
     
     func execute() {
+        Log(v: "QueueItem: Executing \(self.name ?? "(none)")")
         if let execution = execution {
             execution { (result) in
                 // Allow an early exit from the task if execution was a failure
@@ -107,6 +113,7 @@ extension QueueItem: Queueable {
     }
     
     func notify(_ result: Result<T, Error>) {
+        Log(v: "QueueItem: Notifying \(self.name ?? "(none)")")
         if let cb = callback {
             cb(result) {
                 done()
