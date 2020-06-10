@@ -125,6 +125,7 @@ extension Device {
         let item = QueueItem<[Service]>(
             name: "discoverServices", // TODO: Need better than a hardcoded string
             execution: { (cb) in
+
                 guard self.isConnected == true else {
                     Log(v: "Not connected - cannot discoverServices", tag: self.tag)
                     cb(.failure(ConnectionError.disconnected))
@@ -293,6 +294,7 @@ internal extension Device {
     func didDisconnect() {
         Log(v: "didDisconnect: Calling disconnection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
         queue.cancelAll()
+
         connectionHandler?(.disconnected)
         connectionStateChangedHandler?(.disconnected)
         if autoReconnect == true {

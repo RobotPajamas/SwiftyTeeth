@@ -80,6 +80,11 @@ public class QueueItem<T>: Operation {
         state = .executing
         execute()
     }
+
+    public override func cancel() {
+        super.cancel()
+        done()
+    }
     
     // Call this after Execute is completed to allow Queue to continue
     public func done() {
