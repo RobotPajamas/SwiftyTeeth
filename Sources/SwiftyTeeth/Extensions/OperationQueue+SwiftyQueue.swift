@@ -18,7 +18,7 @@ extension OperationQueue: SwiftyQueue {
         self.addOperation(item)
         Log(v: "SwiftyQueue: Now there are \(items.count) items in queue")
         for item in items {
-            Log(v: "SwiftyQueue: About to be cancelled \(item.name ?? "(none)")")
+            Log(v: "SwiftyQueue: \(item.name ?? "(none)") is in the queue")
         }
     }
     
@@ -27,7 +27,6 @@ extension OperationQueue: SwiftyQueue {
         for item in items {
             Log(v: "SwiftyQueue: About to be cancelled \(item.name ?? "(none)")")
         }
-        Log(v: "SwiftyQueue: Adding item to existing \(items.count) items in queue")
         self.cancelAllOperations()
     }
 }
