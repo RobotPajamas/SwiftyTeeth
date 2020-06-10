@@ -292,6 +292,7 @@ internal extension Device {
     
     func didDisconnect() {
         Log(v: "didDisconnect: Calling disconnection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
+        queue.cancelAll()
         connectionHandler?(.disconnected)
         connectionStateChangedHandler?(.disconnected)
         if autoReconnect == true {
