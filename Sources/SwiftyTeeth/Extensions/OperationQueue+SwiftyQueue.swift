@@ -14,10 +14,12 @@ extension OperationQueue: SwiftyQueue {
     }
     
     func pushBack(_ item: Operation) {
+        Log(v: "SwiftyQueue: Adding item to existing \(items.count) items in queue")
         self.addOperation(item)
     }
     
     func cancelAll() {
+        Log(v: "SwiftyQueue: Cancelling all \(items.count) items in queue")
         self.cancelAllOperations()
     }
     
