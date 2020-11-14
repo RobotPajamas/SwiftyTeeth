@@ -72,8 +72,10 @@ let service = Service(
 
 instance.stateChangedHandler = { (state) in
     print("Current Bluetooth state is: \(state)")
+    if state == .poweredOn {
+        instance.add(service: service)
+        instance.advertise(name: "SwiftyTooth")
+    }
 }
-instance.add(service: service)
-instance.advertise(name: "SwiftyTooth")
 
 RunLoop.main.run()

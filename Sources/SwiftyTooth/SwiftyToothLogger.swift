@@ -1,6 +1,6 @@
 //
 //  Logger.swift
-//  SwiftyToothth
+//  SwiftyTooth
 //
 //  Created by Suresh Joshi on 2017-07-05.
 //

@@ -1,6 +1,6 @@
 //
 //  SwiftyTooth.swift
-//  SwiftyTeeth
+//  SwiftyTooth
 //
 //  Created by Suresh Joshi on 2019-11-23.
 //
