@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'SwiftyTeeth'
-  s.version          = '0.7.1'
+  s.version          = '0.7.2'
   s.summary          = 'A simple, lightweight library intended to take away some of the cruft and tediousness of using CoreBluetooth.'
   s.description      = <<-DESC
 A simple, lightweight library intended to take away some of the cruft and tediousness of using CoreBluetooth. 
