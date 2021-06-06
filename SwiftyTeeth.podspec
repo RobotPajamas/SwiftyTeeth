@@ -14,9 +14,8 @@ It replaces CoreBluetooth's protocols and delegates with a block-based pattern, 
   s.source           = { :git => 'https://github.com/RobotPajamas/SwiftyTeeth.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
+  s.swift_versions = ['5.1', '5.2', '5.3']
   s.ios.deployment_target = '10.0'
-
-  s.source_files = 'Sources/**/*'
-
+  s.source_files = ['Sources/Common/**/*.swift', 'Sources/SwiftyTeeth/**/*.swift']
   s.frameworks = 'CoreBluetooth'
 end
