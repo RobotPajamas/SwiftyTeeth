@@ -10,7 +10,9 @@ import CoreBluetooth
 
 internal extension CBCharacteristic {
     var compositeId: String {
-        return service.uuid.uuidString + uuid.uuidString
+        // TODO: What is the correct way to handle this change?
+        // https://developer.apple.com/documentation/corebluetooth/cbcharacteristic/1518728-service?changes=latest_minor
+        return service?.uuid.uuidString ?? "" + uuid.uuidString
     }
     
     func equals(_ uuidString: String) -> Bool {
