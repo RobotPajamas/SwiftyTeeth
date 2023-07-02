@@ -1,6 +1,6 @@
 //
 //  ScanningView.swift
-//  SwiftyTeeth Sample
+//  SwiftyTeeth-Sample
 //
 //  Created by SJ on 2020-03-27.
 //
@@ -11,13 +11,13 @@ import SwiftyTeeth
 final class ScanningViewModel: ObservableObject, SwiftyTeethable {
     @Published var isScanning = false
     @Published var peripherals = [Device]()
-    
+
     init() {
         swiftyTeeth.stateChangedHandler = { (state) in
             print("Bluetooth State is: \(state)")
         }
     }
-    
+
     func scan(timeout: Int = 5) {
         print("Starting scan for nearby peripherals with timeout: \(timeout)")
         isScanning = true
@@ -40,13 +40,13 @@ struct PeripheralRow: View {
 }
 struct ScanningView: View {
     @ObservedObject var vm = ScanningViewModel()
-    
+
     private var scanButton: some View {
         Button("Scan") {
             self.vm.scan(timeout: 3)
         }.disabled(vm.isScanning == true)
     }
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -54,11 +54,11 @@ struct ScanningView: View {
                     NavigationLink(destination: PeripheralView(peripheral: peripheral)) {
                         PeripheralRow(name: peripheral.name)
                     }
-                    
+
                 }
             }.listStyle(GroupedListStyle())
-            .navigationBarTitle("Scanning", displayMode: .inline)
-            .navigationBarItems(trailing: scanButton)
+                .navigationBarTitle("Scanning", displayMode: .inline)
+                .navigationBarItems(trailing: scanButton)
         }
     }
 }

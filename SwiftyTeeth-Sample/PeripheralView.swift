@@ -1,6 +1,6 @@
 //
-//  DeviceView.swift
-//  SwiftyTeeth Sample
+//  PeripheralView.swift
+//  SwiftyTeeth-Sample
 //
 //  Created by SJ on 2020-03-27.
 //
@@ -15,31 +15,31 @@ final class PeripheralViewModel: ObservableObject {
     let rxUuid = UUID(uuidString: "02726f62-6f74-7061-6a61-6d61732e6361")!
 
     @Published var logMessage = ""
-    
+
     init(peripheral: Device) {
         self.peripheral = peripheral
         peripheral.connectionStateChangedHandler = { state in
             self.log("Connection state is \(state)")
         }
     }
-    
+
     private func log(_ text: String) {
         print(text)
         DispatchQueue.main.async {
             self.logMessage.append(text + "\n")
         }
     }
-    
+
     func connect() {
         peripheral.connect { (connectionState) in
             guard connectionState == .connected else {
                 self.log("Not connected")
                 return
             }
-            
+
             self.log("App: Device is connected? \(connectionState == .connected)")
             self.log("App: Starting service discovery...")
-            
+
             self.peripheral.discoverServices { (result) in
                 let services = (try? result.get()) ?? []
                 services.forEach { (service) in
@@ -58,11 +58,11 @@ final class PeripheralViewModel: ObservableObject {
             }
         }
     }
-    
+
     func disconnect() {
         peripheral.disconnect()
     }
-    
+
     func subscribe() {
         peripheral.subscribe(to: rxUuid, in: serviceUuid) { result in
             switch result {
@@ -73,7 +73,7 @@ final class PeripheralViewModel: ObservableObject {
             }
         }
     }
-    
+
     func read() {
         peripheral.read(from: rxUuid, in: serviceUuid) { (result) in
             switch result {
@@ -84,7 +84,7 @@ final class PeripheralViewModel: ObservableObject {
             }
         }
     }
-    
+
     func write() {
         let command = Data([0x01])
         peripheral.write(data: command, to: txUuid, in: serviceUuid) { result in
@@ -101,12 +101,12 @@ final class PeripheralViewModel: ObservableObject {
 struct PeripheralView: View {
     @ObservedObject var vm: PeripheralViewModel
     let peripheral: Device
-    
+
     init(peripheral: Device) {
         self.peripheral = peripheral
         self.vm = PeripheralViewModel(peripheral: peripheral)
     }
-    
+
     var body: some View {
         VStack {
             HStack {
