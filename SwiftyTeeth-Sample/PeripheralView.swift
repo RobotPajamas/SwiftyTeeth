@@ -124,7 +124,7 @@ struct PeripheralView: View {
                 }
                 Spacer()
             }
-            TextView(text: $vm.logMessage, autoscroll: true)
+            TextField("", text: $vm.logMessage, axis: .vertical)
         }.onAppear {
             self.vm.connect()
         }.onDisappear {

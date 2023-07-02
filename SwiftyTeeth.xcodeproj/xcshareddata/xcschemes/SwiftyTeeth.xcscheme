@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1300"
-   version = "1.3">
+   LastUpgradeVersion = "1430"
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8B64D1891DC2E16300D41A2C"
+               BlueprintIdentifier = "3324E6422A51D4F600F2C908"
                BuildableName = "SwiftyTeeth.framework"
                BlueprintName = "SwiftyTeeth"
                ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
@@ -26,8 +26,20 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "3324E6492A51D4F600F2C908"
+               BuildableName = "SwiftyTeethTests.xctest"
+               BlueprintName = "SwiftyTeethTests"
+               ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -40,15 +52,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8B64D1891DC2E16300D41A2C"
-            BuildableName = "SwiftyTeeth.framework"
-            BlueprintName = "SwiftyTeeth"
-            ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -59,7 +62,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8B64D1891DC2E16300D41A2C"
+            BlueprintIdentifier = "3324E6422A51D4F600F2C908"
             BuildableName = "SwiftyTeeth.framework"
             BlueprintName = "SwiftyTeeth"
             ReferencedContainer = "container:SwiftyTeeth.xcodeproj">

@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "332BEEC72A51C61900D77F8C"
-               BuildableName = "SwiftyTeeth-Sample.app"
-               BlueprintName = "SwiftyTeeth-Sample"
+               BlueprintIdentifier = "333B59982A51DF5800DF3AD7"
+               BuildableName = "SwiftyTooth.framework"
+               BlueprintName = "SwiftyTooth"
                ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,19 +28,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "333B599F2A51DF5800DF3AD7"
-               BuildableName = "SwiftyToothTests.xctest"
-               BlueprintName = "SwiftyToothTests"
-               ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -52,16 +39,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "332BEEC72A51C61900D77F8C"
-            BuildableName = "SwiftyTeeth-Sample.app"
-            BlueprintName = "SwiftyTeeth-Sample"
-            ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -69,16 +46,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "332BEEC72A51C61900D77F8C"
-            BuildableName = "SwiftyTeeth-Sample.app"
-            BlueprintName = "SwiftyTeeth-Sample"
+            BlueprintIdentifier = "333B59982A51DF5800DF3AD7"
+            BuildableName = "SwiftyTooth.framework"
+            BlueprintName = "SwiftyTooth"
             ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
