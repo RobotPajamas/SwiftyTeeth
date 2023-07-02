@@ -1,12 +1,14 @@
 //
 //  Device+Identifiable.swift
-//  SwiftyTeeth Sample
+//  SwiftyTeeth-Sample
 //
-//  Created by SJ on 2020-03-27.
+//  Created by sj on 2023-07-02.
 //
 
 import SwiftyTeeth
 
+import SwiftyTeeth
+
 extension Device: Identifiable {
-    
+
 }

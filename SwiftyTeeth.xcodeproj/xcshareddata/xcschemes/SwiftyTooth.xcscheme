@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3324E6422A51D4F600F2C908"
-               BuildableName = "SwiftyTeeth.framework"
-               BlueprintName = "SwiftyTeeth"
+               BlueprintIdentifier = "333B59982A51DF5800DF3AD7"
+               BuildableName = "SwiftyTooth.framework"
+               BlueprintName = "SwiftyTooth"
                ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,19 +28,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3324E6492A51D4F600F2C908"
-               BuildableName = "SwiftyTeethTests.xctest"
-               BlueprintName = "SwiftyTeethTests"
-               ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -62,9 +49,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3324E6422A51D4F600F2C908"
-            BuildableName = "SwiftyTeeth.framework"
-            BlueprintName = "SwiftyTeeth"
+            BlueprintIdentifier = "333B59982A51DF5800DF3AD7"
+            BuildableName = "SwiftyTooth.framework"
+            BlueprintName = "SwiftyTooth"
             ReferencedContainer = "container:SwiftyTeeth.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
