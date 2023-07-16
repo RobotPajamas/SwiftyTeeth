@@ -42,9 +42,11 @@ let tx = Characteristic(
                 // TODO: Failure response?
                 return
             }
-            
+            print("Received value \(value)")
+
             // TODO: Clean up this UInt8 
-            increment(by: [UInt8](value)[0])
+            increment(by: ([UInt8](value))[0])
+            print("Incremented by \(value)")
             
             // If increment is really long, this could technically time out - should increment the counter, respond success, THEN notify
             response(.success(()))
@@ -58,10 +60,10 @@ let tx = Characteristic(
 
 var counter = UInt8.min
 func increment(by value: UInt8) {
-    for _ in 0..<128 { // Sending 128 elements to test notification queue
+    for _ in 0..<10 { // Sending 128 elements to test notification queue
         counter += value
         let data = Data([counter])
-        instance.emit(data: data, on: rx)
+        let _  = instance.emit(data: data, on: rx)
     }
 }
 
@@ -76,6 +78,14 @@ instance.stateChangedHandler = { (state) in
         instance.add(service: service)
         instance.advertise(name: "SwiftyTooth")
     }
+}
+
+// Run instance.emit on a timer
+let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
+    counter += 1
+    let data = Data([counter])
+    let _  = instance.emit(data: data, on: rx)
+
 }
 
 RunLoop.main.run()
