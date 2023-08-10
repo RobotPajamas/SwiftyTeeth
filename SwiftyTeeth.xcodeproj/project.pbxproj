@@ -123,6 +123,9 @@
 		333B59992A51DF5800DF3AD7 /* SwiftyTooth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyTooth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		333B59A02A51DF5800DF3AD7 /* SwiftyToothTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftyToothTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		333B59A72A51DF5800DF3AD7 /* SwiftyToothTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyToothTests.swift; sourceTree = "<group>"; };
+		33854DC82A646C6000D40FAD /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
+		33854DC92A646C6100D40FAD /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		33854DCA2A646C6100D40FAD /* SwiftyTeeth.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftyTeeth.podspec; sourceTree = "<group>"; };
 		33C429282A51E26A00FC81EE /* BluetoothState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothState.swift; sourceTree = "<group>"; };
 		33C429292A51E26A00FC81EE /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		33C4292A2A51E26A00FC81EE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -202,6 +205,9 @@
 		330D89192A51C82B00721EE6 /* Metadata */ = {
 			isa = PBXGroup;
 			children = (
+				33854DC92A646C6100D40FAD /* Cartfile */,
+				33854DC82A646C6000D40FAD /* Cartfile.private */,
+				33854DCA2A646C6100D40FAD /* SwiftyTeeth.podspec */,
 				330D891A2A51C84700721EE6 /* LICENSE */,
 				330D891C2A51C84800721EE6 /* Package.swift */,
 				330D891B2A51C84800721EE6 /* README.md */,
