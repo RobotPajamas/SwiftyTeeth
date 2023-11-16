@@ -22,7 +22,7 @@ public class QueueItem<T>: Operation {
     public typealias ExecutionBlock = ((Result<T, Error>) -> Void) -> Void
     
     @available(*, deprecated, message: "Don't use this")
-    override open var completionBlock: (() -> Void)? {
+    override open var completionBlock: (@Sendable() -> Void)? {
         get {
             return nil
         }
