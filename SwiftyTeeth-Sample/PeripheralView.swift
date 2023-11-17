@@ -5,8 +5,8 @@
 //  Created by SJ on 2020-03-27.
 //
 
-import SwiftyTeeth
 import SwiftUI
+import SwiftyTeeth
 
 final class PeripheralViewModel: ObservableObject {
     let peripheral: Device
@@ -43,11 +43,14 @@ final class PeripheralViewModel: ObservableObject {
             self.peripheral.discoverServices { (result) in
                 let services = (try? result.get()) ?? []
                 services.forEach { (service) in
-                    self.log("App: Discovering characteristics for service: \(service.uuid.uuidString)")
+                    self.log(
+                        "App: Discovering characteristics for service: \(service.uuid.uuidString)")
                     self.peripheral.discoverCharacteristics(for: service) { (result) in
                         let characteristics = (try? result.get().characteristics) ?? []
                         characteristics.forEach { (characteristuc) in
-                            self.log("App: Discovered characteristic: \(characteristuc.uuid.uuidString) in \(String(describing: service.uuid.uuidString))")
+                            self.log(
+                                "App: Discovered characteristic: \(characteristuc.uuid.uuidString) in \(String(describing: service.uuid.uuidString))"
+                            )
                         }
 
                         if service.uuid == services.last?.uuid {

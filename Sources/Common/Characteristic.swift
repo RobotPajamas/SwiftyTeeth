@@ -19,7 +19,7 @@ public enum Property {
     case notify(onNotify: NotifyHandler)
     case write(onWrite: WriteHandler)
     case writeNoResponse(onWrite: WriteNoResponseHandler)
-    
+
     var isReadable: Bool {
         switch self {
         case .read, .notify:
@@ -28,7 +28,7 @@ public enum Property {
             return false
         }
     }
-    
+
     var isWriteable: Bool {
         return !isReadable
     }
@@ -37,8 +37,7 @@ public enum Property {
 public struct Characteristic {
     public let uuid: UUID
     public let properties: [Property]
-    
-    
+
     public init(uuid: UUID, properties: [Property]) {
         self.uuid = uuid
         self.properties = properties

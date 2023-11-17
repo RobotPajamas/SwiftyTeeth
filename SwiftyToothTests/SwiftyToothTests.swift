@@ -6,6 +6,7 @@
 //
 
 import XCTest
+
 @testable import SwiftyTooth
 
 final class SwiftyToothTests: XCTestCase {

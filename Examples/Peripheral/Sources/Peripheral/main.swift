@@ -5,7 +5,6 @@
 //  Created by SJ on 2020-03-27.
 //
 
-
 import Foundation
 import SwiftyTooth
 
@@ -35,33 +34,34 @@ let tx = Characteristic(
     properties: [
         .write(onWrite: { (request, response) in
             print("In on onWrite \(String(describing: request))")
-            
+
             guard let value = request,
-                value.count == 1 else {
+                value.count == 1
+            else {
                 print("No data available")
                 // TODO: Failure response?
                 return
             }
-            
-            // TODO: Clean up this UInt8 
+
+            // TODO: Clean up this UInt8
             increment(by: [UInt8](value)[0])
-            
+
             // If increment is really long, this could technically time out - should increment the counter, respond success, THEN notify
             response(.success(()))
         }),
 
         .writeNoResponse(onWrite: { (request) in
             print("In on onWriteNoResponse \(String(describing: request))")
-        })
+        }),
     ]
 )
 
 var counter = UInt8.min
 func increment(by value: UInt8) {
-    for _ in 0..<128 { // Sending 128 elements to test notification queue
+    for _ in 0..<128 {  // Sending 128 elements to test notification queue
         counter += value
         let data = Data([counter])
-        instance.emit(data: data, on: rx)
+        _ = instance.emit(data: data, on: rx)
     }
 }
 

@@ -6,8 +6,8 @@
 //
 //
 
-import Foundation
 import CoreBluetooth
+import Foundation
 
 public typealias DiscoveredCharacteristic = (service: Service, characteristics: [Characteristic])
 public typealias ServiceDiscovery = ((Result<[Service], Error>) -> Void)
@@ -17,17 +17,16 @@ public enum ConnectionError: Error {
     case disconnected
 }
 
-
 // Note: The design of this class will (eventually, and if reasonable) attempt to keep APIs unaware of CoreBluetooth
 // while at the same time making use of them internally as a convenience
 // NotificationHandler is an example of this, as it could be a dictionary using a String key - but that just adds extra indirection internally,
 // where all CBCharacterisics need to be dereferenced by uuid then uuidString. Internally, this adds no value - and adds risk.
 open class Device: NSObject {
     fileprivate let tag = "SwiftyDevice"
-    
+
     let peripheral: CBPeripheral
     var discoveredServices = [UUID: Service]()
-    
+
     private let manager: SwiftyTeeth
 
     public var connectionStateChangedHandler: ((ConnectionState) -> Void)? {
@@ -39,13 +38,13 @@ open class Device: NSObject {
 
     private var connectionHandler: ((ConnectionState) -> Void)?
     private var notificationHandler = [CBCharacteristic: ((Result<Data, Error>) -> Void)]()
-    
+
     // Connection parameters
     fileprivate var autoReconnect = false
- 
+
     lazy var queue: SwiftyQueue = {
         let instance = OperationQueue()
-        instance.maxConcurrentOperationCount = 1 // Ensure serial queue
+        instance.maxConcurrentOperationCount = 1  // Ensure serial queue
         return instance
     }()
 
@@ -98,7 +97,10 @@ extension Device {
 extension Device {
     // Annoyingly, iOS has the connection functionality sitting on the central manager, instead of on the peripheral
     // TODO: Should the completion be optional?
-    public func connect(with timeout: TimeInterval? = nil, autoReconnect: Bool = true, complete: ((ConnectionState) -> Void)?) {
+    public func connect(
+        with timeout: TimeInterval? = nil, autoReconnect: Bool = true,
+        complete: ((ConnectionState) -> Void)?
+    ) {
         Log(v: "Calling connect", tag: tag)
         connectionStateChangedHandler?(.connecting)
         self.connectionHandler = complete
@@ -116,14 +118,13 @@ extension Device {
     }
 }
 
-
 // MARK: - GATT operations
 extension Device {
 
     // TODO: Make CBUUID into strings
-  public func discoverServices(with uuids: [UUID]? = nil, complete: ServiceDiscovery?) {
+    public func discoverServices(with uuids: [UUID]? = nil, complete: ServiceDiscovery?) {
         let item = QueueItem<[Service]>(
-            name: "discoverServices", // TODO: Need better than a hardcoded string
+            name: "discoverServices",  // TODO: Need better than a hardcoded string
             execution: { (cb) in
 
                 guard self.isConnected == true else {
@@ -131,19 +132,24 @@ extension Device {
                     cb(.failure(ConnectionError.disconnected))
                     return
                 }
-                Log(v: "discoverServices: \(self.peripheral) \n \(String(describing: self.peripheral.delegate))", tag: self.tag)
+                Log(
+                    v:
+                        "discoverServices: \(self.peripheral) \n \(String(describing: self.peripheral.delegate))",
+                    tag: self.tag)
                 let cbuuids = uuids == nil ? nil : uuids!.map { CBUUID(nsuuid: $0) }
                 self.peripheral.discoverServices(cbuuids)
-        },
+            },
             callback: { (result, done) in
                 complete?(result)
                 done()
-        })
+            })
 
         queue.pushBack(item)
     }
 
-  public func discoverCharacteristics(with uuids: [UUID]? = nil, for service: Service, complete: CharacteristicDiscovery?) {
+    public func discoverCharacteristics(
+        with uuids: [UUID]? = nil, for service: Service, complete: CharacteristicDiscovery?
+    ) {
         let item = QueueItem<DiscoveredCharacteristic>(
             name: service.uuid.uuidString,
             execution: { (cb) in
@@ -153,28 +159,37 @@ extension Device {
                     return
                 }
 
-                guard let cbService = self.peripheral.services?.find(uuidString: service.uuid.uuidString) else {
-                    Log(w: "Service not found on peripheral - cannot discoverCharacteristics", tag: self.tag)
-                    cb(.failure(ConnectionError.disconnected)) // TODO: Replace this error
+                guard
+                    let cbService = self.peripheral.services?.find(
+                        uuidString: service.uuid.uuidString)
+                else {
+                    Log(
+                        w: "Service not found on peripheral - cannot discoverCharacteristics",
+                        tag: self.tag)
+                    cb(.failure(ConnectionError.disconnected))  // TODO: Replace this error
                     return
                 }
 
                 Log(v: "discoverCharacteristics", tag: self.tag)
                 let cbuuids = uuids == nil ? nil : uuids!.map { CBUUID(nsuuid: $0) }
                 self.peripheral.discoverCharacteristics(cbuuids, for: cbService)
-        },
+            },
             callback: { (result, done) in
                 complete?(result)
                 done()
-        })
-        
+            })
+
         queue.pushBack(item)
     }
 
-  public func read(from characteristic: UUID, in service: UUID, complete: ((Result<Data, Error>) -> Void)?) {
+    public func read(
+        from characteristic: UUID, in service: UUID, complete: ((Result<Data, Error>) -> Void)?
+    ) {
         guard let targetService = peripheral.services?.find(uuidString: service.uuidString),
-            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic.uuidString) else {
-                return
+            let targetCharacteristic = targetService.characteristics?.find(
+                uuidString: characteristic.uuidString)
+        else {
+            return
         }
 
         let item = QueueItem<Data>(
@@ -190,15 +205,21 @@ extension Device {
             callback: { (result, done) in
                 complete?(result)
                 done()
-        })
+            })
 
         queue.pushBack(item)
     }
 
-    public func write(data: Data, to characteristic: UUID, in service: UUID, type: CBCharacteristicWriteType = .withResponse, complete: ((Result<Void, Error>) -> Void)? = nil) {
+    public func write(
+        data: Data, to characteristic: UUID, in service: UUID,
+        type: CBCharacteristicWriteType = .withResponse,
+        complete: ((Result<Void, Error>) -> Void)? = nil
+    ) {
         guard let targetService = peripheral.services?.find(uuidString: service.uuidString),
-            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic.uuidString) else {
-                return
+            let targetCharacteristic = targetService.characteristics?.find(
+                uuidString: characteristic.uuidString)
+        else {
+            return
         }
 
         let item = QueueItem<Void>(
@@ -210,18 +231,23 @@ extension Device {
                     return
                 }
                 self.peripheral.writeValue(data, for: targetCharacteristic, type: type)
-        }, callback: { (result, done) in
-            complete?(result)
-            done()
-        })
+            },
+            callback: { (result, done) in
+                complete?(result)
+                done()
+            })
         queue.pushBack(item)
     }
 
     // TODO: Adding some pre-conditions libraries/toolkits could streamline the initial clutter
-    public func subscribe(to characteristic: UUID, in service: UUID, complete: ((Result<Data, Error>) -> Void)?) {
+    public func subscribe(
+        to characteristic: UUID, in service: UUID, complete: ((Result<Data, Error>) -> Void)?
+    ) {
         guard let targetService = peripheral.services?.find(uuidString: service.uuidString),
-            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic.uuidString) else {
-                return
+            let targetCharacteristic = targetService.characteristics?.find(
+                uuidString: characteristic.uuidString)
+        else {
+            return
         }
 
         guard isConnected == true else {
@@ -242,8 +268,10 @@ extension Device {
     // TODO: Faster probably to just iterate through the notification handler instead of current method
     public func unsubscribe(from characteristic: UUID, in service: UUID) {
         guard let targetService = peripheral.services?.find(uuidString: service.uuidString),
-            let targetCharacteristic = targetService.characteristics?.find(uuidString: characteristic.uuidString) else {
-                return
+            let targetCharacteristic = targetService.characteristics?.find(
+                uuidString: characteristic.uuidString)
+        else {
+            return
         }
 
         guard isConnected == true else {
@@ -264,10 +292,9 @@ extension Device {
     }
 }
 
-
 // MARK: - NSObject overrides
 extension Device {
-    open override var hash : Int {
+    open override var hash: Int {
         return id.hash
     }
 
@@ -280,19 +307,24 @@ extension Device {
     }
 }
 
-
 // TODO: Instead of creating internal functions, could register connection/disconnection handlers with the Manager?
 // MARK: - Connection Handler Proxy
-internal extension Device {
+extension Device {
 
     func didConnect() {
-        Log(v: "didConnect: Calling connection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
+        Log(
+            v:
+                "didConnect: Calling connection handler: Is handler nil? \(connectionHandler == nil)",
+            tag: tag)
         connectionHandler?(.connected)
         connectionStateChangedHandler?(.connected)
     }
 
     func didDisconnect() {
-        Log(v: "didDisconnect: Calling disconnection handler: Is handler nil? \(connectionHandler == nil)", tag: tag)
+        Log(
+            v:
+                "didDisconnect: Calling disconnection handler: Is handler nil? \(connectionHandler == nil)",
+            tag: tag)
         queue.cancelAll()
 
         connectionHandler?(.disconnected)
@@ -303,10 +335,9 @@ internal extension Device {
     }
 }
 
-
 // TODO: If multiple peripherals are connected, should there be a peripheral validation done?
 // MARK: - CBPeripheralDelegate Proxy
-internal extension Device  {
+extension Device {
 
     func didUpdateName() {
 
@@ -325,25 +356,28 @@ internal extension Device  {
     }
 
     func didDiscoverServices(error: Error?) {
-//        discoveredServices.removeAll()
+        //        discoveredServices.removeAll()
 
-        let services = peripheral.services?.compactMap { (cbService) -> Service? in
-            Log(v: "Service Discovered: \(cbService.uuid.uuidString)", tag: tag)
-            guard let uuid = UUID(cbuuid: cbService.uuid) else {
-                return nil
-            }
-            return Service(uuid: uuid, characteristics: [])
-        } ?? []
+        let services =
+            peripheral.services?.compactMap { (cbService) -> Service? in
+                Log(v: "Service Discovered: \(cbService.uuid.uuidString)", tag: tag)
+                guard let uuid = UUID(cbuuid: cbService.uuid) else {
+                    return nil
+                }
+                return Service(uuid: uuid, characteristics: [])
+            } ?? []
 
-        discoveredServices = Dictionary(uniqueKeysWithValues: zip(services.map {$0.uuid}, services))
+        discoveredServices = Dictionary(
+            uniqueKeysWithValues: zip(services.map { $0.uuid }, services))
 
         var result: Result<[Service], Error> = .success(Array(discoveredServices.values))
         if let error = error {
             result = .failure(error)
         }
 
-        let item = queue.items.first { (operation) -> Bool in
-            operation.isExecuting && operation.name == "discoverServices"
+        let item =
+            queue.items.first { (operation) -> Bool in
+                operation.isExecuting && operation.name == "discoverServices"
             } as? QueueItem<[Service]>
         item?.notify(result)
     }
@@ -357,43 +391,50 @@ internal extension Device  {
             return
         }
 
-        let characteristics = service.characteristics?.compactMap { cbCharacteristic -> Characteristic? in
-            Log(v: "Characteristic Discovered: \(cbCharacteristic.uuid.uuidString)", tag: tag)
-            guard let uuid = UUID(cbuuid: cbCharacteristic.uuid) else {
-               return nil
-           }
-            return Characteristic(uuid: uuid, properties: [])
-        } ?? []
+        let characteristics =
+            service.characteristics?.compactMap { cbCharacteristic -> Characteristic? in
+                Log(v: "Characteristic Discovered: \(cbCharacteristic.uuid.uuidString)", tag: tag)
+                guard let uuid = UUID(cbuuid: cbCharacteristic.uuid) else {
+                    return nil
+                }
+                return Characteristic(uuid: uuid, properties: [])
+            } ?? []
 
         let service = Service(uuid: uuid, characteristics: characteristics)
         discoveredServices[uuid] = service
 
-        var result: Result<DiscoveredCharacteristic, Error> = .success((service: service, characteristics: characteristics))
+        var result: Result<DiscoveredCharacteristic, Error> = .success(
+            (service: service, characteristics: characteristics))
         if let error = error {
             result = .failure(error)
         }
 
-        let item = queue.items.first { (operation) -> Bool in
-            operation.isExecuting && operation.name == service.uuid.uuidString
+        let item =
+            queue.items.first { (operation) -> Bool in
+                operation.isExecuting && operation.name == service.uuid.uuidString
             } as? QueueItem<DiscoveredCharacteristic>
         item?.notify(result)
     }
 
     func didUpdateValueFor(characteristic: CBCharacteristic, error: Error?) {
-        Log(v: "didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(String(describing: characteristic.value))", tag: tag)
+        Log(
+            v:
+                "didUpdateValueFor: \(characteristic.uuid.uuidString) with: \(String(describing: characteristic.value))",
+            tag: tag)
 
         var result: Result<Data, Error> = .success(characteristic.value ?? Data())
         if let e = error {
             result = .failure(e)
         }
 
-        let item = queue.items.first { (operation) -> Bool in
-            operation.isExecuting && operation.name == characteristic.compositeId
+        let item =
+            queue.items.first { (operation) -> Bool in
+                operation.isExecuting && operation.name == characteristic.compositeId
             } as? QueueItem<Data>
         item?.notify(result)
         notificationHandler[characteristic]?(result)
     }
-    
+
     func didWriteValueFor(characteristic: CBCharacteristic, error: Error?) {
         Log(v: "didWriteValueFor: \(characteristic.uuid.uuidString)", tag: tag)
 
@@ -402,12 +443,13 @@ internal extension Device  {
             result = .failure(e)
         }
 
-        let item = queue.items.first { (operation) -> Bool in
-            operation.isExecuting && operation.name == characteristic.compositeId
-        } as? QueueItem<Void>
+        let item =
+            queue.items.first { (operation) -> Bool in
+                operation.isExecuting && operation.name == characteristic.compositeId
+            } as? QueueItem<Void>
         item?.notify(result)
     }
-    
+
     // This is equivalent to a direct READ from the characteristic
     func didUpdateNotificationStateFor(characteristic: CBCharacteristic, error: Error?) {
         Log(v: "didUpdateNotificationStateFor: \(characteristic.uuid.uuidString)", tag: tag)
