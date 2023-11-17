@@ -8,8 +8,8 @@
 import Foundation
 
 internal protocol SwiftyQueue {
-    var items: [Operation] {get}
-    
+    var items: [Operation] { get }
+
     func pushBack(_ item: Operation)
     func cancelAll()
 }
@@ -21,10 +21,10 @@ public enum FailureHandler {
 }
 
 internal protocol Queueable {
-    var timeout: TimeInterval {get}
-    var doOnFailure: FailureHandler {get}
+    var timeout: TimeInterval { get }
+    var doOnFailure: FailureHandler { get }
     // priority
-    
+
     func execute()
     func cancel()
 }

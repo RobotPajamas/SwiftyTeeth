@@ -14,7 +14,7 @@ public protocol SwiftyTeethable {
 }
 
 extension SwiftyTeethable {
-    
+
     /// Central and peripheral bluetooth manager.
     public var swiftyTeeth: SwiftyTeeth {
         return SwiftyTeeth.shared

@@ -25,11 +25,11 @@ let package = Package(
         .macOS(.v10_15),
     ],
     dependencies: [
-        .package(name: "SwiftyTeeth", path: "../../"),
+        .package(name: "SwiftyTeeth", path: "../../")
     ],
     targets: [
         .executableTarget(
             name: "Peripheral",
-            dependencies: [.product(name: "SwiftyTooth", package: "SwiftyTeeth")]),
+            dependencies: [.product(name: "SwiftyTooth", package: "SwiftyTeeth")])
     ]
 )

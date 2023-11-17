@@ -7,8 +7,6 @@
 
 import SwiftyTeeth
 
-import SwiftyTeeth
-
 extension Device: Identifiable {
 
 }

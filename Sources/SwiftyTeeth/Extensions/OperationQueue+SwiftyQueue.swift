@@ -8,11 +8,11 @@
 import Foundation
 
 extension OperationQueue: SwiftyQueue {
-    
+
     var items: [Operation] {
         return operations
     }
-    
+
     func pushBack(_ item: Operation) {
         Log(v: "SwiftyQueue: Adding item to existing \(items.count) items in queue")
         self.addOperation(item)
@@ -21,7 +21,7 @@ extension OperationQueue: SwiftyQueue {
             Log(v: "SwiftyQueue: \(item.name ?? "(none)") is in the queue")
         }
     }
-    
+
     func cancelAll() {
         Log(v: "SwiftyQueue: Cancelling all \(items.count) items in queue")
         for item in items {

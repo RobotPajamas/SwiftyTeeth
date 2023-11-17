@@ -25,5 +25,4 @@ instance.stateChangedHandler = { (state) in
     }
 }
 
-
 RunLoop.main.run()
