@@ -10,7 +10,7 @@ import Foundation
 extension OperationQueue: SwiftyQueue {
 
     var items: [Operation] {
-        return operations
+        operations
     }
 
     func pushBack(_ item: Operation) {

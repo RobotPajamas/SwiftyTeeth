@@ -24,10 +24,10 @@ open class SwiftyTooth: NSObject {
     // This is just used to determine if we should notify out values to a subscribed central
     fileprivate var connectedCentral: String?
     fileprivate var characteristics: [CBMutableCharacteristic] = []
-    fileprivate var notifyHandlers = [UUID: NotifyHandler]()
-    fileprivate var readHandlers = [UUID: ReadHandler]()
-    fileprivate var writeHandlers = [UUID: WriteHandler]()
-    fileprivate var writeNoResponseHandlers = [UUID: WriteNoResponseHandler]()
+    fileprivate var notifyHandlers: [UUID: NotifyHandler] = [:]
+    fileprivate var readHandlers: [UUID: ReadHandler] = [:]
+    fileprivate var writeHandlers: [UUID: WriteHandler] = [:]
+    fileprivate var writeNoResponseHandlers: [UUID: WriteNoResponseHandler] = [:]
 
     // Using a very quick thread-unsafe queue just to test this out conceptually, to see how it works
     fileprivate var notificationQueue = Deque<QueueItem>()
@@ -47,7 +47,7 @@ open class SwiftyTooth: NSObject {
     }()
 
     public var state: BluetoothState {
-        return BluetoothState(rawValue: peripheralManager.state.rawValue) ?? .unknown
+        BluetoothState(rawValue: peripheralManager.state.rawValue) ?? .unknown
     }
 
     public override init() {
@@ -57,7 +57,7 @@ open class SwiftyTooth: NSObject {
 extension SwiftyTooth {
     public class var logger: Logger? {
         get {
-            return swiftyToothLogger
+            swiftyToothLogger
         }
         set {
             swiftyToothLogger = newValue
@@ -69,7 +69,7 @@ extension SwiftyTooth {
 extension SwiftyTooth {
 
     public var isAdvertising: Bool {
-        return peripheralManager.isAdvertising
+        peripheralManager.isAdvertising
     }
 
     public func advertise(name: String, uuids: [CBUUID] = [], for timeout: TimeInterval = 0) {

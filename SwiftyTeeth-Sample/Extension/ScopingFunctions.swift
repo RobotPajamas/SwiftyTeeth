@@ -35,7 +35,7 @@ extension ScopingFunctions {
     /// }
     /// // TODO: Is this actually "let"?
     @inline(__always) func with<R>(block: (Self) -> R) -> R {
-        return block(self)
+        block(self)
     }
 }
 

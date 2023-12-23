@@ -25,7 +25,7 @@ open class Device: NSObject {
     fileprivate let tag = "SwiftyDevice"
 
     let peripheral: CBPeripheral
-    var discoveredServices = [UUID: Service]()
+    var discoveredServices: [UUID: Service] = [:]
 
     private let manager: SwiftyTeeth
 
@@ -37,7 +37,7 @@ open class Device: NSObject {
     }
 
     private var connectionHandler: ((ConnectionState) -> Void)?
-    private var notificationHandler = [CBCharacteristic: ((Result<Data, Error>) -> Void)]()
+    private var notificationHandler: [CBCharacteristic: ((Result<Data, Error>) -> Void)] = [:]
 
     // Connection parameters
     fileprivate var autoReconnect = false
@@ -77,15 +77,15 @@ extension Device {
     }
 
     public var isConnected: Bool {
-        return connectionState == .connected
+        connectionState == .connected
     }
 
     public var name: String {
-        return peripheral.name ?? ""
+        peripheral.name ?? ""
     }
 
     public var id: String {
-        return peripheral.identifier.uuidString
+        peripheral.identifier.uuidString
     }
 
     //    open var rssi: Int {
@@ -295,7 +295,7 @@ extension Device {
 // MARK: - NSObject overrides
 extension Device {
     open override var hash: Int {
-        return id.hash
+        id.hash
     }
 
     open override func isEqual(_ object: Any?) -> Bool {

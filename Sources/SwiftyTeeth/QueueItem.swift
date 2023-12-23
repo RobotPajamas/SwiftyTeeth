@@ -14,7 +14,7 @@ private enum State: String {
     case finishing = "Finishing"  // On route to finished, but haven't notified Queue
     case finished = "Finished"
 
-    fileprivate var keyPath: String { return "is" + self.rawValue }
+    fileprivate var keyPath: String { "is" + self.rawValue }
 }
 
 public class QueueItem<T>: Operation {
@@ -24,7 +24,7 @@ public class QueueItem<T>: Operation {
     @available(*, deprecated, message: "Don't use this")
     override open var completionBlock: (@Sendable () -> Void)? {
         get {
-            return nil
+            nil
         }
         set {
             fatalError(
@@ -33,9 +33,9 @@ public class QueueItem<T>: Operation {
         }
     }
 
-    override public var isAsynchronous: Bool { return true }
-    override public var isExecuting: Bool { return state == .executing }
-    override public var isFinished: Bool { return state == .finished }
+    override public var isAsynchronous: Bool { true }
+    override public var isExecuting: Bool { state == .executing }
+    override public var isFinished: Bool { state == .finished }
 
     fileprivate var state = State.ready {
         willSet {

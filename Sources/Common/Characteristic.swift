@@ -30,7 +30,7 @@ public enum Property {
     }
 
     var isWriteable: Bool {
-        return !isReadable
+        !isReadable
     }
 }
 

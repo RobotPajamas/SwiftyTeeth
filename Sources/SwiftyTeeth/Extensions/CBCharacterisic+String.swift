@@ -18,12 +18,12 @@ extension CBCharacteristic {
     }
 
     func equals(_ uuidString: String) -> Bool {
-        return self.uuid.uuidString.lowercased() == uuidString.lowercased()
+        self.uuid.uuidString.lowercased() == uuidString.lowercased()
     }
 }
 
 extension Array where Element: CBCharacteristic {
     func find(uuidString: String) -> CBCharacteristic? {
-        return self.first(where: { $0.equals(uuidString) })
+        self.first(where: { $0.equals(uuidString) })
     }
 }

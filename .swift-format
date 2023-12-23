@@ -23,7 +23,7 @@
   "respectsExistingLineBreaks" : true,
   "rules" : {
     "AllPublicDeclarationsHaveDocumentation" : false,
-    "AlwaysUseLiteralForEmptyCollectionInit" : false,
+    "AlwaysUseLiteralForEmptyCollectionInit" : true,
     "AlwaysUseLowerCamelCase" : true,
     "AmbiguousTrailingClosureOverload" : true,
     "BeginDocumentationCommentWithOneLineSummary" : false,
@@ -46,7 +46,7 @@
     "NoParensAroundConditions" : true,
     "NoPlaygroundLiterals" : true,
     "NoVoidReturnOnFunctionSignature" : true,
-    "OmitExplicitReturns" : false,
+    "OmitExplicitReturns" : true,
     "OneCasePerLine" : true,
     "OneVariableDeclarationPerLine" : true,
     "OnlyOneTrailingClosureArgument" : true,

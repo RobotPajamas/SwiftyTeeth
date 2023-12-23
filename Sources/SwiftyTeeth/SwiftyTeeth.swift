@@ -29,18 +29,18 @@ open class SwiftyTeeth: NSObject {
     }()
 
     public var state: BluetoothState {
-        return BluetoothState(rawValue: centralManager.state.rawValue) ?? .unknown
+        BluetoothState(rawValue: centralManager.state.rawValue) ?? .unknown
     }
 
     // TODO: Hold a private set, and expose a list?
     public var scannedDevices = Set<Device>()
 
     public var isScanning: Bool {
-        return centralManager.isScanning
+        centralManager.isScanning
     }
 
     // TODO: Should be a list? Can connect to > 1 device
-    private var connectedDevices = [String: Device]()
+    private var connectedDevices: [String: Device] = [:]
     private var scanChangesHandler: ((Device) -> Void)?
     private var scanCompleteHandler: (([Device]) -> Void)?
 
@@ -51,7 +51,7 @@ open class SwiftyTeeth: NSObject {
 extension SwiftyTeeth {
     public class var logger: Logger? {
         get {
-            return swiftyTeethLogger
+            swiftyTeethLogger
         }
         set {
             swiftyTeethLogger = newValue

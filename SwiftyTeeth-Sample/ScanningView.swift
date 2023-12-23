@@ -10,7 +10,7 @@ import SwiftyTeeth
 
 final class ScanningViewModel: ObservableObject, SwiftyTeethable {
     @Published var isScanning = false
-    @Published var peripherals = [Device]()
+    @Published var peripherals: [Device] = []
 
     init() {
         swiftyTeeth.stateChangedHandler = { (state) in

@@ -9,14 +9,14 @@
   linked list or a circular buffer.
 */
 public struct Deque<T> {
-    private var array = [T]()
+    private var array: [T] = []
 
     public var isEmpty: Bool {
-        return array.isEmpty
+        array.isEmpty
     }
 
     public var count: Int {
-        return array.count
+        array.count
     }
 
     public mutating func enqueue(_ element: T) {
@@ -44,10 +44,10 @@ public struct Deque<T> {
     }
 
     public func peekFront() -> T? {
-        return array.first
+        array.first
     }
 
     public func peekBack() -> T? {
-        return array.last
+        array.last
     }
 }
